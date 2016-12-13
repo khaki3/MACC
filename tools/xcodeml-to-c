@@ -1,0 +1,36 @@
+#!/bin/bash
+
+set -e
+
+OMNI_JAVA=java
+
+GOSH=gosh
+ADJUSTOR="$(cd $(dirname $0) && pwd)/acc-adjustor.scm"
+
+if [ $# -ne 1 ]; then
+  echo 'Usage: xcodeml-to-c file' >&2
+  exit 1
+fi
+
+if test -z "${OMNI_HOME}"; then
+    echo 'Please set the environmental variable OMNI_HOME to point to the directory in which Omni Compiler is installed' >&2
+    exit 1
+fi
+
+XM_FILE=$1
+XM_FILE_BASENAME="`basename "${XM_FILE}" .xml`"
+
+TEMP_DIR=$(mktemp -d)
+cp "${XM_FILE}" "${TEMP_DIR}"
+cd "${TEMP_DIR}"
+
+XM_FILE="${XM_FILE_BASENAME}.xml"
+C_FILE="${XM_FILE_BASENAME}.c"
+
+OMNI_JAR1="${OMNI_HOME}/share/xcalablemp/om-c-back.jar"
+OMNI_JAR2="${OMNI_HOME}/share/xcalablemp/om-common.jar"
+OMNI_JAR3="${OMNI_HOME}/share/xcalablemp/om-exc-tools.jar"
+
+${OMNI_JAVA} -Xmx200m -Xms200m -cp ${OMNI_JAR1}:${OMNI_JAR2}:${OMNI_JAR3} exc.util.omompx -decomp -xc "${XM_FILE}" >/dev/null
+cat "${C_FILE}" | ${GOSH} "${ADJUSTOR}"
+rm -rf "${TEMP_DIR}"

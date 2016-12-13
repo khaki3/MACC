@@ -1,0 +1,37 @@
+#!/bin/bash
+
+set -e
+
+CC=pgcc
+
+GOSH=gosh
+TOOLS_DIR="$(cd $(dirname $0) && pwd)"
+
+LINT="$TOOLS_DIR/omni-lint.scm"
+MACC_H="$TOOLS_DIR/macc.h"
+
+if [ $# -ne 1 ]; then
+  echo 'Usage: c-to-xcodeml file' >&2
+  exit 1
+fi
+
+if test -z "${OMNI_HOME}"; then
+    echo 'Please set the environmental variable OMNI_HOME to point to the directory in which Omni Compiler is installed' >&2
+    exit 1
+fi
+
+C_FILE=$1
+C_FILE_BASENAME="`basename "${C_FILE}" .c`"
+TEMP_DIR=$(mktemp -d)
+TMP0="${TEMP_DIR}/${C_FILE_BASENAME}_0.c"
+TMP1="${TEMP_DIR}/${C_FILE_BASENAME}_1.c"
+TMP2="${TEMP_DIR}/${C_FILE_BASENAME}_2.i"
+OUT="${TEMP_DIR}/${C_FILE_BASENAME}.xml"
+
+${GOSH} "${LINT}" < "${C_FILE}" >&2
+${OMNI_HOME}/libexec/om_replace_pragma -I${OMNI_HOME}/include "${C_FILE}" -o "${TMP0}"
+cat "${MACC_H}" "${TMP0}" > "${TMP1}"
+${CC} -E -I${OMNI_HOME}/include -D_OPENACC=201111 "${TMP1}" > "${TMP2}"
+${OMNI_HOME}/bin/C_Front --no-builtin-va-arg -facc -fopenmp "${TMP2}" -o "${OUT}"
+cat "${OUT}"
+rm -rf "${TEMP_DIR}"
