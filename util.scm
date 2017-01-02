@@ -2,6 +2,7 @@
   (use util.match)
   (use sxml.tools)
   (use sxml.sxpath)
+  (use srfi-1)
   (use srfi-14)
   (use srfi-27)
   (export
@@ -19,6 +20,7 @@
    list-copy-deep
    match1
    match-lambda1
+   values-map
    ))
 (select-module util)
 
@@ -36,6 +38,15 @@
   (syntax-rules ()
     [(_ pat body ...)
      (match-lambda [pat body ...])]))
+
+(define (values-map proc . lists)
+  (let loop ([res '()] [lists lists])
+    (if (any null? lists)
+        (apply values (apply zip (reverse res)))
+
+        (loop
+         (cons (values->list (apply proc (map car lists))) res)
+         (map cdr lists)))))
 
 (define (list-copy-deep obj)
   (if (list? obj)
