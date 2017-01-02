@@ -21,73 +21,6 @@
 ;;; Parallelize acc regions individually
 ;;;
 
-(define (generate-data-state label args enter)
-  (and-let*
-      ([fun-name
-        (if enter
-            (match label
-              [(or "COPY" "COPYIN")
-               "__macc_copyin"]
-
-              [(or "COPYOUT" "CREATE")
-               "__macc_create"]
-
-              [else #f])
-
-            (match label
-              [(or "COPY" "COPYOUT")
-               "__macc_copyout"]
-
-              [(or "COPYIN" "CREATE")
-               "__macc_delete"]
-
-              [else #f]))]
-       [var    (~ (sxml:content args)    0)]
-       [start  (~ (~ (sxml:content args) 1) 1)]
-       [length (~ (~ (sxml:content args) 1) 2)])
-
-    `
-    (exprStatement
-     ,(gen-funcall
-       fun-name
-       '(Var "__macc_tnum")
-       var
-       `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'ptype)))))
-       start
-       length))
-    ))
-
-(define (generate-enter-data-state label args)
-  (generate-data-state label args #t))
-
-(define (generate-exit-data-state label args)
-  (generate-data-state label args #f))
-
-(define (extract-data-clauses xm state enter)
-  (let ([data-states
-         (append-map
-          (^[x]
-            (let ([label ((ccc-sxpath "string") x)]
-                  [gen   (if enter
-                             generate-enter-data-state
-                             generate-exit-data-state)])
-              (filter-map
-               (cut gen label <>)
-               ((cdar-sxpath "list") x))))
-          (sxml:content ((car-sxpath "list") state)))])
-  `
-  (compoundStatement
-   (symbols)
-   (declarations)
-   (body
-    ,@data-states))))
-
-(define (extract-enter-data-clauses xm state)
-  (extract-data-clauses xm state #t))
-
-(define (extract-exit-data-clauses xm state)
-  (extract-data-clauses xm state #f))
-
 ;; lvar ::= '(type name) | '(type name value)
 (define (gen-compound-with-local-vars local-vars . states)
   (define (gen-id type name sclass)
@@ -140,16 +73,13 @@
 (define (gen-barrier)
   '(OMPPragma (string "BARRIER") (list)))
 
-(define (gen-par label . states)
+(define (gen-par :key (clauses '()) (state #f))
   `
   (OMPPragma
-   (@ (__macc ,label))
    (string "PARALLEL")
    (list
-    (list
-     (string "DIR_NUM_THREADS")
-     (Var "__MACC_NUMGPUS")
-     ))
+    (list (string "DIR_NUM_THREADS") (Var "__MACC_NUMGPUS"))
+    ,@clauses)
 
    ,
    (gen-compound-with-local-vars
@@ -158,24 +88,80 @@
     `(exprStatement
       ,(gen-funcall "__macc_set_gpu_num" '(Var "__macc_tnum")))
 
-    (apply gen-compound states)
+    state
 
     (gen-barrier)
     )))
 
-(define (gen-par-data . states)
-  (apply gen-par "DATA" states))
+(define (generate-data-state label args enter)
+  (and-let*
+      ([fun-name
+        (if enter
+            (match label
+              [(or "COPY" "COPYIN")
+               "__macc_copyin"]
 
-(define (gen-par-kernel . states)
-  (apply gen-par "KERNEL" states))
+              [(or "COPYOUT" "CREATE")
+               "__macc_create"]
+
+              [else #f])
+
+            (match label
+              [(or "COPY" "COPYOUT")
+               "__macc_copyout"]
+
+              [(or "COPYIN" "CREATE")
+               "__macc_delete"]
+
+              [else #f]))]
+       [var    (~ (sxml:content args)    0)]
+       [start  (~ (~ (sxml:content args) 1) 1)]
+       [length (~ (~ (sxml:content args) 1) 2)])
+
+    `
+    (exprStatement
+     ,(gen-funcall
+       fun-name
+       '(Var "__macc_tnum")
+       var
+       `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'ptype)))))
+       start
+       length))
+    ))
+
+(define (generate-data-state-enter label args)
+  (generate-data-state label args #t))
+
+(define (generate-data-state-exit label args)
+  (generate-data-state label args #f))
+
+(define (translate-data-clauses xm state enter)
+  (apply
+   gen-compound
+
+   (append-map
+    (lambda (cls)
+      (let ([label ((ccc-sxpath "string") cls)]
+            [gen   (if enter generate-data-state-enter generate-data-state-exit)])
+
+        (filter-map (cut gen label <>) ((cdar-sxpath "list") cls))))
+
+    (sxml:content ((car-sxpath "list") state)))
+   ))
+
+(define (translate-data-clauses-enter xm state)
+  (translate-data-clauses xm state #t))
+
+(define (translate-data-clauses-exit xm state)
+  (translate-data-clauses xm state #f))
 
 (define (parallelize-data xm state)
   (gen-compound
-   (gen-par-data (extract-enter-data-clauses xm state))
+   (gen-par :state (translate-data-clauses-enter xm state))
 
    (~ (sxml:content state) 2)
 
-   (gen-par-data (extract-exit-data-clauses xm state))
+   (gen-par :state (translate-data-clauses-exit xm state))
    ))
 
 ;;
@@ -807,9 +793,25 @@
             (append-map extend-loop-counter def-indexes)))
       ))))
 
+;; '( (op . var) ... )
+(define (collect-acc-reductions state)
+  (let ([reductions
+         ((sxpath
+           `(// ,(sxpath:name 'ACCPragma)
+                list (list (string *text* ,(make-sxpath-query #/^REDUCTION_/)))))
+          state)])
+    (append-map
+     (lambda (r)
+       (let ([op   ((car-sxpath '(string *text*)) r)]
+             [vars ((sxpath '(list *))            r)])
+         (map (cut cons op <>) vars)))
+     reductions)
+    ))
+
 (define (parallelize-acc-parallel xm state)
   (let* ([state           (rename-vars state)]
          [indexes-cols    (extract-indexes-collections state)]
+         [reductions      (collect-acc-reductions state)]
 
          [top-loop         ((car-sxpath '(// forStatement)) state)]
          [top-loop-counter (car (extract-loop-counters top-loop))]
@@ -963,29 +965,38 @@
      ;; | change loop conter
      ;; | recalc only gpunum=0
 
-     (gen-par-kernel
-      (apply
-       gen-compound
-       (map
-        (^[set]
-          `(exprStatement
-            ,
-            (gen-funcall "__macc_set_data_region"
-             '(Var "__macc_tnum")
-             `(Var ,(~ set 0))
-             `(Var "__macc_multi")
-             `(intConstant ,(number->string (~ set 1)))
-             `(Var ,(~ set 2))
-             `(Var ,(~ set 3))
-             `(intConstant ,(number->string (~ set 4)))
-             `(Var ,(~ set 5))
-             `(Var ,(~ set 6))))
-          )
-        sets))
+     (gen-par
+      :clauses
+      (map
+       (match-lambda1 (op . var)
+         `(list (string ,(string-append "DATA_" op)) (list ,var)))
+       reductions)
 
-      (gen-barrier)
+      :state
+      (gen-compound
 
-      state)
+       (apply
+        gen-compound
+        (map
+         (^[set]
+           `(exprStatement
+             ,
+             (gen-funcall "__macc_set_data_region"
+              '(Var "__macc_tnum")
+              `(Var ,(~ set 0))
+              `(Var "__macc_multi")
+              `(intConstant ,(number->string (~ set 1)))
+              `(Var ,(~ set 2))
+              `(Var ,(~ set 3))
+              `(intConstant ,(number->string (~ set 4)))
+              `(Var ,(~ set 5))
+              `(Var ,(~ set 6))))
+           )
+         sets))
+
+       (gen-barrier)
+
+       state))
      )))
 
 (define (parallelize-acc! xm state)

@@ -15,6 +15,8 @@
    sxml:change!
    sxml:content-push!
    node-all
+   make-sxpath-query
+   sxpath:name
 
    dprint
    list-copy-deep
@@ -67,7 +69,17 @@
      (sxml:change-content! place (cons item (sxml:content place)))]
     ))
 
+(define (make-sxpath-query pred?)
+  (lambda (nodeset . rest)
+    ((sxml:filter pred?) nodeset)))
+
+(define (sxpath:name name)
+  (make-sxpath-query (ntype?? name)))
+
 ;; node-closure U node-self
+;;
+;;  (node-all (ntype?? 'Var)) == (sxpath `(// ,(sxpath:name 'Var)))
+;;
 (define (node-all test-pred?)
   (node-or (node-self test-pred?) (node-closure test-pred?)))
 
