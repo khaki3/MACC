@@ -11,18 +11,23 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
+#define TOPADDR(ADDR, LB, TYPE_SIZE)   (ADDR + LB * TYPE_SIZE)
+#define LENGTH_BYTE(LB, UB, TYPE_SIZE) ((UB - LB + 1) * TYPE_SIZE)
+
+#define __MACC_DEVICE_TYPE acc_device_nvidia
+
 #define __MACC_MAX_NUMGPUS 10
 
 int __MACC_NUMGPUS = -1;
 
 int __macc_get_num_gpus()
 {
-    return acc_get_num_devices(acc_device_nvidia);
+    return acc_get_num_devices(__MACC_DEVICE_TYPE);
 }
 
 void __macc_set_gpu_num(int i)
 {
-    acc_set_device_num(i, acc_device_nvidia);
+    acc_set_device_num(i, __MACC_DEVICE_TYPE);
 }
 
 #define MACC_DATA_TABLE_SIZE 256
@@ -128,8 +133,9 @@ void __macc_data_table_delete(int gpu_num, void *p)
 
 void __macc_delete(int gpu_num, void *p, int type_size, int lb, int length)
 {
-    acc_delete(p + lb * type_size, length * type_size);
+    acc_delete_async(TOPADDR(p, lb, type_size), length * type_size, gpu_num);
     __macc_data_table_delete(gpu_num, p);
+    acc_wait(gpu_num);
 }
 
 void __macc_copyout(int gpu_num, void *p, int type_size, int lb, int length)
@@ -137,22 +143,25 @@ void __macc_copyout(int gpu_num, void *p, int type_size, int lb, int length)
     struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, p);
 
     if (entry->dirty)
-        acc_update_self(entry->addr + entry->dirty_lb * entry->type_size,
-                        (entry->dirty_ub - entry->dirty_lb + 1) * entry->type_size);
+        acc_update_self_async(TOPADDR(entry->addr, entry->dirty_lb, entry->type_size),
+                              LENGTH_BYTE(entry->dirty_lb, entry->dirty_ub, entry->type_size),
+                              gpu_num);
 
     __macc_delete(gpu_num, p, type_size, lb, length);
 }
 
 void __macc_copyin(int gpu_num, void *p, int type_size, int lb, int length)
 {
-    acc_copyin(p + lb * type_size, length * type_size);
+    acc_copyin_async(TOPADDR(p, lb, type_size), length * type_size, gpu_num);
     __macc_data_table_insert(gpu_num, p, type_size, lb, lb + length - 1);
+    acc_wait(gpu_num);
 }
 
 void __macc_create(int gpu_num, void *p, int type_size, int lb, int length)
 {
-    acc_create(p + lb * type_size, length * type_size);
+    acc_create_async(TOPADDR(p, lb, type_size), length * type_size, gpu_num);
     __macc_data_table_insert(gpu_num, p, type_size, lb, lb + length - 1);
+    acc_wait(gpu_num);
 }
 
 void __macc_init_access_region(int gpu_num, int *lb_set, int *ub_set)
@@ -167,6 +176,9 @@ void __macc_update_access_region(int gpu_num, int *lb_set, int *ub_set, int val)
     ub_set[gpu_num] = MAX(ub_set[gpu_num], val);
 }
 
+//#define FEW_BUT_LARGE
+#ifdef FEW_BUT_LARGE
+
 int __macc_sync_valid[__MACC_MAX_NUMGPUS];
 int __macc_sync_lb_set[__MACC_MAX_NUMGPUS];
 int __macc_sync_ub_set[__MACC_MAX_NUMGPUS];
@@ -178,8 +190,8 @@ void __macc_sync_data(int gpu_num, bool will_update, void *p, int type_size, int
     int HtoD_lb, HtoD_ub;
 
     if (will_update) {
-        update_addr = p + lb * type_size;
-        length_b = (ub - lb + 1) * type_size;
+        update_addr = TOPADDR(p, lb, type_size);
+        length_b = LENGTH_BYTE(lb, ub, type_size);
 
         acc_update_self(update_addr, length_b);
 
@@ -202,8 +214,8 @@ void __macc_sync_data(int gpu_num, bool will_update, void *p, int type_size, int
     }
 
     if (HtoD_lb != INT_MAX) {
-        update_addr = p + HtoD_lb * type_size;
-        length_b = (HtoD_ub - HtoD_lb + 1) * type_size;
+        update_addr = TOPADDR(p, HtoD_lb, type_size);
+        length_b = LENGTH_BYTE(HtoD_lb, HtoD_ub, type_size);
 
         acc_update_device(update_addr, length_b);
     }
@@ -322,6 +334,134 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
 
     __macc_sync_data(gpu_num, will_update, p, entry->type_size, update_lb, update_ub);
 }
+
+#else
+
+//
+// In order to make nested-parallel available in the programs which compiled by pgi compiler,
+// run the commands below before running the programs.
+//
+//   export OMP_NESTED=TRUE
+//   export OMP_MAX_ACTIVE_LEVELS=2
+//
+
+void __macc_sync_data(int gpu_num, void *p, int type_size, int lb, int ub)
+{
+    void *update_addr = TOPADDR(p, lb, type_size);
+    size_t length_b   = LENGTH_BYTE(lb, ub, type_size);
+
+    acc_update_self(update_addr, length_b);
+
+    #pragma omp parallel num_threads (__MACC_NUMGPUS)
+    {
+        int i = omp_get_thread_num();
+        if (i != gpu_num) {
+            __macc_set_gpu_num(i);
+            acc_update_device(update_addr, length_b);
+        }
+    }
+
+    __macc_set_gpu_num(gpu_num);
+}
+
+// (use|def)_type: 0->non-affine, 1->nothing, 2->affine
+void __macc_set_data_region(int gpu_num, void *p, int multi,
+                            int use_type, int *use_lb_set, int *use_ub_set,
+                            int def_type, int *def_lb_set, int *def_ub_set)
+{
+    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, p);
+
+    //
+    // USE
+    //
+    // update: USE_{*-i} /\ dirty
+    //
+    if (entry->dirty && (multi || gpu_num != 0) && use_type != 1) {
+        // update all dirty
+        if (use_type == 0) {
+            __macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
+            entry->dirty = false;
+        }
+
+        // partial update
+        else {
+            int thread_num = multi ? __MACC_NUMGPUS : 1;
+
+            #pragma omp parallel num_threads (thread_num)
+            {
+                int i = omp_get_thread_num();
+
+                if (i != gpu_num && !(entry->dirty_lb > use_ub_set[i] || entry->dirty_ub < use_lb_set[i])) {
+                    int update_lb = MAX(entry->dirty_lb, use_lb_set[i]);
+                    int update_ub = MIN(entry->dirty_ub, use_ub_set[i]);
+                    void *update_addr = TOPADDR(p, update_lb, entry->type_size);
+                    size_t length_b = LENGTH_BYTE(update_lb, update_ub, entry->type_size);
+
+                    acc_update_self(update_addr, length_b);
+                    __macc_set_gpu_num(i);
+                    acc_update_device(update_addr, length_b);
+                    __macc_set_gpu_num(gpu_num);
+                }
+            }
+        }
+    }
+
+    //
+    // DEF
+    //
+    // update: dirty \ DEF_{i}
+    //
+    if ((multi || gpu_num == 0) && def_type != 1) {
+        if (def_type == 0) {
+            entry->dirty = true;
+            entry->dirty_lb = entry->entire_lb;
+            entry->dirty_ub = entry->entire_ub;
+        }
+
+        else if (
+            // non-dirty
+            !(entry->dirty) ||
+            // whole
+            (def_lb_set[gpu_num] <= entry->dirty_lb && entry->dirty_ub <= def_ub_set[gpu_num])) {
+            entry->dirty = true;
+            entry->dirty_lb = def_lb_set[gpu_num];
+            entry->dirty_ub = def_ub_set[gpu_num];
+        }
+
+        else {
+            int update_lb, update_ub;
+
+            // outside
+            if (entry->dirty_lb > def_ub_set[gpu_num] || entry->dirty_ub < def_lb_set[gpu_num]) {
+                update_lb = entry->dirty_lb;
+                update_ub = entry->dirty_ub;
+                entry->dirty_lb = def_lb_set[gpu_num];
+                entry->dirty_ub = def_ub_set[gpu_num];
+            }
+
+            // inside, side
+            else {
+                // left side
+                if (entry->dirty_lb < def_lb_set[gpu_num]) {
+                    update_lb = entry->dirty_lb;
+                    update_ub = def_lb_set[gpu_num] - 1;
+                }
+                // right side
+                else {
+                    update_lb = def_ub_set[gpu_num] + 1;
+                    update_ub = entry->dirty_ub;
+                }
+
+                entry->dirty_lb = def_lb_set[gpu_num];
+                entry->dirty_ub = def_ub_set[gpu_num];
+            }
+
+            __macc_sync_data(gpu_num, p, entry->type_size, update_lb, update_ub);
+        }
+    }
+}
+
+#endif
 
 // <= or < only
 void __macc_set_loop_region

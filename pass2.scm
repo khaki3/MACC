@@ -89,8 +89,6 @@
       ,(gen-funcall "__macc_set_gpu_num" '(Var "__macc_tnum")))
 
     state
-
-    (gen-barrier)
     )))
 
 (define (generate-data-state label args enter)
@@ -808,10 +806,23 @@
      reductions)
     ))
 
+;; Assign loop counters as omp privates
+;;
+;; '( var ... )
+;;
+(define (extract-omp-privates state)
+  (let ([loop-counters
+         ((sxpath '(// forStatement init assignExpr Var *text*)) state)]
+        [defined
+         ((sxpath '(// compoundStatement declarations varDecl name *text*)) state)])
+
+    (map (lambda (c) `(Var ,c)) (lset-difference string=? loop-counters defined))))
+
 (define (parallelize-acc-parallel xm state)
   (let* ([state           (rename-vars state)]
          [indexes-cols    (extract-indexes-collections state)]
          [reductions      (collect-acc-reductions state)]
+         [privates        (extract-omp-privates state)]
 
          [top-loop         ((car-sxpath '(// forStatement)) state)]
          [top-loop-counter (car (extract-loop-counters top-loop))]
@@ -960,17 +971,21 @@
            )))))
 
      ;; TODO
-     ;; if (def not affine or overrapped)
+     ;; if (def not affine or overlapped)
      ;; | __macc_mult = 0;
      ;; | change loop conter
      ;; | recalc only gpunum=0
 
      (gen-par
       :clauses
-      (map
-       (match-lambda1 (op . var)
-         `(list (string ,(string-append "DATA_" op)) (list ,var)))
-       reductions)
+      (append
+       (map
+        (match-lambda1 (op . var)
+          `(list (string ,(string-append "DATA_" op)) (list ,var)))
+        reductions)
+
+       (if (null? privates) '()
+           `((list (string "DATA_PRIVATE") (list ,@privates)))))
 
       :state
       (gen-compound
