@@ -21,58 +21,6 @@
 ;;; Parallelize acc regions individually
 ;;;
 
-;; lvar ::= '(type name) | '(type name value)
-(define (gen-compound-with-local-vars local-vars . states)
-  (define (gen-id type name sclass)
-    `(id (@ (type ,type) (sclass ,sclass)) (name ,name)))
-
-  (define (gen-decl name value)
-    `(varDecl (name ,name) ,@(if value `((value ,value)) '())))
-
-  (define local-var->id&decl
-    (match-lambda
-     [(type name)
-      (values
-       (gen-id type name "auto")
-       (gen-decl name #f))]
-
-     [(type name value)
-      (values
-       (gen-id type name "auto")
-       (gen-decl name value))]
-
-     [(type name value sclass)
-      (values
-       (gen-id type name sclass)
-       (gen-decl name value))]
-     ))
-
-  (let-values ([(ids decls) (values-map local-var->id&decl local-vars)])
-    `
-    (compoundStatement
-     (symbols ,@ids)
-     (declarations ,@decls)
-     (body ,@states))
-    ))
-
-(define (gen-compound . states)
-  `(compoundStatement
-    (symbols)
-    (declarations)
-    (body
-     ,@states)))
-
-(define (gen-funcall fun-name . args)
-  `
-  (functionCall
-   (function
-    (funcAddr ,fun-name))
-   (arguments
-    ,@args)))
-
-(define (gen-barrier)
-  '(OMPPragma (string "BARRIER") (list)))
-
 (define (gen-par :key (clauses '()) (state #f))
   `
   (OMPPragma
@@ -83,10 +31,9 @@
 
    ,
    (gen-compound-with-local-vars
-    `(("int" "__macc_tnum" ,(gen-funcall "omp_get_thread_num")))
+    `(("int" "__macc_tnum" ,(gen-funcall-expr "omp_get_thread_num")))
 
-    `(exprStatement
-      ,(gen-funcall "__macc_set_gpu_num" '(Var "__macc_tnum")))
+    (gen-funcall "__macc_set_gpu_num" '(Var "__macc_tnum"))
 
     state
     )))
@@ -116,15 +63,13 @@
        [start  (~ (~ (sxml:content args) 1) 1)]
        [length (~ (~ (sxml:content args) 1) 2)])
 
-    `
-    (exprStatement
-     ,(gen-funcall
-       fun-name
-       '(Var "__macc_tnum")
-       var
-       `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'ptype)))))
-       start
-       length))
+    (gen-funcall
+     fun-name
+     '(Var "__macc_tnum")
+     var
+     `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'ptype)))))
+     start
+     length)
     ))
 
 (define (generate-data-state-enter label args)
@@ -134,8 +79,7 @@
   (generate-data-state label args #f))
 
 (define (translate-data-clauses xm state enter)
-  (apply
-   gen-compound
+  (apply gen-compound
 
    (append-map
     (lambda (cls)
@@ -400,7 +344,7 @@
                 [(asgBitAndExpr) 'bitAndExpr]
                 [(asgBitOrExpr)  'bitOrExpr]
                 [(asgBitXorExpr) 'bitXorExpr])
-      `(assignExpr ,var (,exp ,var ,val))
+      (gen-=-expr var (list exp var val))
       )))
 
 (define (extract-loop-counters state-for)
@@ -658,7 +602,7 @@
                   [(postIncrExpr preIncrExpr) '(intConstant "1")]
                   [(postDecrExpr preDecrExpr) '(intConstant "-1")])])
        (gather-indexes
-        `(assignExpr ,var (plusExpr ,var ,val))
+        (gen-=-expr var `(plusExpr ,var ,val))
         env))]
 
     [(arrayRef pointerRef)
@@ -773,25 +717,18 @@
      (list use-lb-set-name use-ub-set-name def-lb-set-name def-ub-set-name)
 
      (gen-compound
-      `
-      (exprStatement
-       ,(gen-funcall "__macc_init_access_region" macc-gpu-num-var use-lb-set-var use-ub-set-var))
-      `
-      (exprStatement
-       ,(gen-funcall "__macc_init_access_region" macc-gpu-num-var def-lb-set-var def-ub-set-var))
+      (gen-funcall "__macc_init_access_region" macc-gpu-num-var use-lb-set-var use-ub-set-var)
+      (gen-funcall "__macc_init_access_region" macc-gpu-num-var def-lb-set-var def-ub-set-var)
 
-      (apply
-       gen-compound
-       (map (lambda (e) `(exprStatement
-                          ,(gen-funcall "__macc_update_access_region"
-                            macc-gpu-num-var use-lb-set-var use-ub-set-var e)))
-            (append-map extend-loop-counter use-indexes)))
-      (apply
-       gen-compound
-       (map (lambda (e) `(exprStatement
-                          ,(gen-funcall "__macc_update_access_region"
-                            macc-gpu-num-var def-lb-set-var def-ub-set-var e)))
-            (append-map extend-loop-counter def-indexes)))
+      (apply gen-compound
+       (map (lambda (e) (gen-funcall "__macc_update_access_region"
+                                     macc-gpu-num-var use-lb-set-var use-ub-set-var e))
+            (append-map extend-loop-counter (or use-indexes '()) )))
+
+      (apply gen-compound
+       (map (lambda (e) (gen-funcall "__macc_update_access_region"
+                                     macc-gpu-num-var def-lb-set-var def-ub-set-var e))
+            (append-map extend-loop-counter (or def-indexes '()) )))
       ))))
 
 ;; '( (op . var) ... )
@@ -800,15 +737,19 @@
          ((sxpath
            `(// ,(sxpath:name 'ACCPragma)
                 list (list (string *text* ,(make-sxpath-query #/^REDUCTION_/)))))
-          state)])
+          state)]
+        [defined
+         ((sxpath '(// compoundStatement declarations varDecl name *text*)) state)])
     (append-map
      (lambda (r)
-       (let ([op   ((car-sxpath '(string *text*)) r)]
-             [vars ((sxpath '(list *))            r)])
-         (map (cut cons op <>) vars)))
+       (let* ([op       ((car-sxpath '(string *text*)) r)]
+              [varnames ((sxpath '(list Var *text*))   r)]
+              [varnames (lset-difference string=? varnames defined)])
+         (map (lambda (vn) (cons op `(Var ,vn))) varnames)))
      reductions)
     ))
 
+;;
 ;; Assign loop counters as omp privates
 ;;
 ;; '( var ... )
@@ -824,6 +765,7 @@
 (define (parallelize-acc-parallel! xm state)
   (let* ([state-orig      state] ; for sxml:change!
          [state           (rename-vars state)]
+
          [indexes-cols    (extract-indexes-collections state)]
          [reductions      (collect-acc-reductions state)]
          [privates        (extract-omp-privates state)]
@@ -834,7 +776,7 @@
          [top-loop-lb-set-name (new-name #"~|top-loop-counter-varname|_loop_lb_set")]
          [top-loop-ub-set-name (new-name #"~|top-loop-counter-varname|_loop_ub_set")]
 
-         [sets '()]
+         [data-sets '()]
 
          [dynamic-vars
           (delete-duplicates
@@ -867,121 +809,143 @@
           [top-loop-cond ((car-sxpath "condition") top-loop)])
       (sxml:change-content!
        top-loop-init
-       `
-       (
-        (assignExpr
-         (Var ,top-loop-counter-varname)
-         (arrayRef
-          (@ (type "int"))
-          (arrayAddr ,top-loop-lb-set-name)
-          (Var "__macc_tnum")))
-        ))
+
+       (list
+        (gen-var=-expr
+         top-loop-counter-varname
+         (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_tnum")
+         )))
 
       (sxml:change-content!
        top-loop-cond
-       `
-       (
-        (logLEExpr
-         (Var ,top-loop-counter-varname)
-         (arrayRef
-          (@ (type "int"))
-          (arrayAddr ,top-loop-ub-set-name)
-          (Var "__macc_tnum")))
-        )))
+       (list
+        (gen-var<=-expr
+         top-loop-counter-varname
+         (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_tnum")
+         ))))
 
+    ;; New state
     (sxml:change!
      state-orig
 
-     ;; new state
      (gen-compound-with-local-vars
-      `(("int" "__macc_region_is_changed" (intConstant "1") "static")
+      '(("int" "__macc_region_is_changed" (intConstant "1") "static")
         ("int" "__macc_multi" (intConstant "1") "static")
 
         ("int" "__macc_gpu_num")
         ("int" "__macc_top_loop_lb")
-        ("int" "__macc_top_loop_ub")
-        )
+        ("int" "__macc_top_loop_ub"))
 
-      `
-      (exprStatement
-       (assignExpr
-        (Var "__macc_region_is_changed")
-       (logNotExpr
-        ,(fold
-          (lambda (v lastv knil) `(logAndExpr (logEQExpr ,v ,lastv) ,knil))
-          '(logNotExpr (Var "__macc_region_is_changed"))
-          dynamic-vars
-          last-dvars))
-       ))
+      (gen-var=
+       "__macc_region_is_changed"
+       (gen-!-expr
+        (apply gen-&&-expr
+         (gen-!var-expr "__macc_region_is_changed")
+         (map gen-==-expr dynamic-vars last-dvars))))
 
-      `
-      (ifStatement
-       (condition
-        (Var "__macc_region_is_changed"))
+      (gen-if
+       ;; cond
+       '(Var "__macc_region_is_changed")
 
-       (then
-        ,(gen-compound
-          '
-          (exprStatement (assignExpr (Var "__macc_region_is_changed") (intConstant "0")))
+       ;; then
+       (gen-compound
+        (gen-var=int "__macc_multi"             1)
+        (gen-var=int "__macc_region_is_changed" 0)
 
-          (apply
-           gen-compound
-           (map (lambda (v lastv) `(exprStatement (assignExpr ,lastv ,v)))
-                dynamic-vars
-                last-dvars))
+        (apply gen-compound
+         (map gen-= last-dvars dynamic-vars))
 
-          `
-          (exprStatement
-           ,(gen-funcall
-             "__macc_set_loop_region"
-             `(Var ,top-loop-lb-set-name)
-             `(Var ,top-loop-ub-set-name)
-             (~ top-loop-counter 1)
-             (~ top-loop-counter 2)
-             (~ top-loop-counter 3)
-             `(intConstant ,(if (eq? (~ top-loop-counter 4) '<=) "1" "0"))))
+        (gen-funcall
+         "__macc_calc_loop_region"
+         `(Var ,top-loop-lb-set-name)
+         `(Var ,top-loop-ub-set-name)
+         (~ top-loop-counter 1)
+         (~ top-loop-counter 2)
+         (~ top-loop-counter 3)
+         `(intConstant ,(if (eq? (~ top-loop-counter 4) '<=) "1" "0")))
 
-          `
-          (forStatement
-           (init
-            (assignExpr (Var "__macc_gpu_num") (intConstant "0")))
-           (condition
-            (logLTExpr (Var "__macc_gpu_num") (Var "__MACC_NUMGPUS")))
-           (iter
-            (postIncrExpr (Var "__macc_gpu_num")))
-           (body
-            (exprStatement
-             (assignExpr
-              (Var "__macc_top_loop_lb")
-              (arrayRef (@ (type "int")) (arrayAddr ,top-loop-lb-set-name) (Var "__macc_gpu_num"))))
+        (gen-for
+         ((gen-var=int-expr  "__macc_gpu_num" 0)
+          (gen-var<=var-expr "__macc_gpu_num" "__MACC_NUMGPUS")
+          (gen-var++-expr    "__macc_gpu_num"))
 
-            (exprStatement
-             (assignExpr
-              (Var "__macc_top_loop_ub")
-              (arrayRef (@ (type "int")) (arrayAddr ,top-loop-ub-set-name) (Var "__macc_gpu_num"))))
-            ,
-            (apply
-             gen-compound
-             (map
-              (lambda (col)
-                (let-values ([(set-names state)
-                              (generate-access-region-calcs
-                               xm col '(Var "__macc_gpu_num") top-loop-counter-varname)])
-                  (let1 region-type (lambda (col) (cond [(not col) 0] [(null? col) 1] [else 2]))
-                    ;; '(var_name use_type use_lb_name use_ub_name def_type def_lb_name def_ub_name)
-                    (push! sets (list (~ col 0)
-                                      (region-type (~ col 1)) (~ set-names 0) (~ set-names 1)
-                                      (region-type (~ col 2)) (~ set-names 2) (~ set-names 3)))
-                    state
-                    )))
-              indexes-cols))
-            )))))
+         (gen-var= "__macc_top_loop_lb" (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_gpu_num"))
+         (gen-var= "__macc_top_loop_ub" (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_gpu_num"))
 
-      ;; TODO
-      ;; if (def not affine or overlapped)
-      ;; | __macc_mult = 0;
-      ;; | change loop conter
-      ;; | recalc only gpunum=0
+         (apply gen-compound
+          (filter-map
+           (lambda (col)
+             (let-values ([(set-names state)
+                           (generate-access-region-calcs
+                            xm col '(Var "__macc_gpu_num") top-loop-counter-varname)])
+               (let* ([region-type
+                       (lambda (indexes)
+                         (cond [(not indexes) 0]
+                               [(null? indexes) 1]
+                               [else 2]))]
+                      [varname  (~ col 0)]
+                      [use-type (region-type (~ col 1))]
+                      [def-type (region-type (~ col 2))]
+                      [use-lb-name (~ set-names 0)]
+                      [use-ub-name (~ set-names 1)]
+                      [def-lb-name (~ set-names 2)]
+                      [def-ub-name (~ set-names 3)])
+
+                 (push!
+                  data-sets
+                  (list
+                   varname
+                   use-type use-lb-name use-ub-name
+                   def-type def-lb-name def-ub-name))
+
+                 state
+
+                 )))
+           indexes-cols))) ; forStatement
+
+        (gen-if
+         ;; cond
+         (apply gen-OR-expr
+          (filter-map
+           (match-lambda1 (_ _ _ _ def-type def-lb-name def-ub-name)
+             (case def-type
+               [(0) '(intConstant "1")]
+
+               [(1) #f]
+
+               [(2) (gen-funcall-expr
+                     "__macc_region_is_overlapping"
+                     `(Var ,def-lb-name) `(Var ,def-ub-name))]
+               ))
+           data-sets))
+
+         ;; then
+         (apply gen-compound
+          (gen-var=int "__macc_multi" 0)
+
+          (gen-funcall
+           "__macc_rewrite_loop_region_into_single"
+           `(Var ,top-loop-lb-set-name)
+           `(Var ,top-loop-ub-set-name))
+
+          (filter-map
+           (match-lambda1 (type lb-name ub-name)
+             (and (= type 2)
+                  (gen-funcall
+                   "__macc_rewrite_data_region_into_single"
+                   `(Var ,lb-name)
+                   `(Var ,ub-name))))
+
+           (append-map
+            (lambda (set)
+              (match-let1 (_ use-type use-lb-name use-ub-name
+                             def-type def-lb-name def-ub-name) set
+                (list (list use-type use-lb-name use-ub-name)
+                      (list def-type def-lb-name def-ub-name))))
+            data-sets))
+          ))
+
+        )) ; ifStatement __macc_region_is_changed
 
       (gen-par
        :clauses
@@ -997,24 +961,20 @@
        :state
        (gen-compound
 
-        (apply
-         gen-compound
+        (apply gen-compound
          (map
           (^[set]
-            `(exprStatement
-              ,
-              (gen-funcall "__macc_set_data_region"
-               '(Var "__macc_tnum")
-               `(Var ,(~ set 0))
-               `(Var "__macc_multi")
-               `(intConstant ,(number->string (~ set 1)))
-               `(Var ,(~ set 2))
-               `(Var ,(~ set 3))
-               `(intConstant ,(number->string (~ set 4)))
-               `(Var ,(~ set 5))
-               `(Var ,(~ set 6))))
-            )
-          sets))
+            (gen-funcall "__macc_set_data_region"
+             '(Var "__macc_tnum")
+             `(Var ,(~ set 0))
+             '(Var "__macc_multi")
+             `(intConstant ,(number->string (~ set 1)))
+             `(Var ,(~ set 2))
+             `(Var ,(~ set 3))
+             `(intConstant ,(number->string (~ set 4)))
+             `(Var ,(~ set 5))
+             `(Var ,(~ set 6))))
+          data-sets))
 
         (gen-barrier)
 
@@ -1043,10 +1003,11 @@
 
     (sxml:change-content!
      main-body
-     `(,(apply
-         gen-compound
-         `(exprStatement ,(gen-funcall "__macc_init"))
-         (cdr main-body))))
+     (list
+      (apply gen-compound
+       (gen-funcall "__macc_init")
+       (cdr main-body)
+       )))
     ))
 
 (define (pass2 xm)

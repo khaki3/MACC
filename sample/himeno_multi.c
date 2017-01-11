@@ -1,11 +1,11 @@
 /*
- * Original Source  : /tmp/tmp.wrEpMhfpRj/himeno_1.c
+ * Original Source  : /tmp/tmp.GU0mISc5sC/himeno_1.c
  * Language         : C
- * Compiled Time    : 2017-01-06 06:34:31
+ * Compiled Time    : 2017-01-11 14:06:45
  * Compiler Info    : XcodeML/C-FrontEnd
  * Compiler Version : 1.1.0
  */
-# 1 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 1 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 typedef void * omp_lock_t;
 typedef void * omp_nest_lock_t;
 enum anon_type_1_acc_device_t {
@@ -746,358 +746,452 @@ extern int rpmatch(char const * __response);
 extern int getsubopt(char * * restrict __optionp, char * const * restrict __tokens, char * * restrict __valuep);
 extern int getloadavg(double __loadavg[], int __nelem);
 int __builtin_abs(int);
-# 21 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 22 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int __MACC_NUMGPUS = -(1);
-# 23 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 24 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int __macc_get_num_gpus()
 {
-# 25 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 26 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 return acc_get_num_devices(acc_device_nvidia);
 }
-# 28 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 29 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_set_gpu_num(int i)
 {
-# 30 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 31 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 acc_set_device_num(i, acc_device_nvidia);
 }
-# 50 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 51 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 struct __MaccDataTable * __MACC_DATA_TABLE_SET;
-# 52 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 53 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_init()
 {
-# 54 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 55 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 __MACC_NUMGPUS = (__macc_get_num_gpus());
-# 56 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 57 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 if(__MACC_NUMGPUS == (0)) {
-# 57 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-fputs("No GPU device found.", stderr);
-# 58 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 58 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+fputs("[MACC ERROR] No GPU device found.", stderr);
+# 59 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 exit(-(1));
 }
-# 61 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 62 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if(((getenv("OMP_NESTED")) == ((void * )(0))) || ((getenv("OMP_MAX_ACTIVE_LEVELS")) == ((void * )(0)))) {
+# 63 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+fputs("[MACC ERROR] Improper setting.\n\nIn order to make nested-parallel available,\nrun the commands below before running the program.\n\n\texport OMP_NESTED=TRUE\n\texport OMP_MAX_ACTIVE_LEVELS=2\n\n", stderr);
+# 72 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+exit(-(1));
+}
+# 75 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 __MACC_DATA_TABLE_SET = (calloc(__MACC_NUMGPUS, sizeof(struct __MaccDataTable)));
 }
-# 64 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 78 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_data_table_insert(int gpu_num, void * p, int type_size, int entire_lb, int entire_ub)
 {
-# 67 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 81 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int index = ((long)(p)) % (256);
-# 69 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 83 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 struct __MaccDataTableEntry * new_entry = malloc(sizeof(struct __MaccDataTableEntry));
-# 71 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 85 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (new_entry->addr) = p;
-# 72 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 86 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (new_entry->type_size) = type_size;
-# 73 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 87 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (new_entry->entire_lb) = entire_lb;
-# 74 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 88 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (new_entry->entire_ub) = entire_ub;
-# 75 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 89 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (new_entry->dirty) = (0);
-# 76 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 90 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (new_entry->dirty_lb) = (-(1));
-# 77 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 91 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (new_entry->dirty_ub) = (-(1));
-# 78 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 92 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (new_entry->next) = (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index));
-# 80 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 94 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index)) = new_entry;
 }
-# 83 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 97 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 struct __MaccDataTableEntry * __macc_data_table_find(int gpu_num, void * p)
 {
-# 85 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 99 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int index = ((long)(p)) % (256);
-# 86 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 100 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 struct __MaccDataTableEntry * entry = *(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index);
-# 88 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 102 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 while(entry != ((void * )(0))) {
 {
-# 90 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 104 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 if((entry->addr) == p) {
-# 91 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 105 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 return entry;
 }
-# 93 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 107 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 entry = (entry->next);
 }
 }
-# 96 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 110 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 fprintf(stderr, "Error on __macc_data_table_find: Not found the item %p\n", p);
-# 97 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 111 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 exit(-(1));
-# 99 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 113 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 return (void * )(0);
 }
-# 102 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 116 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_data_table_delete(int gpu_num, void * p)
 {
-# 104 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 118 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int index = ((long)(p)) % (256);
-# 105 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 119 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 struct __MaccDataTableEntry * entry = *(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index);
-# 106 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 120 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 struct __MaccDataTableEntry * pre = (void * )(0);
-# 108 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 122 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 if(entry != ((void * )(0))) {
-# 109 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 123 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 if((entry->addr) == p) {
-# 110 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 124 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index)) = (entry->next);
-# 111 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 125 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 return ;
 }
-# 114 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 128 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 pre = entry;
-# 115 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 129 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 entry = (entry->next);
 }
-# 118 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 132 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 while((pre != ((void * )(0))) && (entry != ((void * )(0)))) {
 {
-# 120 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 134 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 if((entry->addr) == p) {
-# 121 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 135 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (pre->next) = (entry->next);
-# 122 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 136 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 free(entry);
-# 123 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 137 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 return ;
 }
-# 126 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 140 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 pre = entry;
-# 127 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 141 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 entry = (entry->next);
 }
 }
-# 130 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 144 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 fprintf(stderr, "Error on __macc_data_table_delete: Not found the item %p\n", p);
-# 131 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 145 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 exit(-(1));
 }
-# 134 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 148 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_delete(int gpu_num, void * p, int type_size, int lb, int length)
 {
-# 136 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 150 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 acc_delete_async(p + (lb * type_size), length * type_size, gpu_num);
-# 137 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 151 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 __macc_data_table_delete(gpu_num, p);
-# 138 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 152 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 acc_wait(gpu_num);
 }
-# 141 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 155 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_copyout(int gpu_num, void * p, int type_size, int lb, int length)
 {
-# 143 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 157 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, p);
-# 145 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 159 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 if(entry->dirty) {
-# 146 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 160 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 acc_update_self_async((entry->addr) + ((entry->dirty_lb) * (entry->type_size)), (((entry->dirty_ub) - (entry->dirty_lb)) + (1)) * (entry->type_size), gpu_num);
 }
-# 150 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 164 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 __macc_delete(gpu_num, p, type_size, lb, length);
 }
-# 153 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 167 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_copyin(int gpu_num, void * p, int type_size, int lb, int length)
 {
-# 155 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 169 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 acc_copyin_async(p + (lb * type_size), length * type_size, gpu_num);
-# 156 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 170 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 __macc_data_table_insert(gpu_num, p, type_size, lb, (lb + length) - (1));
-# 157 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 171 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 acc_wait(gpu_num);
 }
-# 160 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 174 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_create(int gpu_num, void * p, int type_size, int lb, int length)
 {
-# 162 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 176 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 acc_create_async(p + (lb * type_size), length * type_size, gpu_num);
-# 163 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 177 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 __macc_data_table_insert(gpu_num, p, type_size, lb, (lb + length) - (1));
-# 164 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 178 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 acc_wait(gpu_num);
 }
-# 167 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 181 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_init_access_region(int gpu_num, int * lb_set, int * ub_set)
 {
-# 169 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 183 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (lb_set[gpu_num]) = (2147483647);
-# 170 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 184 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (ub_set[gpu_num]) = (-(1));
 }
-# 173 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 187 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 void __macc_update_access_region(int gpu_num, int * lb_set, int * ub_set, int val)
 {
-# 175 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 189 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (lb_set[gpu_num]) = (((lb_set[gpu_num]) < val) ?(lb_set[gpu_num]) : val);
-# 176 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 190 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (ub_set[gpu_num]) = (((ub_set[gpu_num]) > val) ?(ub_set[gpu_num]) : val);
 }
-# 348 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-void __macc_sync_data(int gpu_num, void * p, int type_size, int lb, int ub)
+# 193 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+_Bool __macc_region_is_overlapping(int * lb_set, int * ub_set)
 {
-# 350 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-void * update_addr = p + (lb * type_size);
-# 351 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-unsigned long length_b = ((ub - lb) + (1)) * type_size;
-# 353 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-acc_update_self(update_addr, length_b);
-#pragma omp parallel num_threads ( __MACC_NUMGPUS )
 {
-# 357 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-int i = omp_get_thread_num();
-# 358 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if(i != gpu_num) {
-# 359 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-__macc_set_gpu_num(i);
-# 360 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-acc_update_device(update_addr, length_b);
-}
-}
-# 364 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-__macc_set_gpu_num(gpu_num);
-}
-# 368 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-void __macc_set_data_region(int gpu_num, void * p, int multi, int use_type, int * use_lb_set, int * use_ub_set, int def_type, int * def_lb_set, int * def_ub_set)
+# 195 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int i;
+# 195 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+for(i = (0); i < (__MACC_NUMGPUS - (1)); i++) {
 {
-# 372 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, p);
-# 379 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if(((entry->dirty) && (multi || (gpu_num != (0)))) && (use_type != (1))) {
-# 381 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if(use_type == (0)) {
-# 382 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-__macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
-# 383 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty) = (0);
-}
-else {
-# 388 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-int thread_num = multi ? __MACC_NUMGPUS : (1);
-#pragma omp parallel num_threads ( thread_num )
 {
-# 392 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-int i = omp_get_thread_num();
-# 394 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if((i != gpu_num) && (!(((entry->dirty_lb) > (use_ub_set[i])) || ((entry->dirty_ub) < (use_lb_set[i]))))) {
-# 395 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-int update_lb = ((entry->dirty_lb) > (use_lb_set[i])) ?(entry->dirty_lb) : (use_lb_set[i]);
-# 396 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-int update_ub = ((entry->dirty_ub) < (use_ub_set[i])) ?(entry->dirty_ub) : (use_ub_set[i]);
-# 397 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-void * update_addr = p + (update_lb * (entry->type_size));
-# 398 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-unsigned long length_b = ((update_ub - update_lb) + (1)) * (entry->type_size);
-# 400 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-acc_update_self(update_addr, length_b);
-# 401 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-__macc_set_gpu_num(i);
-# 402 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-acc_update_device(update_addr, length_b);
-# 403 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-__macc_set_gpu_num(gpu_num);
-}
-}
-}
-}
-# 414 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if((multi || (gpu_num == (0))) && (def_type != (1))) {
-# 415 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if(def_type == (0)) {
-# 416 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty) = (1);
-# 417 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty_lb) = (entry->entire_lb);
-# 418 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty_ub) = (entry->entire_ub);
-}
-else {
-# 423 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if((!(entry->dirty)) || (((def_lb_set[gpu_num]) <= (entry->dirty_lb)) && ((entry->dirty_ub) <= (def_ub_set[gpu_num])))) {
-# 426 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty) = (1);
-# 427 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty_lb) = (def_lb_set[gpu_num]);
-# 428 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty_ub) = (def_ub_set[gpu_num]);
-}
-else {
-# 432 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-int update_lb;
-# 432 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-int update_ub;
-# 435 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if(((entry->dirty_lb) > (def_ub_set[gpu_num])) || ((entry->dirty_ub) < (def_lb_set[gpu_num]))) {
-# 436 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-update_lb = (entry->dirty_lb);
-# 437 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-update_ub = (entry->dirty_ub);
-# 438 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty_lb) = (def_lb_set[gpu_num]);
-# 439 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty_ub) = (def_ub_set[gpu_num]);
-}
-else {
-# 445 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-if((entry->dirty_lb) < (def_lb_set[gpu_num])) {
-# 446 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-update_lb = (entry->dirty_lb);
-# 447 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-update_ub = ((def_lb_set[gpu_num]) - (1));
-}
-else {
-# 451 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-update_lb = ((def_ub_set[gpu_num]) + (1));
-# 452 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-update_ub = (entry->dirty_ub);
-}
-# 455 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty_lb) = (def_lb_set[gpu_num]);
-# 456 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-(entry->dirty_ub) = (def_ub_set[gpu_num]);
-}
-# 459 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-__macc_sync_data(gpu_num, p, entry->type_size, update_lb, update_ub);
-}
-}
-}
-}
-# 467 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
-void __macc_set_loop_region(int * loop_lb_set, int * loop_ub_set, int entire_start, int entire_end, int step, int until_equal)
+# 196 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int j;
+# 196 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+for(j = (i + (1)); j < __MACC_NUMGPUS; j++) {
 {
-# 471 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 197 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if(!(((lb_set[i]) > (ub_set[j])) || ((ub_set[i]) < (lb_set[j])))) {
+# 198 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+return 1;
+}
+}
+}
+}
+}
+}
+}
+# 200 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+return 0;
+}
+# 204 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+void __macc_calc_loop_region(int * loop_lb_set, int * loop_ub_set, int entire_start, int entire_end, int step, int until_equal)
+{
+# 208 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int pos = entire_start;
-# 472 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 209 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int width = (int)((((((float)(entire_end)) - entire_start) + (until_equal ?(1) : (0))) / __MACC_NUMGPUS) + (0.9));
-# 473 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 210 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 width -= (width % step);
 {
-# 475 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 212 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int i;
-# 475 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 212 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 476 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 213 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (loop_lb_set[i]) = pos;
-# 477 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 214 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 pos += (width - (1));
-# 478 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 215 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (loop_ub_set[i]) = pos;
-# 479 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 216 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 pos += step;
 }
 }
 }
 {
-# 482 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 219 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 int tail = __MACC_NUMGPUS - (1);
-# 483 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 220 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (loop_ub_set[tail]) = entire_end;
-# 484 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 221 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 if((! until_equal) && ((loop_ub_set[tail]) == entire_end)) {
-# 485 "/tmp/tmp.wrEpMhfpRj/himeno_1.c"
+# 222 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
 (loop_ub_set[tail]) -= step;
+}
+}
+}
+# 225 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+void __macc_rewrite_loop_region_into_single(int * loop_lb_set, int * loop_ub_set)
+{
+# 227 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(loop_ub_set[(0)]) = (loop_ub_set[(__MACC_NUMGPUS - (1))]);
+{
+# 229 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int i;
+# 229 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+for(i = (1); i < __MACC_NUMGPUS; i++) {
+{
+# 230 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(loop_lb_set[i]) = (1);
+# 231 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(loop_ub_set[i]) = (0);
+}
+}
+}
+}
+# 235 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+void __macc_rewrite_data_region_into_single(int * lb_set, int * ub_set)
+{
+# 237 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int gpu_ub = __MACC_NUMGPUS - (1);
+# 238 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(lb_set[(0)]) = (((lb_set[(0)]) < (lb_set[gpu_ub])) ?(lb_set[(0)]) : (lb_set[gpu_ub]));
+# 239 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(ub_set[(0)]) = (((ub_set[(0)]) > (ub_set[gpu_ub])) ?(ub_set[(0)]) : (ub_set[gpu_ub]));
+}
+# 242 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+void __macc_sync_data(int gpu_num, void * p, int type_size, int lb, int ub)
+{
+# 244 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+void * update_addr = p + (lb * type_size);
+# 245 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+unsigned long length_b = ((ub - lb) + (1)) * type_size;
+# 247 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+acc_update_self(update_addr, length_b);
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+# 251 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int i = omp_get_thread_num();
+# 252 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if(i != gpu_num) {
+# 253 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+__macc_set_gpu_num(i);
+# 254 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+acc_update_device(update_addr, length_b);
+}
+}
+# 258 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+__macc_set_gpu_num(gpu_num);
+}
+# 262 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+void __macc_set_data_region(int gpu_num, void * p, int multi, int use_type, int * use_lb_set, int * use_ub_set, int def_type, int * def_lb_set, int * def_ub_set)
+{
+# 266 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, p);
+# 271 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if((entry->dirty) && (multi || (gpu_num != (0)))) {
+# 272 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+_Bool update_all = 0;
+# 274 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if((use_type == (0)) || (def_type == (0))) {
+# 275 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+update_all = (1);
+}
+else {
+# 277 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if(def_type == (2)) {
+{
+# 278 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int i;
+# 278 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+for(i = (0); i < __MACC_NUMGPUS; i++) {
+{
+# 279 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if((i != gpu_num) && (!(((entry->dirty_lb) > (def_ub_set[i])) || ((entry->dirty_ub) < (def_lb_set[i]))))) {
+# 282 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+update_all = (1);
+# 283 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+break;
+}
+}
+}
+}
+}
+}
+# 289 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if(update_all) {
+# 290 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+__macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
+# 291 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty) = (0);
+}
+# 295 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if((entry->dirty) && (use_type == (2))) {
+# 296 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int thread_num = multi ? __MACC_NUMGPUS : (1);
+#pragma omp parallel num_threads ( thread_num )
+{
+# 300 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int i = omp_get_thread_num();
+# 302 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if((i != gpu_num) && (!(((entry->dirty_lb) > (use_ub_set[i])) || ((entry->dirty_ub) < (use_lb_set[i]))))) {
+# 306 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int update_lb = ((entry->dirty_lb) > (use_lb_set[i])) ?(entry->dirty_lb) : (use_lb_set[i]);
+# 307 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int update_ub = ((entry->dirty_ub) < (use_ub_set[i])) ?(entry->dirty_ub) : (use_ub_set[i]);
+# 308 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+void * update_addr = p + (update_lb * (entry->type_size));
+# 309 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+unsigned long length_b = ((update_ub - update_lb) + (1)) * (entry->type_size);
+# 311 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+acc_update_self(update_addr, length_b);
+# 312 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+__macc_set_gpu_num(i);
+# 313 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+acc_update_device(update_addr, length_b);
+# 314 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+__macc_set_gpu_num(gpu_num);
+}
+}
+}
+}
+# 325 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if((multi || (gpu_num == (0))) && (def_type != (1))) {
+# 326 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if(def_type == (0)) {
+# 327 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty) = (1);
+# 328 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty_lb) = (entry->entire_lb);
+# 329 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty_ub) = (entry->entire_ub);
+}
+else {
+# 334 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if((!(entry->dirty)) || (((def_lb_set[gpu_num]) <= (entry->dirty_lb)) && ((entry->dirty_ub) <= (def_ub_set[gpu_num])))) {
+# 338 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty) = (1);
+# 339 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty_lb) = (def_lb_set[gpu_num]);
+# 340 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty_ub) = (def_ub_set[gpu_num]);
+}
+else {
+# 344 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int update_lb;
+# 344 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+int update_ub;
+# 347 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if(!(!(((entry->dirty_lb) > (def_ub_set[gpu_num])) || ((entry->dirty_ub) < (def_lb_set[gpu_num]))))) {
+# 351 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+update_lb = (entry->dirty_lb);
+# 352 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+update_ub = (entry->dirty_ub);
+# 353 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty_lb) = (def_lb_set[gpu_num]);
+# 354 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty_ub) = (def_ub_set[gpu_num]);
+}
+else {
+# 360 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+if((entry->dirty_lb) < (def_lb_set[gpu_num])) {
+# 361 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+update_lb = (entry->dirty_lb);
+# 362 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+update_ub = ((def_lb_set[gpu_num]) - (1));
+}
+else {
+# 366 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+update_lb = ((def_ub_set[gpu_num]) + (1));
+# 367 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+update_ub = (entry->dirty_ub);
+}
+# 370 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty_lb) = (def_lb_set[gpu_num]);
+# 371 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+(entry->dirty_ub) = (def_ub_set[gpu_num]);
+}
+# 374 "/tmp/tmp.GU0mISc5sC/himeno_1.c"
+__macc_sync_data(gpu_num, p, entry->type_size, update_lb, update_ub);
+}
 }
 }
 }
@@ -1109,35 +1203,6 @@ extern int setitimer(int __which, struct itimerval const * restrict __new, struc
 extern int utimes(char const * __file, struct timeval const __tvp[2]);
 extern int lutimes(char const * __file, struct timeval const __tvp[2]);
 extern int futimes(int __fd, struct timeval const __tvp[2]);
-# 4 "../../acc_sample/common.h"
-double second()
-{
-# 7 "../../acc_sample/common.h"
-struct timeval tm;
-# 8 "../../acc_sample/common.h"
-double t;
-# 10 "../../acc_sample/common.h"
-static int base_sec = 0;
-# 10 "../../acc_sample/common.h"
-static int base_usec = 0;
-# 12 "../../acc_sample/common.h"
-gettimeofday(&(tm), (void * )(0));
-# 14 "../../acc_sample/common.h"
-if((base_sec == (0)) && (base_usec == (0))) {
-# 16 "../../acc_sample/common.h"
-base_sec = ((&(tm))->tv_sec);
-# 17 "../../acc_sample/common.h"
-base_usec = ((&(tm))->tv_usec);
-# 18 "../../acc_sample/common.h"
-t = (0.0);
-}
-else {
-# 20 "../../acc_sample/common.h"
-t = (((double)(((&(tm))->tv_sec) - base_sec)) + (((double)(((&(tm))->tv_usec) - base_usec)) / (1.0e6)));
-}
-# 24 "../../acc_sample/common.h"
-return t;
-}
 int newMat(struct Mat * Mat, int mnums, int mrows, int mcols, int mdeps);
 void clearMat(struct Mat * Mat);
 void set_param(int is[], char * size);
@@ -1146,348 +1211,376 @@ void mat_set_init(struct Mat * Mat);
 float jacobi(int nn, struct Mat * a, struct Mat * b, struct Mat * c, struct Mat * p, struct Mat * bnd, struct Mat * wrk1, struct Mat * wrk2);
 double fflop(int mx, int my, int mz);
 double mflops(int nn, double cpu, double flop);
-double second();
-# 34 "../../acc_sample/himeno.c"
+# 32 "../../macc_public/sample/himeno.c"
+double second()
+{
+# 35 "../../macc_public/sample/himeno.c"
+struct timeval tm;
+# 36 "../../macc_public/sample/himeno.c"
+double t;
+# 38 "../../macc_public/sample/himeno.c"
+static int base_sec = 0;
+# 38 "../../macc_public/sample/himeno.c"
+static int base_usec = 0;
+# 40 "../../macc_public/sample/himeno.c"
+gettimeofday(&(tm), (void * )(0));
+# 42 "../../macc_public/sample/himeno.c"
+if((base_sec == (0)) && (base_usec == (0))) {
+# 44 "../../macc_public/sample/himeno.c"
+base_sec = ((&(tm))->tv_sec);
+# 45 "../../macc_public/sample/himeno.c"
+base_usec = ((&(tm))->tv_usec);
+# 46 "../../macc_public/sample/himeno.c"
+t = (0.0);
+}
+else {
+# 48 "../../macc_public/sample/himeno.c"
+t = (((double)(((&(tm))->tv_sec) - base_sec)) + (((double)(((&(tm))->tv_usec) - base_usec)) / (1.0e6)));
+}
+# 52 "../../macc_public/sample/himeno.c"
+return t;
+}
+# 55 "../../macc_public/sample/himeno.c"
 float omega = 0.8;
-# 35 "../../acc_sample/himeno.c"
+# 56 "../../macc_public/sample/himeno.c"
 struct Mat a;
-# 35 "../../acc_sample/himeno.c"
+# 56 "../../macc_public/sample/himeno.c"
 struct Mat b;
-# 35 "../../acc_sample/himeno.c"
+# 56 "../../macc_public/sample/himeno.c"
 struct Mat c;
-# 35 "../../acc_sample/himeno.c"
+# 56 "../../macc_public/sample/himeno.c"
 struct Mat p;
-# 35 "../../acc_sample/himeno.c"
+# 56 "../../macc_public/sample/himeno.c"
 struct Mat bnd;
-# 35 "../../acc_sample/himeno.c"
+# 56 "../../macc_public/sample/himeno.c"
 struct Mat wrk1;
-# 35 "../../acc_sample/himeno.c"
+# 56 "../../macc_public/sample/himeno.c"
 struct Mat wrk2;
-# 37 "../../acc_sample/himeno.c"
+# 58 "../../macc_public/sample/himeno.c"
 int main(int argc, char * argv[])
 {
 __macc_init();
 {
-# 40 "../../acc_sample/himeno.c"
+# 61 "../../macc_public/sample/himeno.c"
 int i;
-# 40 "../../acc_sample/himeno.c"
+# 61 "../../macc_public/sample/himeno.c"
 int j;
-# 40 "../../acc_sample/himeno.c"
+# 61 "../../macc_public/sample/himeno.c"
 int k;
-# 40 "../../acc_sample/himeno.c"
+# 61 "../../macc_public/sample/himeno.c"
 int nn;
-# 41 "../../acc_sample/himeno.c"
+# 62 "../../macc_public/sample/himeno.c"
 int imax;
-# 41 "../../acc_sample/himeno.c"
+# 62 "../../macc_public/sample/himeno.c"
 int jmax;
-# 41 "../../acc_sample/himeno.c"
+# 62 "../../macc_public/sample/himeno.c"
 int kmax;
-# 41 "../../acc_sample/himeno.c"
+# 62 "../../macc_public/sample/himeno.c"
 int mimax;
-# 41 "../../acc_sample/himeno.c"
+# 62 "../../macc_public/sample/himeno.c"
 int mjmax;
-# 41 "../../acc_sample/himeno.c"
+# 62 "../../macc_public/sample/himeno.c"
 int mkmax;
-# 41 "../../acc_sample/himeno.c"
+# 62 "../../macc_public/sample/himeno.c"
 int msize[3];
-# 42 "../../acc_sample/himeno.c"
+# 63 "../../macc_public/sample/himeno.c"
 float gosa;
-# 42 "../../acc_sample/himeno.c"
+# 63 "../../macc_public/sample/himeno.c"
 float target;
-# 43 "../../acc_sample/himeno.c"
+# 64 "../../macc_public/sample/himeno.c"
 double cpu0;
-# 43 "../../acc_sample/himeno.c"
+# 64 "../../macc_public/sample/himeno.c"
 double cpu1;
-# 43 "../../acc_sample/himeno.c"
+# 64 "../../macc_public/sample/himeno.c"
 double cpu;
-# 43 "../../acc_sample/himeno.c"
+# 64 "../../macc_public/sample/himeno.c"
 double flop;
-# 44 "../../acc_sample/himeno.c"
+# 65 "../../macc_public/sample/himeno.c"
 char size[10];
-# 46 "../../acc_sample/himeno.c"
+# 67 "../../macc_public/sample/himeno.c"
 if(argc == (2)) {
-# 47 "../../acc_sample/himeno.c"
+# 68 "../../macc_public/sample/himeno.c"
 strcpy(size, argv[1]);
 }
 else {
-# 49 "../../acc_sample/himeno.c"
+# 70 "../../macc_public/sample/himeno.c"
 printf("For example: \n");
-# 50 "../../acc_sample/himeno.c"
+# 71 "../../macc_public/sample/himeno.c"
 printf(" Grid-size= XS (32x32x64)\n");
-# 51 "../../acc_sample/himeno.c"
+# 72 "../../macc_public/sample/himeno.c"
 printf("\t    S  (64x64x128)\n");
-# 52 "../../acc_sample/himeno.c"
+# 73 "../../macc_public/sample/himeno.c"
 printf("\t    M  (128x128x256)\n");
-# 53 "../../acc_sample/himeno.c"
+# 74 "../../macc_public/sample/himeno.c"
 printf("\t    L  (256x256x512)\n");
-# 54 "../../acc_sample/himeno.c"
+# 75 "../../macc_public/sample/himeno.c"
 printf("\t    XL (512x512x1024)\n\n");
-# 55 "../../acc_sample/himeno.c"
+# 76 "../../macc_public/sample/himeno.c"
 printf("Grid-size = ");
-# 56 "../../acc_sample/himeno.c"
+# 77 "../../macc_public/sample/himeno.c"
 __isoc99_scanf("%s", size);
-# 57 "../../acc_sample/himeno.c"
+# 78 "../../macc_public/sample/himeno.c"
 printf("\n");
 }
-# 60 "../../acc_sample/himeno.c"
+# 81 "../../macc_public/sample/himeno.c"
 set_param(msize, size);
-# 62 "../../acc_sample/himeno.c"
+# 83 "../../macc_public/sample/himeno.c"
 mimax = (msize[0]);
-# 63 "../../acc_sample/himeno.c"
+# 84 "../../macc_public/sample/himeno.c"
 mjmax = (msize[1]);
-# 64 "../../acc_sample/himeno.c"
+# 85 "../../macc_public/sample/himeno.c"
 mkmax = (msize[2]);
-# 65 "../../acc_sample/himeno.c"
+# 86 "../../macc_public/sample/himeno.c"
 imax = (mimax - (1));
-# 66 "../../acc_sample/himeno.c"
+# 87 "../../macc_public/sample/himeno.c"
 jmax = (mjmax - (1));
-# 67 "../../acc_sample/himeno.c"
+# 88 "../../macc_public/sample/himeno.c"
 kmax = (mkmax - (1));
-# 69 "../../acc_sample/himeno.c"
+# 90 "../../macc_public/sample/himeno.c"
 target = (60.0);
-# 71 "../../acc_sample/himeno.c"
+# 92 "../../macc_public/sample/himeno.c"
 printf("mimax = %d mjmax = %d mkmax = %d\n", mimax, mjmax, mkmax);
-# 72 "../../acc_sample/himeno.c"
+# 93 "../../macc_public/sample/himeno.c"
 printf("imax = %d jmax = %d kmax =%d\n", imax, jmax, kmax);
-# 77 "../../acc_sample/himeno.c"
+# 98 "../../macc_public/sample/himeno.c"
 newMat(&(p), 1, mimax, mjmax, mkmax);
-# 78 "../../acc_sample/himeno.c"
+# 99 "../../macc_public/sample/himeno.c"
 newMat(&(bnd), 1, mimax, mjmax, mkmax);
-# 79 "../../acc_sample/himeno.c"
+# 100 "../../macc_public/sample/himeno.c"
 newMat(&(wrk1), 1, mimax, mjmax, mkmax);
-# 80 "../../acc_sample/himeno.c"
+# 101 "../../macc_public/sample/himeno.c"
 newMat(&(wrk2), 1, mimax, mjmax, mkmax);
-# 81 "../../acc_sample/himeno.c"
+# 102 "../../macc_public/sample/himeno.c"
 newMat(&(a), 4, mimax, mjmax, mkmax);
-# 82 "../../acc_sample/himeno.c"
+# 103 "../../macc_public/sample/himeno.c"
 newMat(&(b), 3, mimax, mjmax, mkmax);
-# 83 "../../acc_sample/himeno.c"
+# 104 "../../macc_public/sample/himeno.c"
 newMat(&(c), 3, mimax, mjmax, mkmax);
-# 85 "../../acc_sample/himeno.c"
+# 106 "../../macc_public/sample/himeno.c"
 mat_set_init(&(p));
-# 86 "../../acc_sample/himeno.c"
+# 107 "../../macc_public/sample/himeno.c"
 mat_set(&(bnd), 0, 1.0);
-# 87 "../../acc_sample/himeno.c"
+# 108 "../../macc_public/sample/himeno.c"
 mat_set(&(wrk1), 0, 0.0);
-# 88 "../../acc_sample/himeno.c"
+# 109 "../../macc_public/sample/himeno.c"
 mat_set(&(wrk2), 0, 0.0);
-# 89 "../../acc_sample/himeno.c"
+# 110 "../../macc_public/sample/himeno.c"
 mat_set(&(a), 0, 1.0);
-# 90 "../../acc_sample/himeno.c"
+# 111 "../../macc_public/sample/himeno.c"
 mat_set(&(a), 1, 1.0);
-# 91 "../../acc_sample/himeno.c"
+# 112 "../../macc_public/sample/himeno.c"
 mat_set(&(a), 2, 1.0);
-# 92 "../../acc_sample/himeno.c"
+# 113 "../../macc_public/sample/himeno.c"
 mat_set(&(a), 3, (1.0) / (6.0));
-# 93 "../../acc_sample/himeno.c"
+# 114 "../../macc_public/sample/himeno.c"
 mat_set(&(b), 0, 0.0);
-# 94 "../../acc_sample/himeno.c"
+# 115 "../../macc_public/sample/himeno.c"
 mat_set(&(b), 1, 0.0);
-# 95 "../../acc_sample/himeno.c"
+# 116 "../../macc_public/sample/himeno.c"
 mat_set(&(b), 2, 0.0);
-# 96 "../../acc_sample/himeno.c"
+# 117 "../../macc_public/sample/himeno.c"
 mat_set(&(c), 0, 1.0);
-# 97 "../../acc_sample/himeno.c"
+# 118 "../../macc_public/sample/himeno.c"
 mat_set(&(c), 1, 1.0);
-# 98 "../../acc_sample/himeno.c"
+# 119 "../../macc_public/sample/himeno.c"
 mat_set(&(c), 2, 1.0);
-# 103 "../../acc_sample/himeno.c"
+# 124 "../../macc_public/sample/himeno.c"
 jacobi(1, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2));
-# 105 "../../acc_sample/himeno.c"
+# 126 "../../macc_public/sample/himeno.c"
 nn = (3);
-# 106 "../../acc_sample/himeno.c"
+# 127 "../../macc_public/sample/himeno.c"
 printf(" Start rehearsal measurement process.\n");
-# 107 "../../acc_sample/himeno.c"
+# 128 "../../macc_public/sample/himeno.c"
 printf(" Measure the performance in %d times.\n\n", nn);
-# 109 "../../acc_sample/himeno.c"
+# 130 "../../macc_public/sample/himeno.c"
 cpu0 = (second());
-# 110 "../../acc_sample/himeno.c"
+# 131 "../../macc_public/sample/himeno.c"
 gosa = (jacobi(nn, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2)));
-# 111 "../../acc_sample/himeno.c"
+# 132 "../../macc_public/sample/himeno.c"
 cpu1 = (second());
-# 112 "../../acc_sample/himeno.c"
+# 133 "../../macc_public/sample/himeno.c"
 cpu = (cpu1 - cpu0);
-# 113 "../../acc_sample/himeno.c"
+# 134 "../../macc_public/sample/himeno.c"
 flop = (fflop(imax, jmax, kmax));
-# 115 "../../acc_sample/himeno.c"
+# 136 "../../macc_public/sample/himeno.c"
 printf(" MFLOPS: %f time(s): %f %e\n\n", mflops(nn, cpu, flop), cpu, gosa);
-# 118 "../../acc_sample/himeno.c"
+# 139 "../../macc_public/sample/himeno.c"
 nn = ((int)(target / (cpu / (3.0))));
-# 120 "../../acc_sample/himeno.c"
+# 141 "../../macc_public/sample/himeno.c"
 printf(" Now, start the actual measurement process.\n");
-# 121 "../../acc_sample/himeno.c"
+# 142 "../../macc_public/sample/himeno.c"
 printf(" The loop will be excuted in %d times\n", nn);
-# 122 "../../acc_sample/himeno.c"
+# 143 "../../macc_public/sample/himeno.c"
 printf(" This will take about one minute.\n");
-# 123 "../../acc_sample/himeno.c"
+# 144 "../../macc_public/sample/himeno.c"
 printf(" Wait for a while\n\n");
-# 125 "../../acc_sample/himeno.c"
+# 146 "../../macc_public/sample/himeno.c"
 cpu0 = (second());
-# 126 "../../acc_sample/himeno.c"
+# 147 "../../macc_public/sample/himeno.c"
 gosa = (jacobi(nn, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2)));
-# 127 "../../acc_sample/himeno.c"
+# 148 "../../macc_public/sample/himeno.c"
 cpu1 = (second());
-# 128 "../../acc_sample/himeno.c"
+# 149 "../../macc_public/sample/himeno.c"
 cpu = (cpu1 - cpu0);
-# 130 "../../acc_sample/himeno.c"
+# 151 "../../macc_public/sample/himeno.c"
 printf(" Loop executed for %d times\n", nn);
-# 131 "../../acc_sample/himeno.c"
+# 152 "../../macc_public/sample/himeno.c"
 printf(" Gosa : %e \n", gosa);
-# 132 "../../acc_sample/himeno.c"
+# 153 "../../macc_public/sample/himeno.c"
 printf(" MFLOPS measured : %f\tcpu : %f\n", mflops(nn, cpu, flop), cpu);
-# 133 "../../acc_sample/himeno.c"
+# 154 "../../macc_public/sample/himeno.c"
 printf(" Score based on Pentium III 600MHz using Fortran 77: %f\n", (mflops(nn, cpu, flop)) / (82), 84);
-# 139 "../../acc_sample/himeno.c"
+# 160 "../../macc_public/sample/himeno.c"
 clearMat(&(p));
-# 140 "../../acc_sample/himeno.c"
+# 161 "../../macc_public/sample/himeno.c"
 clearMat(&(bnd));
-# 141 "../../acc_sample/himeno.c"
+# 162 "../../macc_public/sample/himeno.c"
 clearMat(&(wrk1));
-# 142 "../../acc_sample/himeno.c"
+# 163 "../../macc_public/sample/himeno.c"
 clearMat(&(wrk2));
-# 143 "../../acc_sample/himeno.c"
+# 164 "../../macc_public/sample/himeno.c"
 clearMat(&(a));
-# 144 "../../acc_sample/himeno.c"
+# 165 "../../macc_public/sample/himeno.c"
 clearMat(&(b));
-# 145 "../../acc_sample/himeno.c"
+# 166 "../../macc_public/sample/himeno.c"
 clearMat(&(c));
-# 147 "../../acc_sample/himeno.c"
+# 168 "../../macc_public/sample/himeno.c"
 return 0;
 }
 }
-# 150 "../../acc_sample/himeno.c"
+# 171 "../../macc_public/sample/himeno.c"
 double fflop(int mx, int my, int mz)
 {
-# 153 "../../acc_sample/himeno.c"
+# 174 "../../macc_public/sample/himeno.c"
 return ((((double)(mz - (2))) * ((double)(my - (2)))) * ((double)(mx - (2)))) * (34.0);
 }
-# 156 "../../acc_sample/himeno.c"
+# 177 "../../macc_public/sample/himeno.c"
 double mflops(int nn, double cpu, double flop)
 {
-# 159 "../../acc_sample/himeno.c"
+# 180 "../../macc_public/sample/himeno.c"
 return ((flop / cpu) * (1.e-6)) * ((double)(nn));
 }
-# 162 "../../acc_sample/himeno.c"
+# 183 "../../macc_public/sample/himeno.c"
 void set_param(int is[], char * size)
 {
-# 165 "../../acc_sample/himeno.c"
+# 186 "../../macc_public/sample/himeno.c"
 if((!(strcmp(size, "XS"))) || (!(strcmp(size, "xs")))) {
-# 166 "../../acc_sample/himeno.c"
+# 187 "../../macc_public/sample/himeno.c"
 (is[0]) = (32);
-# 167 "../../acc_sample/himeno.c"
+# 188 "../../macc_public/sample/himeno.c"
 (is[1]) = (32);
-# 168 "../../acc_sample/himeno.c"
+# 189 "../../macc_public/sample/himeno.c"
 (is[2]) = (64);
-# 169 "../../acc_sample/himeno.c"
+# 190 "../../macc_public/sample/himeno.c"
 return ;
 }
-# 171 "../../acc_sample/himeno.c"
+# 192 "../../macc_public/sample/himeno.c"
 if((!(strcmp(size, "S"))) || (!(strcmp(size, "s")))) {
-# 172 "../../acc_sample/himeno.c"
+# 193 "../../macc_public/sample/himeno.c"
 (is[0]) = (64);
-# 173 "../../acc_sample/himeno.c"
+# 194 "../../macc_public/sample/himeno.c"
 (is[1]) = (64);
-# 174 "../../acc_sample/himeno.c"
+# 195 "../../macc_public/sample/himeno.c"
 (is[2]) = (128);
-# 175 "../../acc_sample/himeno.c"
+# 196 "../../macc_public/sample/himeno.c"
 return ;
 }
-# 177 "../../acc_sample/himeno.c"
+# 198 "../../macc_public/sample/himeno.c"
 if((!(strcmp(size, "M"))) || (!(strcmp(size, "m")))) {
-# 178 "../../acc_sample/himeno.c"
+# 199 "../../macc_public/sample/himeno.c"
 (is[0]) = (128);
-# 179 "../../acc_sample/himeno.c"
+# 200 "../../macc_public/sample/himeno.c"
 (is[1]) = (128);
-# 180 "../../acc_sample/himeno.c"
+# 201 "../../macc_public/sample/himeno.c"
 (is[2]) = (256);
-# 181 "../../acc_sample/himeno.c"
+# 202 "../../macc_public/sample/himeno.c"
 return ;
 }
-# 183 "../../acc_sample/himeno.c"
+# 204 "../../macc_public/sample/himeno.c"
 if((!(strcmp(size, "L"))) || (!(strcmp(size, "l")))) {
-# 184 "../../acc_sample/himeno.c"
+# 205 "../../macc_public/sample/himeno.c"
 (is[0]) = (256);
-# 185 "../../acc_sample/himeno.c"
+# 206 "../../macc_public/sample/himeno.c"
 (is[1]) = (256);
-# 186 "../../acc_sample/himeno.c"
+# 207 "../../macc_public/sample/himeno.c"
 (is[2]) = (512);
-# 187 "../../acc_sample/himeno.c"
+# 208 "../../macc_public/sample/himeno.c"
 return ;
 }
-# 189 "../../acc_sample/himeno.c"
+# 210 "../../macc_public/sample/himeno.c"
 if((!(strcmp(size, "XL"))) || (!(strcmp(size, "xl")))) {
-# 190 "../../acc_sample/himeno.c"
+# 211 "../../macc_public/sample/himeno.c"
 (is[0]) = (512);
-# 191 "../../acc_sample/himeno.c"
+# 212 "../../macc_public/sample/himeno.c"
 (is[1]) = (512);
-# 192 "../../acc_sample/himeno.c"
+# 213 "../../macc_public/sample/himeno.c"
 (is[2]) = (1024);
-# 193 "../../acc_sample/himeno.c"
+# 214 "../../macc_public/sample/himeno.c"
 return ;
 }
 else {
-# 195 "../../acc_sample/himeno.c"
+# 216 "../../macc_public/sample/himeno.c"
 printf("Invalid input character !!\n");
-# 196 "../../acc_sample/himeno.c"
+# 217 "../../macc_public/sample/himeno.c"
 exit(6);
 }
 }
-# 200 "../../acc_sample/himeno.c"
+# 221 "../../macc_public/sample/himeno.c"
 int newMat(struct Mat * Mat, int mnums, int mrows, int mcols, int mdeps)
 {
-# 203 "../../acc_sample/himeno.c"
+# 224 "../../macc_public/sample/himeno.c"
 (Mat->mnums) = mnums;
-# 204 "../../acc_sample/himeno.c"
+# 225 "../../macc_public/sample/himeno.c"
 (Mat->mrows) = mrows;
-# 205 "../../acc_sample/himeno.c"
+# 226 "../../macc_public/sample/himeno.c"
 (Mat->mcols) = mcols;
-# 206 "../../acc_sample/himeno.c"
+# 227 "../../macc_public/sample/himeno.c"
 (Mat->mdeps) = mdeps;
-# 207 "../../acc_sample/himeno.c"
+# 228 "../../macc_public/sample/himeno.c"
 (Mat->m) = ((void * )(0));
-# 208 "../../acc_sample/himeno.c"
+# 229 "../../macc_public/sample/himeno.c"
 (Mat->m) = ((float * )(malloc((((mnums * mrows) * mcols) * mdeps) * (sizeof(float)))));
-# 211 "../../acc_sample/himeno.c"
+# 232 "../../macc_public/sample/himeno.c"
 return ((Mat->m) != ((void * )(0))) ?(1) : (0);
 }
-# 214 "../../acc_sample/himeno.c"
+# 235 "../../macc_public/sample/himeno.c"
 void clearMat(struct Mat * Mat)
 {
-# 217 "../../acc_sample/himeno.c"
+# 238 "../../macc_public/sample/himeno.c"
 if(Mat->m) {
-# 218 "../../acc_sample/himeno.c"
+# 239 "../../macc_public/sample/himeno.c"
 free(Mat->m);
 }
-# 219 "../../acc_sample/himeno.c"
+# 240 "../../macc_public/sample/himeno.c"
 (Mat->m) = ((void * )(0));
-# 220 "../../acc_sample/himeno.c"
+# 241 "../../macc_public/sample/himeno.c"
 (Mat->mnums) = (0);
-# 221 "../../acc_sample/himeno.c"
+# 242 "../../macc_public/sample/himeno.c"
 (Mat->mcols) = (0);
-# 222 "../../acc_sample/himeno.c"
+# 243 "../../macc_public/sample/himeno.c"
 (Mat->mrows) = (0);
-# 223 "../../acc_sample/himeno.c"
+# 244 "../../macc_public/sample/himeno.c"
 (Mat->mdeps) = (0);
 }
-# 226 "../../acc_sample/himeno.c"
+# 247 "../../macc_public/sample/himeno.c"
 void mat_set(struct Mat * Mat, int l, float val)
 {
-# 229 "../../acc_sample/himeno.c"
+# 250 "../../macc_public/sample/himeno.c"
 int i;
-# 229 "../../acc_sample/himeno.c"
+# 250 "../../macc_public/sample/himeno.c"
 int j;
-# 229 "../../acc_sample/himeno.c"
+# 250 "../../macc_public/sample/himeno.c"
 int k;
-# 231 "../../acc_sample/himeno.c"
+# 252 "../../macc_public/sample/himeno.c"
 for(i = (0); i < (Mat->mrows); i++) {
 {
-# 232 "../../acc_sample/himeno.c"
+# 253 "../../macc_public/sample/himeno.c"
 for(j = (0); j < (Mat->mcols); j++) {
 {
-# 233 "../../acc_sample/himeno.c"
+# 254 "../../macc_public/sample/himeno.c"
 for(k = (0); k < (Mat->mdeps); k++) {
 {
-# 234 "../../acc_sample/himeno.c"
+# 255 "../../macc_public/sample/himeno.c"
 (*((Mat->m) + ((((((l * (Mat->mrows)) * (Mat->mcols)) * (Mat->mdeps)) + ((i * (Mat->mcols)) * (Mat->mdeps))) + (j * (Mat->mdeps))) + k))) = val;
 }
 }
@@ -1496,29 +1589,29 @@ for(k = (0); k < (Mat->mdeps); k++) {
 }
 }
 }
-# 237 "../../acc_sample/himeno.c"
+# 258 "../../macc_public/sample/himeno.c"
 void mat_set_init(struct Mat * Mat)
 {
-# 240 "../../acc_sample/himeno.c"
+# 261 "../../macc_public/sample/himeno.c"
 int i;
-# 240 "../../acc_sample/himeno.c"
+# 261 "../../macc_public/sample/himeno.c"
 int j;
-# 240 "../../acc_sample/himeno.c"
+# 261 "../../macc_public/sample/himeno.c"
 int k;
-# 240 "../../acc_sample/himeno.c"
+# 261 "../../macc_public/sample/himeno.c"
 int l;
-# 241 "../../acc_sample/himeno.c"
+# 262 "../../macc_public/sample/himeno.c"
 float tt;
-# 243 "../../acc_sample/himeno.c"
+# 264 "../../macc_public/sample/himeno.c"
 for(i = (0); i < (Mat->mrows); i++) {
 {
-# 244 "../../acc_sample/himeno.c"
+# 265 "../../macc_public/sample/himeno.c"
 for(j = (0); j < (Mat->mcols); j++) {
 {
-# 245 "../../acc_sample/himeno.c"
+# 266 "../../macc_public/sample/himeno.c"
 for(k = (0); k < (Mat->mdeps); k++) {
 {
-# 246 "../../acc_sample/himeno.c"
+# 267 "../../macc_public/sample/himeno.c"
 (*((Mat->m) + (((((((0) * (Mat->mrows)) * (Mat->mcols)) * (Mat->mdeps)) + ((i * (Mat->mcols)) * (Mat->mdeps))) + (j * (Mat->mdeps))) + k))) = (((float)(i * i)) / ((float)(((Mat->mrows) - (1)) * ((Mat->mrows) - (1)))));
 }
 }
@@ -1527,72 +1620,72 @@ for(k = (0); k < (Mat->mdeps); k++) {
 }
 }
 }
-# 261 "../../acc_sample/himeno.c"
+# 282 "../../macc_public/sample/himeno.c"
 float jacobi(int nn, struct Mat * a, struct Mat * b, struct Mat * c, struct Mat * p, struct Mat * bnd, struct Mat * wrk1, struct Mat * wrk2)
 {
-# 265 "../../acc_sample/himeno.c"
+# 286 "../../macc_public/sample/himeno.c"
 unsigned long mrows = p->mrows;
-# 266 "../../acc_sample/himeno.c"
+# 287 "../../macc_public/sample/himeno.c"
 unsigned long mcols = p->mcols;
-# 267 "../../acc_sample/himeno.c"
+# 288 "../../macc_public/sample/himeno.c"
 unsigned long mdeps = p->mdeps;
-# 269 "../../acc_sample/himeno.c"
+# 290 "../../macc_public/sample/himeno.c"
 int i;
-# 269 "../../acc_sample/himeno.c"
+# 290 "../../macc_public/sample/himeno.c"
 int j;
-# 269 "../../acc_sample/himeno.c"
+# 290 "../../macc_public/sample/himeno.c"
 int k;
-# 269 "../../acc_sample/himeno.c"
+# 290 "../../macc_public/sample/himeno.c"
 int n;
-# 269 "../../acc_sample/himeno.c"
+# 290 "../../macc_public/sample/himeno.c"
 int imax;
-# 269 "../../acc_sample/himeno.c"
+# 290 "../../macc_public/sample/himeno.c"
 int jmax;
-# 269 "../../acc_sample/himeno.c"
+# 290 "../../macc_public/sample/himeno.c"
 int kmax;
-# 270 "../../acc_sample/himeno.c"
+# 291 "../../macc_public/sample/himeno.c"
 float gosa;
-# 270 "../../acc_sample/himeno.c"
+# 291 "../../macc_public/sample/himeno.c"
 float s0;
-# 270 "../../acc_sample/himeno.c"
+# 291 "../../macc_public/sample/himeno.c"
 float ss;
-# 272 "../../acc_sample/himeno.c"
+# 293 "../../macc_public/sample/himeno.c"
 float * a_m;
-# 272 "../../acc_sample/himeno.c"
+# 293 "../../macc_public/sample/himeno.c"
 float * b_m;
-# 272 "../../acc_sample/himeno.c"
+# 293 "../../macc_public/sample/himeno.c"
 float * c_m;
-# 272 "../../acc_sample/himeno.c"
+# 293 "../../macc_public/sample/himeno.c"
 float * p_m;
-# 272 "../../acc_sample/himeno.c"
+# 293 "../../macc_public/sample/himeno.c"
 float * bnd_m;
-# 272 "../../acc_sample/himeno.c"
+# 293 "../../macc_public/sample/himeno.c"
 float * wrk1_m;
-# 272 "../../acc_sample/himeno.c"
+# 293 "../../macc_public/sample/himeno.c"
 float * wrk2_m;
-# 273 "../../acc_sample/himeno.c"
+# 294 "../../macc_public/sample/himeno.c"
 unsigned long bs;
-# 275 "../../acc_sample/himeno.c"
+# 296 "../../macc_public/sample/himeno.c"
 imax = (mrows - (1));
-# 276 "../../acc_sample/himeno.c"
+# 297 "../../macc_public/sample/himeno.c"
 jmax = (mcols - (1));
-# 277 "../../acc_sample/himeno.c"
+# 298 "../../macc_public/sample/himeno.c"
 kmax = (mdeps - (1));
-# 279 "../../acc_sample/himeno.c"
+# 300 "../../macc_public/sample/himeno.c"
 a_m = (a->m);
-# 280 "../../acc_sample/himeno.c"
+# 301 "../../macc_public/sample/himeno.c"
 b_m = (b->m);
-# 281 "../../acc_sample/himeno.c"
+# 302 "../../macc_public/sample/himeno.c"
 c_m = (c->m);
-# 282 "../../acc_sample/himeno.c"
+# 303 "../../macc_public/sample/himeno.c"
 p_m = (p->m);
-# 283 "../../acc_sample/himeno.c"
+# 304 "../../macc_public/sample/himeno.c"
 bnd_m = (bnd->m);
-# 284 "../../acc_sample/himeno.c"
+# 305 "../../macc_public/sample/himeno.c"
 wrk1_m = (wrk1->m);
-# 285 "../../acc_sample/himeno.c"
+# 306 "../../macc_public/sample/himeno.c"
 wrk2_m = (wrk2->m);
-# 287 "../../acc_sample/himeno.c"
+# 308 "../../macc_public/sample/himeno.c"
 bs = ((mrows * mcols) * mdeps);
 {
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
@@ -1617,10 +1710,10 @@ __macc_copyin(__macc_tnum, wrk1_m, sizeof(float), 0, bs);
 __macc_copyin(__macc_tnum, wrk2_m, sizeof(float), 0, bs);
 }
 }
-# 293 "../../acc_sample/himeno.c"
+# 314 "../../macc_public/sample/himeno.c"
 for(n = (0); n < nn; n++) {
 {
-# 294 "../../acc_sample/himeno.c"
+# 315 "../../macc_public/sample/himeno.c"
 gosa = (0.0);
 {
 static int __macc_region_is_changed = 1;
@@ -1628,8 +1721,9 @@ static int __macc_multi = 1;
 int __macc_gpu_num;
 int __macc_top_loop_lb;
 int __macc_top_loop_ub;
-__macc_region_is_changed = (!((imax == __macc__imax_last_6) && ((mrows == __macc__mrows_last_5) && ((mcols == __macc__mcols_last_4) && ((mdeps == __macc__mdeps_last_3) && (! __macc_region_is_changed))))));
+__macc_region_is_changed = (!((! __macc_region_is_changed) && ((mdeps == __macc__mdeps_last_3) && ((mcols == __macc__mcols_last_4) && ((mrows == __macc__mrows_last_5) && (imax == __macc__imax_last_6))))));
 if(__macc_region_is_changed) {
+__macc_multi = (1);
 __macc_region_is_changed = (0);
 {
 __macc__mdeps_last_3 = mdeps;
@@ -1637,8 +1731,8 @@ __macc__mcols_last_4 = mcols;
 __macc__mrows_last_5 = mrows;
 __macc__imax_last_6 = imax;
 }
-__macc_set_loop_region(__macc__i_loop_lb_set_1, __macc__i_loop_ub_set_2, 1, imax, 1, 0);
-for(__macc_gpu_num = (0); __macc_gpu_num < __MACC_NUMGPUS; __macc_gpu_num++) {
+__macc_calc_loop_region(__macc__i_loop_lb_set_1, __macc__i_loop_ub_set_2, 1, imax, 1, 0);
+for(__macc_gpu_num = (0); __macc_gpu_num <= __MACC_NUMGPUS; __macc_gpu_num++) {
 __macc_top_loop_lb = (__macc__i_loop_lb_set_1[__macc_gpu_num]);
 __macc_top_loop_ub = (__macc__i_loop_ub_set_2[__macc_gpu_num]);
 {
@@ -1964,6 +2058,17 @@ __macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_33, __macc
 }
 }
 }
+if(__macc_region_is_overlapping(__macc__wrk2_m_def_lb_set_33, __macc__wrk2_m_def_ub_set_34)) {
+__macc_multi = (0);
+__macc_rewrite_loop_region_into_single(__macc__i_loop_lb_set_1, __macc__i_loop_ub_set_2);
+__macc_rewrite_data_region_into_single(__macc__wrk2_m_def_lb_set_33, __macc__wrk2_m_def_ub_set_34);
+__macc_rewrite_data_region_into_single(__macc__bnd_m_use_lb_set_27, __macc__bnd_m_use_ub_set_28);
+__macc_rewrite_data_region_into_single(__macc__wrk1_m_use_lb_set_23, __macc__wrk1_m_use_ub_set_24);
+__macc_rewrite_data_region_into_single(__macc__c_m_use_lb_set_19, __macc__c_m_use_ub_set_20);
+__macc_rewrite_data_region_into_single(__macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16);
+__macc_rewrite_data_region_into_single(__macc__p_m_use_lb_set_11, __macc__p_m_use_ub_set_12);
+__macc_rewrite_data_region_into_single(__macc__a_m_use_lb_set_7, __macc__a_m_use_ub_set_8);
+}
 }
 #pragma omp parallel num_threads ( __MACC_NUMGPUS ) reduction ( + : gosa ) private ( i , j , k )
 {
@@ -1982,22 +2087,22 @@ __macc_set_data_region(__macc_tnum, a_m, __macc_multi, 2, __macc__a_m_use_lb_set
 #pragma omp barrier
 #pragma acc parallel present ( a_m , b_m , c_m , bnd_m , wrk1_m , wrk2_m , p_m ) reduction ( + : gosa )
 #pragma acc loop
-# 297 "../../acc_sample/himeno.c"
+# 318 "../../macc_public/sample/himeno.c"
 for(i = (__macc__i_loop_lb_set_1[__macc_tnum]); i <= (__macc__i_loop_ub_set_2[__macc_tnum]); i++) {
 #pragma acc loop
-# 299 "../../acc_sample/himeno.c"
+# 320 "../../macc_public/sample/himeno.c"
 for(j = (1); j < jmax; j++) {
 #pragma acc loop
-# 301 "../../acc_sample/himeno.c"
+# 322 "../../macc_public/sample/himeno.c"
 for(k = (1); k < kmax; k++) {
 {
-# 302 "../../acc_sample/himeno.c"
+# 323 "../../macc_public/sample/himeno.c"
 s0 = (((((((((((a_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + k)])) + ((a_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)]))) + ((a_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))]))) + ((b_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)])))) + ((b_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + (k + (1)))]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + (k + (1)))])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + (k - (1)))])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + (k - (1)))])))) + ((b_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))])))) + ((c_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + k)]))) + ((c_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)]))) + ((c_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))]))) + (wrk1_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]));
-# 319 "../../acc_sample/himeno.c"
+# 340 "../../macc_public/sample/himeno.c"
 ss = (((s0 * (a_m[(((((((3) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)])) * (bnd_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]));
-# 321 "../../acc_sample/himeno.c"
+# 342 "../../macc_public/sample/himeno.c"
 gosa += (ss * ss);
-# 322 "../../acc_sample/himeno.c"
+# 343 "../../macc_public/sample/himeno.c"
 (wrk2_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) = ((p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) + (omega * ss));
 }
 }
@@ -2012,8 +2117,9 @@ static int __macc_multi = 1;
 int __macc_gpu_num;
 int __macc_top_loop_lb;
 int __macc_top_loop_ub;
-__macc_region_is_changed = (!((imax == __macc__imax_last_40) && ((mrows == __macc__mrows_last_39) && ((mcols == __macc__mcols_last_38) && ((mdeps == __macc__mdeps_last_37) && (! __macc_region_is_changed))))));
+__macc_region_is_changed = (!((! __macc_region_is_changed) && ((mdeps == __macc__mdeps_last_37) && ((mcols == __macc__mcols_last_38) && ((mrows == __macc__mrows_last_39) && (imax == __macc__imax_last_40))))));
 if(__macc_region_is_changed) {
+__macc_multi = (1);
 __macc_region_is_changed = (0);
 {
 __macc__mdeps_last_37 = mdeps;
@@ -2021,8 +2127,8 @@ __macc__mcols_last_38 = mcols;
 __macc__mrows_last_39 = mrows;
 __macc__imax_last_40 = imax;
 }
-__macc_set_loop_region(__macc__i_loop_lb_set_35, __macc__i_loop_ub_set_36, 1, imax, 1, 0);
-for(__macc_gpu_num = (0); __macc_gpu_num < __MACC_NUMGPUS; __macc_gpu_num++) {
+__macc_calc_loop_region(__macc__i_loop_lb_set_35, __macc__i_loop_ub_set_36, 1, imax, 1, 0);
+for(__macc_gpu_num = (0); __macc_gpu_num <= __MACC_NUMGPUS; __macc_gpu_num++) {
 __macc_top_loop_lb = (__macc__i_loop_lb_set_35[__macc_gpu_num]);
 __macc_top_loop_ub = (__macc__i_loop_ub_set_36[__macc_gpu_num]);
 {
@@ -2060,6 +2166,12 @@ __macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc
 }
 }
 }
+if(__macc_region_is_overlapping(__macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44)) {
+__macc_multi = (0);
+__macc_rewrite_loop_region_into_single(__macc__i_loop_lb_set_35, __macc__i_loop_ub_set_36);
+__macc_rewrite_data_region_into_single(__macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46);
+__macc_rewrite_data_region_into_single(__macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44);
+}
 }
 #pragma omp parallel num_threads ( __MACC_NUMGPUS ) private ( i , j , k )
 {
@@ -2073,16 +2185,16 @@ __macc_set_data_region(__macc_tnum, p_m, __macc_multi, 1, __macc__p_m_use_lb_set
 #pragma omp barrier
 #pragma acc parallel present ( a_m , b_m , c_m , bnd_m , wrk1_m , wrk2_m , p_m )
 #pragma acc loop independent
-# 326 "../../acc_sample/himeno.c"
+# 347 "../../macc_public/sample/himeno.c"
 for(i = (__macc__i_loop_lb_set_35[__macc_tnum]); i <= (__macc__i_loop_ub_set_36[__macc_tnum]); i++) {
 #pragma acc loop independent
-# 328 "../../acc_sample/himeno.c"
+# 349 "../../macc_public/sample/himeno.c"
 for(j = (1); j < jmax; j++) {
 #pragma acc loop independent
-# 330 "../../acc_sample/himeno.c"
+# 351 "../../macc_public/sample/himeno.c"
 for(k = (1); k < kmax; k++) {
 {
-# 331 "../../acc_sample/himeno.c"
+# 352 "../../macc_public/sample/himeno.c"
 (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) = (wrk2_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]);
 }
 }
@@ -2116,6 +2228,6 @@ __macc_copyout(__macc_tnum, p_m, sizeof(float), 0, bs);
 }
 }
 }
-# 335 "../../acc_sample/himeno.c"
+# 356 "../../macc_public/sample/himeno.c"
 return gosa;
 }
