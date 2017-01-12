@@ -17,13 +17,11 @@
 ;;;
 ;;; Transform ACCPragma into the form supported by macc.
 ;;;
-;;; - PARALLEL_LOOP => PARALLEL & LOOP
-;;; - KERNELS_LOOP  => KERNELS  & LOOP
-;;;
-;;; - KERNELS COPYIN  => DATA & KERNELS
-;;; - PARALLEL COPYIN => DATA & PARALLEL
-;;;
+;;; - KERNELS_LOOP  => PARALLEL & LOOP
 ;;; - KERNELS       => PARALLEL
+;;;
+;;; - PARALLEL_LOOP   => PARALLEL & LOOP
+;;; - PARALLEL COPYIN => DATA & PARALLEL
 ;;;
 
 (define-syntax define-clauses-separater
@@ -35,8 +33,7 @@
            (if (null? clauses)
                (values (reverse cl1) (reverse cl2))
 
-               (let* ([head (car clauses)]
-                      [rest (cdr clauses)])
+               (match-let1 (head . rest) clauses
                  (match1 ((ccc-sxpath "string") head) pat
                    (loop (cons head cl1) cl2 rest)
                    (loop cl1 (cons head cl2) rest)
@@ -75,60 +72,17 @@
       "FIRSTPRIVATE"
       "DEFAULT"))
 
-(define (split-acc-*-loop! state)
-  (match-let1 (('string dir) clauses body) (sxml:content state)
+(define (split-acc-parallel-loop! state)
+  (match-let1 (_ clauses body) (sxml:content state)
     (let-values ([(cl1 cl2) (separate-acc-*-loop-clauses clauses)])
       (sxml:change-content! state
-       `((string ,((#/^(KERNELS|PARALLEL)_LOOP$/ dir) 1))
+       `((string "PARALLEL")
          ,cl1
          (ACCPragma
           (string "LOOP")
           ,cl2
           ,body)))
       )))
-
-(define (tightly-nested-loop? state)
-  ;; TODO
-  )
-
-(define (independent-loop? state)
-  ;; TODO
-  )
-
-(define (add-loop-directive! state)
-  (let ([state-orig state] ; for sxml:change!
-        [state (list-copy-deep state)])
-
-    (sxml:add-attr! state '(__macc_info_pass0_parallelized 1))
-
-    (sxml:change!
-     state-orig
-
-     `(ACCPragma
-       (string "LOOP")
-       (list (list (string "INDEPENDENT")))
-       ,state))
-    ))
-
-(define (acc-parallelize! state)
-  (when (and (not (sxml:attr state '__macc_info_pass0_parallelized))
-             (tightly-nested-loop? state)
-             (independent-loop? state))
-    (let ([state-orig state] ; for sxml:change!
-          [state (list-copy-deep state)])
-      (for-each add-loop-directive! ((sxpath `(// ,(sxpath:name 'forStatement))) state))
-      (sxml:change! state-orig `(ACCPragma (string "PARALLEL") (list) ,state))
-      )))
-
-(define (acc-kernels->acc-parallel-compound state)
-  (match-let1 (_ _ body) (sxml:content state)
-    (begin0
-      body
-      (for-each acc-parallelize! ((sxpath '(// forStatement)) state))
-      )))
-
-(define (transform-acc-kernels! state)
-  (sxml:change! state (acc-kernels->acc-parallel-compound state)))
 
 (define-clauses-separater separate-acc-data-clauses
   (or "COPY"
@@ -142,15 +96,50 @@
       "PRESENT_OR_CREATE"))
 
 (define (split-acc-data-clauses! state)
-  (match-let1 (('string dir) clauses body) (sxml:content state)
+  (match-let1 (_ clauses body) (sxml:content state)
     (let-values ([(cl1 cl2) (separate-acc-data-clauses clauses)])
       (when (> (length cl1) 1)
         (sxml:change-content!
          state
          `((string "DATA")
            ,cl1
-           (ACCPragma (string ,((#/^(KERNELS|PARALLEL)$/ dir) 1)) ,cl2 ,body)))
+           (ACCPragma (string "PARALLEL") ,cl2 ,body)))
         ))))
+
+;;
+;; FIXME: BUGGY IMPLEMENTATION
+;;
+;; This works correctly only when
+;;   - The top loop is independent.
+;;   - And there is no gang, worker or vector clause in all under loop directives.
+;;
+(define (translate-acc-kernels-loop! state)
+  (match-let1 (_ clauses body) (sxml:content state)
+    (sxml:change-content!
+     state
+
+     `((string "PARALLEL_LOOP")
+       (list
+        ,@
+        (append-map
+         (lambda (c)
+           (match1 (sxml:content c)
+                   (('string (and (or "GANG" "WORKER" "VECTOR") label)) args)
+
+             (let1 new-label (if (equal? label "VECTOR") "VECT_LEN" #"NUM_~|label|S")
+               (list `(list (string ,label))
+                     `(list (string ,new-label) ,args)))
+
+             (list c)))
+
+         (sxml:content clauses)))
+       ,body))
+
+    (split-acc-parallel-loop! state)))
+;;
+(define (translate-acc-kernels! state)
+  (match-let1 (_ clauses body) (sxml:content state)
+    (sxml:change-content! state `((string "PARALLEL") ,clauses ,body))))
 
 (define (pass0 xm)
   (rlet1 xm (xm-copy xm)
@@ -158,7 +147,8 @@
            [acc-trans!
             (lambda (proc pred?)
               (for-each proc ((sxpath `(// (ACCPragma (string *text* ,(make-sxpath-query pred?))))) decls)))])
-      (acc-trans! split-acc-*-loop!       #/^(KERNELS|PARALLEL)_LOOP$/)
-      (acc-trans! split-acc-data-clauses! #/^(KERNELS|PARALLEL)$/)
-      (acc-trans! transform-acc-kernels!  #/^KERNELS$/)
+      (acc-trans! translate-acc-kernels-loop! #/^KERNELS_LOOP$/)
+      (acc-trans! translate-acc-kernels!      #/^KERNELS$/)
+      (acc-trans! split-acc-parallel-loop!    #/^PARALLEL_LOOP$/)
+      (acc-trans! split-acc-data-clauses!     #/^PARALLEL$/)
       )))
