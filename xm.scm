@@ -41,6 +41,7 @@
    gen-var<=var-expr
    gen-var++-expr
    gen-for
+   gen-int-expr
    ))
 (select-module xm)
 
@@ -117,7 +118,7 @@
   (syntax-rules ()
     [(_ name label)
      (define (name l r)
-       `(,label ,l ,r))]))
+       (list label l r))]))
 
 (define-binop-expr gen-=-expr 'assignExpr)
 
@@ -125,7 +126,7 @@
   (gen-=-expr `(Var ,varname) rvalue))
 
 (define (gen-var=int-expr varname n)
-  (gen-var=-expr varname `(intConstant ,(number->string n))))
+  (gen-var=-expr varname (gen-int-expr n)))
 
 (define-syntax define-binop-state
   (syntax-rules ()
@@ -178,15 +179,18 @@
   (syntax-rules ()
     [(_ name label nil)
      (define (name . args)
-       (cond [(null? args)        nil]
-             [(= (length args) 1) (car args)]
-             [else
-              `(,label
-                ,(car args)
-                ,(apply name (cdr args)))]))]))
+       (match args
+         [()  nil]
+         [(x) x]
+         [else
+          (list
+           label
+           (car args)
+           (apply name (cdr args)))]))]
+    ))
 
-(define-log-chain gen-&&-expr 'logAndExpr '(intConstant "1"))
-(define-log-chain gen-OR-expr 'logOrExpr  '(intConstant "0"))
+(define-log-chain gen-&&-expr 'logAndExpr (gen-int-expr 1))
+(define-log-chain gen-OR-expr 'logOrExpr  (gen-int-expr 0))
 
 (define-binop-expr gen-==-expr 'logEQExpr)
 (define-binop-expr gen-<=-expr 'logLEExpr)
@@ -211,3 +215,6 @@
        (body
         ,body-state ...))]
     ))
+
+(define (gen-int-expr n)
+  `(intConstant ,(number->string n)))

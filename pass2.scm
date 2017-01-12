@@ -122,7 +122,7 @@
   (let1 varname (cadar indexes)
     (let loop ([indexes indexes] [use '()] [def '()])
       (if (null? indexes)
-          `(,varname ,use ,def)
+          (list varname use def)
 
           (let ([head (car indexes)] [rest (cdr indexes)])
             (match-let1 (label _ expr) head
@@ -137,11 +137,9 @@
 (define (normalize-indexes indexes undefs)
   (map
    (match-lambda1 (label var expr)
-     `(,label
-       ,var
-       ,(and-let* ([ne (normalize-expr expr undefs)]
-                   [(affine? ne)])
-          ne)))
+     (list label
+           var
+           (and-let* ([ne (normalize-expr expr undefs)] [(affine? ne)]) ne)))
    indexes))
 
 (define (normalize-expr expr undefs)
@@ -162,9 +160,9 @@
            (rec (~ c 0))]
 
           [(preIncrExpr preDecrExpr)
-           `(,(if (eq? (sxml:name expr) preIncrExpr) plusExpr minusExpr)
-             ,(rec (~ c 0))
-             (intConstant "1"))]
+           (list (if (eq? (sxml:name expr) preIncrExpr) plusExpr minusExpr)
+                 (rec (~ c 0))
+                 (gen-int-expr 1))]
 
           [(asgPlusExpr asgMinusExpr asgMulExpr asgDivExpr
             asgModExpr asgLshiftExpr asgRshiftExpr asgBitAndExpr
@@ -260,7 +258,7 @@
          (let ([name    (sxml:name state)]
                [varname (sxml:car-content state)])
            (sxml:change-content
-            state `(,(or (assoc-ref renaming varname) varname))))]
+            state (list (or (assoc-ref renaming varname) varname))))]
 
         [(compoundStatement)
          (rename-vars-compound state renaming)]
@@ -397,8 +395,8 @@
                   (cons
                    (sxml:car-content var)
                    (case (sxml:name state-iter)
-                     [(postIncrExpr preIncrExpr) '(intConstant "1")]
-                     [(postDecrExpr preDecrExpr) '(intConstant "-1")])
+                     [(postIncrExpr preIncrExpr) (gen-int-expr 1)]
+                     [(postDecrExpr preDecrExpr) (gen-int-expr -1)])
                    )))
             '()
             ))]
@@ -472,12 +470,10 @@
                                   [width (- until-n start-n (if until-equal -1 0))]
                                   [new-until-n (+ (* (div width step-n) step-n) start-n)])
 
-                             `(intConstant
-                               ,(number->string
-                                 (if (and (not until-equal) (= until-n new-until-n))
-                                     (- new-until-n step-n)
-                                     new-until-n)))
-                             ))]
+                             (gen-int-expr
+                              (if (and (not until-equal) (= until-n new-until-n))
+                                  (- new-until-n step-n) new-until-n))))]
+
                 [op (if reducible '<= op)])
 
            (list var start until step op)
@@ -509,12 +505,8 @@
   (define (simplify-expr env expr)
     (if (eq? (sxml:name expr) 'Var)
         (or (assoc-ref env (sxml:car-content expr)) expr)
-        (map
-         (^[ch]
-           (if (sxml:element? ch)
-               (simplify-expr env ch)
-               ch))
-         expr)))
+        (map (lambda (ch) (if (sxml:element? ch) (simplify-expr env ch) ch))
+             expr)))
 
   (define (gather-indexes-for state-for env)
     (let* ([body ((content-car-sxpath "body") state-for)]
@@ -522,18 +514,13 @@
            [loop-env
             (map
              (match-lambda1 (var start until step op)
-               (cons
-                var
-                `(Var
-                  (@ (__macc_info_count-region
-                      (
-                       ,(simplify-expr env start)
-                       ,(simplify-expr env until)
-                       ,step
-                       ,op
-                       )
-                      ))
-                  ,var)))
+               (cons var `(Var (@ (__macc_info_count-region
+                                   ,(list
+                                     (simplify-expr env start)
+                                     (simplify-expr env until)
+                                     step
+                                     op)))
+                               ,var)))
              loop-counters)])
 
       (gather-indexes-several body (append loop-env env))
@@ -598,8 +585,8 @@
     [(postIncrExpr postDecrExpr preIncrExpr preDecrExpr)
      (let ([var (sxml:car-content state)]
            [val (case (sxml:name state)
-                  [(postIncrExpr preIncrExpr) '(intConstant "1")]
-                  [(postDecrExpr preDecrExpr) '(intConstant "-1")])])
+                  [(postIncrExpr preIncrExpr) (gen-int-expr 1)]
+                  [(postDecrExpr preDecrExpr) (gen-int-expr -1)])])
        (gather-indexes
         (gen-=-expr var `(plusExpr ,var ,val))
         env))]
@@ -647,7 +634,7 @@
      `(varDecl (name ,name)))
     ))
 
-(define (new-global-var! xm name type :optional (value '(intConstant "-1")))
+(define (new-global-var! xm name type :optional (value (gen-int-expr -1)))
   (sxml:content-push!
    (xm-global-symbols xm)
    `(id (@ (type ,type) (sclass "extern_def")) (name ,name)))
@@ -683,7 +670,7 @@
                     '((Var "__macc_top_loop_lb")
                       (Var "__macc_top_loop_ub"))
 
-                    (append-map extend-loop-counter `(,(~ cr 0) ,(~ cr 1)))
+                    (append-map extend-loop-counter (list (~ cr 0) (~ cr 1)))
                     ))]
 
           [else
@@ -861,7 +848,7 @@
          (~ top-loop-counter 1)
          (~ top-loop-counter 2)
          (~ top-loop-counter 3)
-         `(intConstant ,(if (eq? (~ top-loop-counter 4) '<=) "1" "0")))
+         (gen-int-expr (if (eq? (~ top-loop-counter 4) '<=) 1 0)))
 
         (gen-for
          ((gen-var=int-expr  "__macc_gpu_num" 0)
@@ -908,7 +895,7 @@
           (filter-map
            (match-lambda1 (_ _ _ _ def-type def-lb-name def-ub-name)
              (case def-type
-               [(0) '(intConstant "1")]
+               [(0) (gen-int-expr 1)]
 
                [(1) #f]
 
@@ -967,10 +954,10 @@
              '(Var "__macc_tnum")
              `(Var ,(~ set 0))
              '(Var "__macc_multi")
-             `(intConstant ,(number->string (~ set 1)))
+             (gen-int-expr (~ set 1))
              `(Var ,(~ set 2))
              `(Var ,(~ set 3))
-             `(intConstant ,(number->string (~ set 4)))
+             (gen-int-expr (~ set 4))
              `(Var ,(~ set 5))
              `(Var ,(~ set 6))))
           data-sets))
