@@ -36,6 +36,7 @@
    gen-&&-expr
    gen-OR-expr
    gen-==-expr
+   gen-!=-expr
    gen-<=-expr
    gen-var<=-expr
    gen-var<=var-expr
@@ -193,6 +194,7 @@
 (define-log-chain gen-OR-expr 'logOrExpr  (gen-int-expr 0))
 
 (define-binop-expr gen-==-expr 'logEQExpr)
+(define-binop-expr gen-!=-expr 'logNEQExpr)
 (define-binop-expr gen-<=-expr 'logLEExpr)
 (define-binop-expr gen-<-expr  'logLTExpr)
 

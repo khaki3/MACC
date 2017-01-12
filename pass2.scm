@@ -824,10 +824,9 @@
 
       (gen-var=
        "__macc_region_is_changed"
-       (gen-!-expr
-        (apply gen-&&-expr
-         (gen-!var-expr "__macc_region_is_changed")
-         (map gen-==-expr dynamic-vars last-dvars))))
+       (apply gen-OR-expr
+        '(Var "__macc_region_is_changed")
+        (map gen-!=-expr dynamic-vars last-dvars)))
 
       (gen-if
        ;; cond
