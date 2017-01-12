@@ -497,15 +497,14 @@
 
 (define (gather-indexes state env)
   (define (compound-env env state-comp)
-    (let ([decls ((sxpath "declarations/varDecl") state-comp)])
-      (append
-       (filter-map
-        (lambda (d)
-          (and-let* ([name ((ccc-sxpath "name")  d)]
-                     [v    ((if-ccc-sxpath "value") d)])
-            (cons name (simplify-expr env v))))
-        decls)
-       env)))
+    (let1 decls ((sxpath "declarations/varDecl") state-comp)
+      (fold
+       (lambda (d env)
+         (or (and-let* ([name ((ccc-sxpath "name")     d)]
+                        [v    ((if-ccc-sxpath "value") d)])
+               (acons name (simplify-expr env v) env))
+             env))
+       env decls)))
 
   (define (simplify-expr env expr)
     (if (eq? (sxml:name expr) 'Var)
@@ -580,7 +579,7 @@
        (let-values ([(indexes env) (gather-indexes rv env)])
          (case (sxml:name lv)
            [(Var)
-            (values indexes (acons (sxml:car-content lv) lv env))]
+            (values indexes (acons (sxml:car-content lv) (simplify-expr env rv) env))]
 
            [(arrayRef pointerRef)
             (let-values ([(var idx) (extract-indexing lv)])
