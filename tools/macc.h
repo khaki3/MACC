@@ -5,8 +5,12 @@
 #include <openacc.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <limits.h>
+
+// Including stdbool.h may cause conflicting.
+#define bool int
+#define true  1
+#define false 0
 
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
@@ -375,5 +379,9 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
         }
     }
 }
+
+#undef bool
+#undef true
+#undef false
 
 #endif
