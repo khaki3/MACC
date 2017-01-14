@@ -18,7 +18,6 @@
 #define TOPADDR(ADDR, LB, TYPE_SIZE)   (ADDR + LB * TYPE_SIZE)
 #define LENGTH_BYTE(LB, UB, TYPE_SIZE) ((UB - LB + 1) * TYPE_SIZE)
 #define ARE_OVERLAPPING(a_lb, a_ub, b_lb, b_ub) (!(a_lb > b_ub || a_ub < b_lb))
-#define ARE_OVERLAPPING_WHOLE(a_lb, a_ub, b_lb, b_ub) (a_lb <= b_lb && b_ub <= a_ub)
 
 #define __MACC_DEVICE_TYPE acc_device_nvidia
 #define __MACC_MAX_NUMGPUS 10
@@ -332,7 +331,7 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
     //
     // DEF
     //
-    // update: dirty \ DEF_{i}
+    // update: DEF_{i} (when dirty and DEF_{i} are separated)
     //
     if ((multi || gpu_num == 0) && def_type != 1) {
         if (def_type == 0) {
@@ -341,49 +340,30 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
             entry->dirty_ub = entry->entire_ub;
         }
 
-        else if (
-            // non-dirty
-            !(entry->dirty) ||
-            // whole
-            ARE_OVERLAPPING_WHOLE(def_lb_set[gpu_num], def_ub_set[gpu_num],
-                                  entry->dirty_lb, entry->dirty_ub)) {
+        else if (!(entry->dirty)) {
             entry->dirty = true;
             entry->dirty_lb = def_lb_set[gpu_num];
             entry->dirty_ub = def_ub_set[gpu_num];
         }
 
+        else if (
+            // overlapping
+            ARE_OVERLAPPING(entry->dirty_lb,
+                            entry->dirty_ub,
+                            def_lb_set[gpu_num],
+                            def_ub_set[gpu_num])       ||
+            // adjacent
+            entry->dirty_lb == def_ub_set[gpu_num] + 1 ||
+            def_lb_set[gpu_num] == entry->dirty_ub + 1
+            ) {
+            entry->dirty_lb = MIN(entry->dirty_lb, def_lb_set[gpu_num]);
+            entry->dirty_ub = MAX(entry->dirty_ub, def_ub_set[gpu_num]);
+        }
+
         else {
-            int update_lb, update_ub;
-
-            // outside
-            if (!ARE_OVERLAPPING(entry->dirty_lb,
-                                 entry->dirty_ub,
-                                 def_lb_set[gpu_num],
-                                 def_ub_set[gpu_num])) {
-                update_lb = entry->dirty_lb;
-                update_ub = entry->dirty_ub;
-                entry->dirty_lb = def_lb_set[gpu_num];
-                entry->dirty_ub = def_ub_set[gpu_num];
-            }
-
-            // inside, side
-            else {
-                // left side
-                if (entry->dirty_lb < def_lb_set[gpu_num]) {
-                    update_lb = entry->dirty_lb;
-                    update_ub = def_lb_set[gpu_num] - 1;
-                }
-                // right side
-                else {
-                    update_lb = def_ub_set[gpu_num] + 1;
-                    update_ub = entry->dirty_ub;
-                }
-
-                entry->dirty_lb = def_lb_set[gpu_num];
-                entry->dirty_ub = def_ub_set[gpu_num];
-            }
-
-            __macc_sync_data(gpu_num, p, entry->type_size, update_lb, update_ub);
+            __macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
+            entry->dirty_lb = def_lb_set[gpu_num];
+            entry->dirty_ub = def_ub_set[gpu_num];
         }
     }
 }
