@@ -56,9 +56,16 @@ struct __MaccDataTable *__MACC_DATA_TABLE_SET;
 
 void __macc_init()
 {
-    __MACC_NUMGPUS = __macc_get_num_gpus();
+    char *env_macc_numgpus = getenv("MACC_NUMGPUS");
 
-    if (__MACC_NUMGPUS == 0) {
+    if (env_macc_numgpus != NULL) {
+        __MACC_NUMGPUS = atoi(env_macc_numgpus);
+    }
+    else {
+        __MACC_NUMGPUS = __macc_get_num_gpus();
+    }
+
+    if (__MACC_NUMGPUS <= 0) {
         fputs("[MACC ERROR] No GPU device found.", stderr);
         exit(-1);
     }
