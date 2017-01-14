@@ -319,11 +319,12 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
                     void *update_addr = TOPADDR(p, update_lb, entry->type_size);
                     size_t length_b = LENGTH_BYTE(update_lb, update_ub, entry->type_size);
 
+                    __macc_set_gpu_num(gpu_num);
                     acc_update_self(update_addr, length_b);
                     __macc_set_gpu_num(i);
                     acc_update_device(update_addr, length_b);
-                    __macc_set_gpu_num(gpu_num);
                 }
+                __macc_set_gpu_num(gpu_num);
             }
         }
     }
