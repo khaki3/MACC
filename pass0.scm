@@ -40,12 +40,24 @@
                    ))))))]
     ))
 
+(define-clauses-separater separate-acc-parallelism-clauses
+  (or "NUM_GANGS"
+      "NUM_WORKERS"
+      "VECT_LEN"
+      "GANG"
+      "WORKER"
+      "VECTOR"))
+
+;; For speeding up
+(define (remove-parallelism-clauses! state)
+  (match-let1 (_ clauses _) (sxml:content state)
+    (let-values ([(_ new-clauses) (separate-acc-parallelism-clauses clauses)])
+      (sxml:change-content! clauses (cdr new-clauses))
+      )))
+
 (define-clauses-separater separate-acc-*-loop-clauses
   (or "ASYNC"
       "WAIT"
-      "NUM_GANGS"
-      "NUM_WORKERS"
-      "VECT_LEN"
       "DEVICE_TYPE"
       "IF"
       "REDUCTION_PLUS"
@@ -109,33 +121,11 @@
 ;;
 ;; FIXME: BUGGY IMPLEMENTATION
 ;;
-;; This works correctly only when
-;;   - The top loop is independent.
-;;   - And there is no gang, worker or vector clause in all under loop directives.
+;; This works correctly only when the top loop is independent.
 ;;
 (define (translate-acc-kernels-loop! state)
   (match-let1 (_ clauses body) (sxml:content state)
-    (sxml:change-content!
-     state
-
-     `((string "PARALLEL_LOOP")
-       (list
-        ,@
-        (append-map
-         (lambda (c)
-           (match1 (sxml:content c)
-                   (('string (and (or "GANG" "WORKER" "VECTOR") label)) args)
-
-             (let1 new-label (if (equal? label "VECTOR") "VECT_LEN" #"NUM_~|label|S")
-               (list `(list (string ,label))
-                     `(list (string ,new-label) ,args)))
-
-             (list c)))
-
-         (sxml:content clauses)))
-       ,body))
-
-    (split-acc-parallel-loop! state)))
+    (sxml:change-content! state `((string "PARALLEL_LOOP") ,clauses ,body))))
 ;;
 (define (translate-acc-kernels! state)
   (match-let1 (_ clauses body) (sxml:content state)
@@ -147,6 +137,7 @@
            [acc-trans!
             (lambda (proc pred?)
               (for-each proc ((sxpath `(// (ACCPragma (string *text* ,(make-sxpath-query pred?))))) decls)))])
+      (acc-trans! remove-parallelism-clauses! values)
       (acc-trans! translate-acc-kernels-loop! #/^KERNELS_LOOP$/)
       (acc-trans! translate-acc-kernels!      #/^KERNELS$/)
       (acc-trans! split-acc-parallel-loop!    #/^PARALLEL_LOOP$/)
