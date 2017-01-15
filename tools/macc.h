@@ -18,6 +18,7 @@
 #define TOPADDR(ADDR, LB, TYPE_SIZE)   (ADDR + LB * TYPE_SIZE)
 #define LENGTH_BYTE(LB, UB, TYPE_SIZE) ((UB - LB + 1) * TYPE_SIZE)
 #define ARE_OVERLAPPING(a_lb, a_ub, b_lb, b_ub) (!(a_lb > b_ub || a_ub < b_lb))
+#define ARE_OVERLAPPING_WHOLE(a_lb, a_ub, b_lb, b_ub) (a_lb <= b_lb && b_ub <= a_ub)
 
 #define __MACC_DEVICE_TYPE acc_device_nvidia
 #define __MACC_MAX_NUMGPUS 10
@@ -278,8 +279,9 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
     //
     // update: dirty /\ DEF_{*-i}, dirty /\ USE_{*-i}
     //
-    if (entry->dirty && (multi || gpu_num != 0)) {
-        bool update_all = false;
+    if (entry->dirty && (multi || gpu_num != 0) && __MACC_NUMGPUS > 1) {
+        bool update_all      = false;
+        bool update_all_DtoH = false;
 
         if (use_type == 0 || def_type == 0)
             update_all = true;
@@ -295,15 +297,47 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
             }
         }
 
+        if (!update_all) {
+            int every_whole = true;
+            int unused_lb = entry->dirty_lb;
+            int unused_ub = entry->dirty_ub;
+
+            for (int i = 0; i < __MACC_NUMGPUS; i++) {
+                if (i != gpu_num) {
+                    if (ARE_OVERLAPPING_WHOLE(use_lb_set[i], use_ub_set[i],
+                                              entry->dirty_lb, entry->dirty_ub)) {
+                        update_all_DtoH = true;
+                    }
+                    else {
+                        every_whole = false;
+
+                        if (use_lb_set[i] <= unused_lb)
+                            unused_lb = MAX(unused_lb, use_ub_set[i] + 1);
+                        else if (use_ub_set[i] >= unused_ub)
+                            unused_ub = MIN(unused_ub, use_lb_set[i] - 1);
+                    }
+                }
+            }
+
+            if (every_whole)
+                update_all = true;
+            if (unused_ub < unused_lb)
+                update_all_DtoH = true;
+        }
+
         // update all dirty
         if (update_all) {
             __macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
             entry->dirty = false;
         }
 
-        // use (doesn't change dirty region)
-        if (entry->dirty && use_type == 2) {
+        // USE /\ dirty (don't change dirty region)
+        else if (entry->dirty && use_type == 2) {
             int thread_num = multi ? __MACC_NUMGPUS : 1;
+
+            if (update_all_DtoH)
+                acc_update_self(TOPADDR(p, entry->dirty_lb, entry->type_size),
+                                LENGTH_BYTE(entry->dirty_lb, entry->dirty_ub, entry->type_size));
 
             #pragma omp parallel num_threads (thread_num)
             {
@@ -318,8 +352,10 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
                     void *update_addr = TOPADDR(p, update_lb, entry->type_size);
                     size_t length_b = LENGTH_BYTE(update_lb, update_ub, entry->type_size);
 
-                    __macc_set_gpu_num(gpu_num);
-                    acc_update_self(update_addr, length_b);
+                    if (!update_all_DtoH) {
+                        __macc_set_gpu_num(gpu_num);
+                        acc_update_self(update_addr, length_b);
+                    }
                     __macc_set_gpu_num(i);
                     acc_update_device(update_addr, length_b);
                 }
