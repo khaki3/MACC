@@ -37,6 +37,9 @@
    gen-OR-expr
    gen-==-expr
    gen-!=-expr
+   gen-<-expr
+   gen-var<-expr
+   gen-var<var-expr
    gen-<=-expr
    gen-var<=-expr
    gen-var<=var-expr
@@ -201,8 +204,24 @@
 (define (gen-var<=-expr varname r)
   (gen-<=-expr `(Var ,varname) r))
 
-(define (gen-var<=var-expr lvarname rvarname)
-  (gen-<=-expr `(Var ,lvarname) `(Var ,rvarname)))
+(define-syntax define-gen-varOP-expr
+  (syntax-rules ()
+    [(_ name gen)
+     (define (name varname r)
+       (gen `(Var ,varname) r))]
+    ))
+
+(define-syntax define-gen-varOPvar-expr
+  (syntax-rules ()
+    [(_ name gen)
+     (define (name lvarname rvarname)
+       (gen `(Var ,lvarname) `(Var ,rvarname)))]
+    ))
+
+(define-gen-varOP-expr    gen-var<-expr     gen-<-expr)
+(define-gen-varOPvar-expr gen-var<var-expr  gen-<-expr)
+(define-gen-varOP-expr    gen-var<=-expr    gen-<=-expr)
+(define-gen-varOPvar-expr gen-var<=var-expr gen-<=-expr)
 
 (define (gen-var++-expr varname)
   `(postIncrExpr (Var ,varname)))

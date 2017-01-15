@@ -850,9 +850,9 @@
          (gen-int-expr (if (eq? (~ top-loop-counter 4) '<=) 1 0)))
 
         (gen-for
-         ((gen-var=int-expr  "__macc_gpu_num" 0)
-          (gen-var<=var-expr "__macc_gpu_num" "__MACC_NUMGPUS")
-          (gen-var++-expr    "__macc_gpu_num"))
+         ((gen-var=int-expr "__macc_gpu_num" 0)
+          (gen-var<var-expr "__macc_gpu_num" "__MACC_NUMGPUS")
+          (gen-var++-expr   "__macc_gpu_num"))
 
          (gen-var= "__macc_top_loop_lb" (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_gpu_num"))
          (gen-var= "__macc_top_loop_ub" (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_gpu_num"))
