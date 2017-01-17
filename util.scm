@@ -6,8 +6,6 @@
   (use srfi-14)
   (use srfi-27)
   (export
-   cdar-sxpath
-   if-cdar-sxpath
    ccc-sxpath
    if-ccc-sxpath
    content-car-sxpath
@@ -92,9 +90,6 @@
   (syntax-rules ()
     [(_ x path) (^[sxml] (x ((sxpath path) sxml)))]))
 
-(define (cdar-sxpath path)
-  (x-sxpath cdar path))
-
 (define (content-car-sxpath path)
   (x-sxpath (.$ sxml:content car) path))
 
@@ -113,14 +108,6 @@
 (define-syntax if-cdr
   (syntax-rules ()
     [(_ lst) (if-pair-x cdr lst)]))
-
-(define (if-cdar-sxpath path)
-  (x-sxpath
-   (^[x]
-     (and-let* ([ca   (if-car x)]
-                [cda  (if-cdr ca)])
-       cda))
-   path))
 
 (define (if-ccc-sxpath path)
   (x-sxpath

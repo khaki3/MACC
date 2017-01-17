@@ -38,7 +38,7 @@
     state
     )))
 
-(define (generate-data-state label args enter)
+(define (generate-data-state label arg enter)
   (and-let*
       ([fun-name
         (if enter
@@ -59,9 +59,9 @@
                "__macc_delete"]
 
               [else #f]))]
-       [var    (~ (sxml:content args)    0)]
-       [start  (~ (~ (sxml:content args) 1) 1)]
-       [length (~ (~ (sxml:content args) 1) 2)])
+       [var    (~ (sxml:content arg)    0)]
+       [start  (~ (~ (sxml:content arg) 1) 1)]
+       [length (~ (~ (sxml:content arg) 1) 2)])
 
     (gen-funcall
      fun-name
@@ -72,42 +72,64 @@
      length)
     ))
 
-(define (generate-data-state-enter label args)
-  (generate-data-state label args #t))
-
-(define (generate-data-state-exit label args)
-  (generate-data-state label args #f))
-
-(define (translate-data-clauses xm state enter)
+(define (translate-com-clauses state gen)
   (apply gen-compound
 
    (append-map
-    (lambda (cls)
-      (let ([label ((ccc-sxpath "string") cls)]
-            [gen   (if enter generate-data-state-enter generate-data-state-exit)])
+    (lambda (c)
+      (let ([label ((ccc-sxpath "string")        c)]
+            [args  ((content-car-sxpath "list")  c)])
+        (filter-map (pa$ gen label) args)))
 
-        (filter-map (cut gen label <>) ((cdar-sxpath "list") cls))))
-
-    (sxml:content ((car-sxpath "list") state)))
+    ((content-car-sxpath "list") state))
    ))
 
-(define (translate-data-clauses-enter xm state)
-  (translate-data-clauses xm state #t))
-
-(define (translate-data-clauses-exit xm state)
-  (translate-data-clauses xm state #f))
+(define (translate-data-clauses state enter)
+  (translate-com-clauses
+   state
+   (lambda (label arg) (generate-data-state label arg enter))))
 
 (define (parallelize-acc-data! xm state)
   (sxml:change!
    state
 
    (gen-compound
-    (gen-par :state (translate-data-clauses-enter xm state))
+    (gen-par :state (translate-data-clauses state #t))
 
     (~ (sxml:content state) 2)
 
-    (gen-par :state (translate-data-clauses-exit xm state))
+    (gen-par :state (translate-data-clauses state #f))
     )))
+
+(define (generate-update-state label arg)
+  (and-let*
+      ([fun-name
+        (match label
+          ["HOST"
+           "__macc_update_self"]
+
+          ["DEVICE"
+           "__macc_update_device"]
+
+          [else #f])]
+       [var    (~ (sxml:content arg)    0)]
+       [start  (~ (~ (sxml:content arg) 1) 1)]
+       [length (~ (~ (sxml:content arg) 1) 2)])
+
+    (gen-funcall
+     fun-name
+     '(Var "__macc_tnum")
+     var
+     `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'ptype)))))
+     start
+     length)
+    ))
+
+(define (translate-update-clauses state)
+  (translate-com-clauses state generate-update-state))
+
+(define (parallelize-acc-update! xm state)
+  (sxml:change! state (gen-par :state (translate-update-clauses state))))
 
 ;;
 ;; Extract indexes in the form of alist of array and indexes for each USE and DEF.
@@ -555,11 +577,14 @@
     [(ifStatement)
      (gather-indexes-several (map cadr (sxml:content state)) env)]
 
-    [(exprStatement)
+    [(exprStatement castExpr)
      (gather-indexes (sxml:car-content state) env)]
 
     [(functionCall)
      (gather-indexes-several ((content-car-sxpath "arguments") state) env)]
+
+    [(condExpr)
+     (gather-indexes-several (sxml:content state) env)]
 
     [(assignExpr)
      (match-let1 (lv rv) (sxml:content state)
@@ -748,7 +773,7 @@
 
     (map (lambda (c) `(Var ,c)) (lset-difference string=? loop-counters defined))))
 
-(define (parallelize-acc-parallel! xm state)
+(define (parallelize-acc-parallel! xm state is-loop)
   (let* ([state-orig      state] ; for sxml:change!
          [state           (rename-vars state)]
 
@@ -756,11 +781,11 @@
          [reductions      (collect-acc-reductions state)]
          [privates        (extract-omp-privates state)]
 
-         [top-loop         ((car-sxpath '(// forStatement)) state)]
-         [top-loop-counter (car (extract-loop-counters top-loop))]
-         [top-loop-counter-varname (car top-loop-counter)]
-         [top-loop-lb-set-name (new-name #"~|top-loop-counter-varname|_loop_lb_set")]
-         [top-loop-ub-set-name (new-name #"~|top-loop-counter-varname|_loop_ub_set")]
+         [top-loop         (and is-loop ((car-sxpath '(// forStatement)) state))]
+         [top-loop-counter (and is-loop (car (extract-loop-counters top-loop)))]
+         [top-loop-counter-varname (and is-loop (car top-loop-counter))]
+         [top-loop-lb-set-name (and is-loop (new-name #"~|top-loop-counter-varname|_loop_lb_set"))]
+         [top-loop-ub-set-name (and is-loop (new-name #"~|top-loop-counter-varname|_loop_ub_set"))]
 
          [data-sets '()]
 
@@ -777,7 +802,8 @@
                  (or (~ c 2) '())))
               indexes-cols)
              ;; loop-counters
-             (drop (take top-loop-counter 3) 1))))]
+             (if is-loop (drop (take top-loop-counter 3) 1) '())
+             )))]
          [last-dvars
           (map
            (^[v]
@@ -786,29 +812,30 @@
                `(Var ,nn)))
            dynamic-vars)])
 
-    ;; Add new loop counters
-    (add-setting-array! xm top-loop-lb-set-name)
-    (add-setting-array! xm top-loop-ub-set-name)
+    (when is-loop
+      ;; Add new loop counters
+      (add-setting-array! xm top-loop-lb-set-name)
+      (add-setting-array! xm top-loop-ub-set-name)
 
-    ;; Rewrite loop counters
-    (let ([top-loop-init ((car-sxpath "init")      top-loop)]
-          [top-loop-cond ((car-sxpath "condition") top-loop)])
-      (sxml:change-content!
-       top-loop-init
+      ;; Rewrite loop counters
+      (let ([top-loop-init ((car-sxpath "init")      top-loop)]
+            [top-loop-cond ((car-sxpath "condition") top-loop)])
+        (sxml:change-content!
+         top-loop-init
 
-       (list
-        (gen-var=-expr
-         top-loop-counter-varname
-         (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_tnum")
-         )))
+         (list
+          (gen-var=-expr
+           top-loop-counter-varname
+           (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_tnum")
+           )))
 
-      (sxml:change-content!
-       top-loop-cond
-       (list
-        (gen-var<=-expr
-         top-loop-counter-varname
-         (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_tnum")
-         ))))
+        (sxml:change-content!
+         top-loop-cond
+         (list
+          (gen-var<=-expr
+           top-loop-counter-varname
+           (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_tnum")
+           )))))
 
     ;; New state
     (sxml:change!
@@ -840,22 +867,25 @@
         (apply gen-compound
          (map gen-= last-dvars dynamic-vars))
 
-        (gen-funcall
-         "__macc_calc_loop_region"
-         `(Var ,top-loop-lb-set-name)
-         `(Var ,top-loop-ub-set-name)
-         (~ top-loop-counter 1)
-         (~ top-loop-counter 2)
-         (~ top-loop-counter 3)
-         (gen-int-expr (if (eq? (~ top-loop-counter 4) '<=) 1 0)))
+        (gen-when is-loop
+          (gen-funcall
+           "__macc_calc_loop_region"
+           `(Var ,top-loop-lb-set-name)
+           `(Var ,top-loop-ub-set-name)
+           (~ top-loop-counter 1)
+           (~ top-loop-counter 2)
+           (~ top-loop-counter 3)
+           (gen-int-expr (if (eq? (~ top-loop-counter 4) '<=) 1 0))))
 
         (gen-for
          ((gen-var=int-expr "__macc_gpu_num" 0)
-          (gen-var<var-expr "__macc_gpu_num" "__MACC_NUMGPUS")
+          (gen-var<-expr
+           "__macc_gpu_num" (if is-loop `(Var "__MACC_NUMGPUS") (gen-int-expr 1)))
           (gen-var++-expr   "__macc_gpu_num"))
 
-         (gen-var= "__macc_top_loop_lb" (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_gpu_num"))
-         (gen-var= "__macc_top_loop_ub" (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_gpu_num"))
+         (gen-when is-loop
+           (gen-var= "__macc_top_loop_lb" (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_gpu_num"))
+           (gen-var= "__macc_top_loop_ub" (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_gpu_num")))
 
          (apply gen-compound
           (filter-map
@@ -890,45 +920,50 @@
 
         (gen-if
          ;; cond
-         (apply gen-OR-expr
-          (filter-map
-           (match-lambda1 (_ _ _ _ def-type def-lb-name def-ub-name)
-             (case def-type
-               [(0) (gen-int-expr 1)]
+         (if is-loop
+             (apply gen-OR-expr
+              (filter-map
+               (match-lambda1 (_ _ _ _ def-type def-lb-name def-ub-name)
+                 (case def-type
+                   [(0) (gen-int-expr 1)]
 
-               [(1) #f]
+                   [(1) #f]
 
-               [(2) (gen-funcall-expr
-                     "__macc_region_is_overlapping"
-                     `(Var ,def-lb-name) `(Var ,def-ub-name))]
-               ))
-           data-sets))
+                   [(2) (gen-funcall-expr
+                         "__macc_region_is_overlapping"
+                         `(Var ,def-lb-name) `(Var ,def-ub-name))]
+                   ))
+               data-sets))
+
+             (gen-int-expr 1))
 
          ;; then
-         (apply gen-compound
+         (gen-compound
           (gen-var=int "__macc_multi" 0)
 
-          (gen-funcall
-           "__macc_rewrite_loop_region_into_single"
-           `(Var ,top-loop-lb-set-name)
-           `(Var ,top-loop-ub-set-name))
+          (gen-when is-loop
+            (gen-funcall
+             "__macc_rewrite_loop_region_into_single"
+             `(Var ,top-loop-lb-set-name)
+             `(Var ,top-loop-ub-set-name))
 
-          (filter-map
-           (match-lambda1 (type lb-name ub-name)
-             (and (= type 2)
-                  (gen-funcall
-                   "__macc_rewrite_data_region_into_single"
-                   `(Var ,lb-name)
-                   `(Var ,ub-name))))
+            (apply gen-compound
+             (filter-map
+              (match-lambda1 (type lb-name ub-name)
+                (and (= type 2)
+                     (gen-funcall
+                      "__macc_rewrite_data_region_into_single"
+                      `(Var ,lb-name)
+                      `(Var ,ub-name))))
 
-           (append-map
-            (lambda (set)
-              (match-let1 (_ use-type use-lb-name use-ub-name
-                             def-type def-lb-name def-ub-name) set
-                (list (list use-type use-lb-name use-ub-name)
-                      (list def-type def-lb-name def-ub-name))))
-            data-sets))
-          ))
+              (append-map
+               (lambda (set)
+                 (match-let1 (_ use-type use-lb-name use-ub-name
+                                def-type def-lb-name def-ub-name) set
+                   (list (list use-type use-lb-name use-ub-name)
+                         (list def-type def-lb-name def-ub-name))))
+               data-sets))
+             ))))
 
         )) ; ifStatement __macc_region_is_changed
 
@@ -971,8 +1006,12 @@
     ["DATA"
      (parallelize-acc-data! xm state)]
 
+    ["UPDATE"
+     (parallelize-acc-update! xm state)]
+
     ["PARALLEL"
-     (parallelize-acc-parallel! xm state)]
+     (parallelize-acc-parallel!
+      xm state (pair? ((sxpath '(// forStatement)) state)))]
 
     [else #f]
     ))

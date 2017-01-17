@@ -137,7 +137,7 @@
            [acc-trans!
             (lambda (proc pred?)
               (for-each proc ((sxpath `(// (ACCPragma (string *text* ,(make-sxpath-query pred?))))) decls)))])
-      (acc-trans! remove-parallelism-clauses! values)
+      (acc-trans! remove-parallelism-clauses! #/^(KERNELS|PARALLEL)(_LOOP)?$/)
       (acc-trans! translate-acc-kernels-loop! #/^KERNELS_LOOP$/)
       (acc-trans! translate-acc-kernels!      #/^KERNELS$/)
       (acc-trans! split-acc-parallel-loop!    #/^PARALLEL_LOOP$/)

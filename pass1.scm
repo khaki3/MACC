@@ -16,50 +16,90 @@
 ;;;
 ;;; Set necessary informations
 ;;;
-;;;  - Add ptype to the vars on acc data clauses
-;;;  - Add present clause to acc for-loops
+;;;  - Attach ptype and size attr to the vars on acc data clauses
+;;;  - Attach present clause to acc for-loops
 ;;;
 
 (define (create-type-ht xm)
   (rlet1 ht (make-hash-table 'string=?)
     (for-each
-     (^[x]
-       (hash-table-put!
-        ht
-        (sxml:attr x 'type)
-        x))
+     (^[x] (hash-table-put! ht (sxml:attr x 'type) x))
      (sxml:content (xm-type-table xm))
      )))
 
-(define (type-search ht type)
+(define (fetch-inner-type decl)
+  (sxml:attr
+   decl
+   (case (sxml:name decl)
+     [(pointerType) 'ref]
+     [(arrayType)   'element_type]
+     [(basicType)   'name])))
+
+(define (search-inner-type ht type)
   (or (and-let* ([type]
-                 [x (ref ht type #f)]
-                 [n (sxml:attr
-                     x
-                     (case (sxml:name x)
-                       [(pointerType) 'ref]
-                       [(arrayType)   'element_type]
-                       [(basicType)   'name]))])
-        (type-search ht n))
+                 [decl (ref ht type #f)]
+                 [type (fetch-inner-type decl)])
+        (search-inner-type ht type))
       type))
+
+(define (search-array-size ht type)
+  (and-let* ([type] [decl (ref ht type #f)])
+    (if (eq? (sxml:name decl) 'arrayType)
+        (and-let1 s (sxml:attr decl 'array_size)
+          (string->number s))
+
+        (search-array-size ht (fetch-inner-type decl))
+        )))
 
 (define (extract-global-env xm)
   (update-env '() (xm-global-symbols xm)))
 
 (define (update-env env symbols)
-  (cons
+  (append
    (map
     (^[x] (cons ((ccc-sxpath "name") x) (sxml:attr x 'type)))
     ((sxpath "id") symbols))
    env))
 
 ;; Fetch the type of var-name
-(define (var-ref env var-name)
-  (and
-   (pair? env)
-   (or (assoc-ref (car env) var-name #f)
-       (var-ref   (cdr env) var-name))
-   ))
+(define (fetch-type env var-name)
+  (assoc-ref env var-name #f))
+
+(define (insert-size-acc-data! type-ht env state)
+  (for-each
+   (lambda (c)
+     (match1 (sxml:content c)
+             (('string (or "COPY"
+                           "COPYIN"
+                           "COPYOUT"
+                           "CREATE"
+                           "PRESENT"
+                           "PRESENT_OR_COPY"
+                           "PRESENT_OR_COPYIN"
+                           "PRESENT_OR_COPYOUT"
+                           "PRESENT_OR_CREATE"
+
+                           "HOST"
+                           "SELF"
+                           "DEVICE")) args)
+       (sxml:change-content!
+        args
+        (map
+         (lambda (x)
+           (or
+            (and-let* ([(eq? (sxml:name x) 'Var)]
+                       [varname    (sxml:car-content x)]
+                       [type       (fetch-type env varname)]
+                       [array-size (search-array-size type-ht type)])
+              `(list
+                ,x
+                (list
+                 ,(gen-int-expr 0)
+                 ,(gen-int-expr array-size))))
+            x))
+         (sxml:content args)))))
+
+   ((content-car-sxpath "list") state)))
 
 (define (insert-ptype-acc-data! type-ht env state)
   (let ([vars ((node-closure (ntype-names?? '(Var))) ((sxpath "list") state))])
@@ -69,10 +109,14 @@
         v
         (list
          'ptype
-         (type-search type-ht (var-ref env (sxml:car-content v))))))
+         (search-inner-type type-ht (fetch-type env (sxml:car-content v))))))
      vars)))
 
-(define (insert-ptype! type-ht env state)
+(define (insert-data-info-acc-data! type-ht env state)
+  (insert-size-acc-data!  type-ht env state)
+  (insert-ptype-acc-data! type-ht env state))
+
+(define (insert-data-info! type-ht env state)
   (define (rec-several! env ss)
     (for-each
      (cut rec! env <>)
@@ -82,9 +126,9 @@
     (case (sxml:name s)
       [(ACCPragma)
        (let1 c (sxml:content s)
-         (when (equal? (sxml:car-content (~ c 0)) "DATA")
-           (insert-ptype-acc-data! type-ht env s))
-         (rec! env (~ c 2)))]
+         (match1 (sxml:car-content (~ c 0)) (or "DATA" "UPDATE")
+           (insert-data-info-acc-data! type-ht env s))
+         (when (>= (length c) 3) (rec! env (~ c 2))))]
 
       [(functionDefinition compoundStatement)
        (let1 env (update-env env ((car-sxpath "symbols") s))
@@ -133,7 +177,8 @@
                     vars)])
        (match1 dirname "PARALLEL"
          (insert-present-acc-for! vars state))
-       (insert-present! vars (~ cnt 2)))]
+       (when (>= (length cnt) 3)
+         (insert-present! vars (~ cnt 2))))]
 
     [(functionDefinition compoundStatement
       doStatement whileStatment forStatement switchStatement)
@@ -149,6 +194,6 @@
           [env     (extract-global-env xm)]
           [defs    ((sxpath "functionDefinition")
                     (xm-global-declarations xm))])
-      (for-each (cut insert-ptype!   type-ht env <>) defs)
-      (for-each (cut insert-present! '() <>)         defs)
+      (for-each (cut insert-data-info! type-ht env <>) defs)
+      (for-each (cut insert-present!   '() <>)         defs)
       )))

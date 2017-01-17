@@ -46,6 +46,7 @@
    gen-var++-expr
    gen-for
    gen-int-expr
+   gen-when
    ))
 (select-module xm)
 
@@ -239,3 +240,11 @@
 
 (define (gen-int-expr n)
   `(intConstant ,(number->string n)))
+
+(define-syntax gen-when
+  (syntax-rules ()
+    [(_ cond state ...)
+     (if cond
+         (gen-compound state ...)
+         (gen-compound))]
+    ))

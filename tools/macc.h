@@ -189,6 +189,16 @@ void __macc_create(int gpu_num, void *p, int type_size, int lb, int length)
     acc_wait(gpu_num);
 }
 
+void __macc_update_self(int gpu_num, void *p, int type_size, int lb, int length)
+{
+    acc_update_self(TOPADDR(p, lb, type_size), length * type_size);
+}
+
+void __macc_update_device(int gpu_num, void *p, int type_size, int lb, int length)
+{
+    acc_update_device(TOPADDR(p, lb, type_size), length * type_size);
+}
+
 void __macc_init_access_region(int gpu_num, int *lb_set, int *ub_set)
 {
     lb_set[gpu_num] = INT_MAX;
