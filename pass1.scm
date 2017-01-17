@@ -144,7 +144,10 @@
   (rec! env state))
 
 (define (extract-acc-data-vars state)
-  (map sxml:car-content ((sxpath "list/list/list/list/Var") state)))
+  (map
+   sxml:car-content
+   (append ((sxpath "list/list/list/Var") state)
+           ((sxpath "list/list/list/list/Var") state))))
 
 (define (make-present-clause vars)
   `
