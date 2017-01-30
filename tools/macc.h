@@ -418,4 +418,12 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
 #undef true
 #undef false
 
+#undef MIN
+#undef MAX
+
+#undef TOPADDR
+#undef LENGTH_BYTE
+#undef ARE_OVERLAPPING
+#undef ARE_OVERLAPPING_WHOLE
+
 #endif
