@@ -629,7 +629,7 @@
       unaryMinusExpr bitNotExpr logNotExpr sizeOfExpr)
      (gather-indexes-several (sxml:content state) env)]
 
-    [(Var caseLabel defaultLabel
+    [(Var caseLabel defaultLabel breakStatement
       intConstant longlongConstant floatConstant
       stringConstant moeConstant funcAddr)
      (values '() env)]
