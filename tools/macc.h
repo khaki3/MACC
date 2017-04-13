@@ -191,7 +191,14 @@ void __macc_create(int gpu_num, void *p, int type_size, int lb, int length)
 
 void __macc_update_self(int gpu_num, void *p, int type_size, int lb, int length)
 {
-    acc_update_self(TOPADDR(p, lb, type_size), length * type_size);
+    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, p);
+    int ub = lb + length - 1;
+
+    if (entry->dirty && ARE_OVERLAPPING(entry->dirty_lb, entry->dirty_ub, lb, ub)) {
+        int new_lb = MAX(entry->dirty_lb, lb);
+        int new_ub = MIN(entry->dirty_ub, ub);
+        acc_update_self(TOPADDR(p, new_lb, type_size), LENGTH_BYTE(new_lb, new_ub, type_size));
+    }
 }
 
 void __macc_update_device(int gpu_num, void *p, int type_size, int lb, int length)
