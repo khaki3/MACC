@@ -168,7 +168,7 @@
   (define (rec e)
     (normalize-expr e undefs))
 
-  (define (rec-several es)
+  (define (rec-multi es)
     (let ([res (map rec es)])
       (and (every values res) res)))
 
@@ -203,14 +203,14 @@
 
                    [(sxml:attr expr '__macc_info_count-region)
                     => (lambda (cr)
-                         (and-let1 cr (rec-several cr)
+                         (and-let1 cr (rec-multi cr)
                            (sxml:change-attr expr `(__macc_info_count-region, cr))))]
 
                    [else expr]
                    ))]
 
           [else
-           (and-let1 rc (rec-several (sxml:content expr))
+           (and-let1 rc (rec-multi (sxml:content expr))
              (sxml:change-content expr rc))]
           ))))
 
@@ -289,7 +289,7 @@
          (sxml:change-content state (map (cut rename-vars <> renaming) (sxml:content state)))]
         )))
 
-(define (gather-undefs-several ss)
+(define (gather-undefs-multi ss)
   (append-map gather-undefs ss))
 
 (define (gather-undefs state)
@@ -302,7 +302,7 @@
                   [iter ((ccc-sxpath "iter")      state)]
                   [body ((ccc-sxpath "body")      state)]
 
-                  [top-undefs  (gather-undefs-several (list init cond iter))]
+                  [top-undefs  (gather-undefs-multi (list init cond iter))]
                   [body-undefs (gather-undefs body)]
                   [loop-vars (map car (extract-loop-counters state))])
 
@@ -322,7 +322,7 @@
               (gather-undefs var)
               (filter string? (sxml:content var))))]
 
-          [else (gather-undefs-several c)]
+          [else (gather-undefs-multi c)]
           ))))
 
 (define (extract-indexing state)
@@ -504,7 +504,7 @@
      init-vars)
     ))
 
-(define (gather-indexes-several ss env)
+(define (gather-indexes-multi ss env)
   (let loop ([ss ss] [indexes-list '()] [env env])
     (if (null? ss)
         (values (apply append (reverse indexes-list)) env)
@@ -545,7 +545,7 @@
                                ,var)))
              loop-counters)])
 
-      (gather-indexes-several body (append loop-env env))
+      (gather-indexes-multi body (append loop-env env))
       ))
 
   (case (sxml:name state)
@@ -553,7 +553,7 @@
      (gather-indexes (~ (sxml:content state) 2) env)]
 
     [(compoundStatement)
-     (gather-indexes-several
+     (gather-indexes-multi
       ((content-car-sxpath "body") state)
       (compound-env env state))]
 
@@ -561,30 +561,30 @@
      (gather-indexes-for state env)]
 
     [(doStatement whileStatment)
-     (gather-indexes-several
+     (gather-indexes-multi
       (append
        ((content-car-sxpath "condition") state)
        ((content-car-sxpath "body")      state))
       env)]
 
     [(switchStatement)
-     (gather-indexes-several
+     (gather-indexes-multi
       (append
        ((content-car-sxpath "value") state)
        ((content-car-sxpath "body")  state))
       env)]
     
     [(ifStatement)
-     (gather-indexes-several (map cadr (sxml:content state)) env)]
+     (gather-indexes-multi (map cadr (sxml:content state)) env)]
 
     [(exprStatement castExpr)
      (gather-indexes (sxml:car-content state) env)]
 
     [(functionCall)
-     (gather-indexes-several ((content-car-sxpath "arguments") state) env)]
+     (gather-indexes-multi ((content-car-sxpath "arguments") state) env)]
 
     [(condExpr)
-     (gather-indexes-several (sxml:content state) env)]
+     (gather-indexes-multi (sxml:content state) env)]
 
     [(assignExpr)
      (match-let1 (lv rv) (sxml:content state)
@@ -627,7 +627,7 @@
       logEQExpr logNEQExpr logGEExpr logGTExpr logLEExpr logLTExpr
       logAndExpr logOrExpr
       unaryMinusExpr bitNotExpr logNotExpr sizeOfExpr)
-     (gather-indexes-several (sxml:content state) env)]
+     (gather-indexes-multi (sxml:content state) env)]
 
     [(Var caseLabel defaultLabel breakStatement
       intConstant longlongConstant floatConstant

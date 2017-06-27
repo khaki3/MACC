@@ -117,7 +117,7 @@
   (insert-ptype-acc-data! type-ht env state))
 
 (define (insert-data-info! type-ht env state)
-  (define (rec-several! env ss)
+  (define (rec-multi! env ss)
     (for-each
      (cut rec! env <>)
      ss))
@@ -132,13 +132,13 @@
 
       [(functionDefinition compoundStatement)
        (let1 env (update-env env ((car-sxpath "symbols") s))
-         (rec-several! env ((content-car-sxpath "body") s)))]
+         (rec-multi! env ((content-car-sxpath "body") s)))]
 
       [(doStatement whileStatment forStatement switchStatement)
-       (rec-several! env ((content-car-sxpath "body") s))]
+       (rec-multi! env ((content-car-sxpath "body") s))]
 
       [(ifStatement)
-       (rec-several! env (map cadr (sxml:content s)))]
+       (rec-multi! env (map cadr (sxml:content s)))]
       ))
 
   (rec! env state))
@@ -166,7 +166,7 @@
       )))
 
 (define (insert-present! vars state)
-  (define (insert-present-several! v ss)
+  (define (insert-present-multi! v ss)
     (for-each
      (cut insert-present! v <>)
      ss))
@@ -185,7 +185,7 @@
 
     [(functionDefinition compoundStatement
       doStatement whileStatment forStatement switchStatement)
-     (insert-present-several! vars ((content-car-sxpath "body") state))]
+     (insert-present-multi! vars ((content-car-sxpath "body") state))]
 
     [(ifStatement)
      (insert-present! vars (map cadr (sxml:content state)))]
