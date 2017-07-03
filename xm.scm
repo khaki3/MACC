@@ -18,6 +18,8 @@
    xm->sxml
    xm-copy
 
+   extract-loop-counters
+
    gen-compound
    gen-compound-with-local-vars
    gen-=-expr
@@ -247,4 +249,141 @@
      (if cond
          (gen-compound state ...)
          (gen-compound))]
+    ))
+
+(define (extract-loop-counters state-for)
+  (define (normalize-cond state-cond)
+    ;; TODO
+    ;; normalize cond like PGI compiler
+    ;; for more flexibilty
+    state-cond
+    )
+
+  ;; '((var . op until) ...)
+  (define (extract-cond-vars state-cond)
+    ;; var (<=|<) expr
+    (case (sxml:name state-cond)
+      [(logLEExpr logLTExpr)
+       (let1 c (sxml:content state-cond)
+         (and (eq? (sxml:name (~ c 0)) 'Var)
+
+              (list
+               (list
+                (sxml:car-content (~ c 0))
+                (case (sxml:name state-cond)
+                  [(logLEExpr) '<=]
+                  [(logLTExpr) '<])
+                (~ c 1)))
+              ))]
+
+      [else '()]
+      ))
+
+  ;; '((var . step) ...)
+  (define (extract-iter-vars state-iter)
+    ;; i(++|--) | (++|--)i | i (+|-)= n
+    ;; TODO
+    ;; more flexibilty
+
+    (define (inverse-sign constant)
+      (list
+       (sxml:name constant)
+       (number->string (- (string->number (sxml:car-content constant))))))
+
+    (let1 c (sxml:content state-iter)
+      (case (sxml:name state-iter)
+        [(postIncrExpr preIncrExpr postDecrExpr preDecrExpr)
+         (match-let1 (var) c
+           (or
+            (and (eq? (sxml:name var) 'Var)
+
+                 (list
+                  (cons
+                   (sxml:car-content var)
+                   (case (sxml:name state-iter)
+                     [(postIncrExpr preIncrExpr) (gen-int-expr 1)]
+                     [(postDecrExpr preDecrExpr) (gen-int-expr -1)])
+                   )))
+            '()
+            ))]
+
+        [(asgPlusExpr asgMinusExpr)
+         (match-let1 (var step) c
+           (or
+            (and (eq? (sxml:name var)  'Var)
+                 (eq? (sxml:name step) 'intConstant)
+
+                 (list
+                  (list
+                   (sxml:car-content var)
+                   (case (sxml:name state-iter)
+                     [(asgPlusExpr)  step]
+                     [(asgMinusExpr) (inverse-sign step)])
+                   )))
+            '()
+            ))]
+
+        [else '()]
+        )))
+
+  ;; '((var start) ...)
+  (define (extract-init-vars state-init)
+    ;; i = ...
+    (let1 c (sxml:content state-init)
+      (case (sxml:name state-init)
+        [(assignExpr)
+         (match-let1 (var start) c
+           (or
+            (and (eq? (sxml:name var)  'Var)
+
+                 (list
+                  (cons
+                   (sxml:car-content var)
+                   start)))
+            '()))]
+        )))
+
+  (let* ([init ((ccc-sxpath "init")      state-for)]
+         [cond ((ccc-sxpath "condition") state-for)]
+         [cond (normalize-cond           cond)]
+         [iter ((ccc-sxpath "iter")      state-for)]
+
+         [init-vars (extract-init-vars init)]
+         [cond-vars (extract-cond-vars cond)]
+         [iter-vars (extract-iter-vars iter)])
+
+    (filter-map
+
+     (^[ini]
+       (and-let* ([var   (car ini)]
+                  [start (cdr ini)]
+
+                  [c     (assoc-ref cond-vars var)]
+                  [op    (~ c 0)]
+                  [until (~ c 1)]
+
+                  [step (assoc-ref iter-vars var)])
+
+         (let* ([int? (lambda (e) (eq? (sxml:name e) 'intConstant))]
+                [reducible (and (int? start) (int? until) (int? step))]
+
+                [until (if (not reducible) until
+                           (let* ([nc (.$ string->number sxml:car-content)]
+                                  [start-n (nc start)]
+                                  [until-n (nc until)]
+                                  [step-n  (nc step)]
+                                  [until-equal (eq? op '<=)]
+                                  [width (- until-n start-n (if until-equal -1 0))]
+                                  [new-until-n (+ (* (div width step-n) step-n) start-n)])
+
+                             (gen-int-expr
+                              (if (and (not until-equal) (= until-n new-until-n))
+                                  (- new-until-n step-n) new-until-n))))]
+
+                [op (if reducible '<= op)])
+
+           (list var start until step op)
+           )))
+
+     init-vars)
     ))

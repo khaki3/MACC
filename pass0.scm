@@ -3,9 +3,11 @@
   (use xm)
 
   (use srfi-11)
+  (use srfi-13)
   (use util.match)
   (use sxml.tools)
   (use sxml.sxpath)
+  (use gauche.collection)
 
   (export
    pass0
@@ -17,11 +19,11 @@
 ;;;
 ;;; Transform ACCPragma into the form supported by macc.
 ;;;
-;;; - KERNELS_LOOP  => PARALLEL & LOOP
-;;; - KERNELS       => PARALLEL
+;;; - KERNELS_LOOP              => KERNELS  & LOOP
+;;; - PARALLEL_LOOP             => PARALLEL & LOOP
 ;;;
-;;; - PARALLEL_LOOP   => PARALLEL & LOOP
-;;; - PARALLEL COPYIN => DATA & PARALLEL
+;;; - (KERNELS|PARALLEL) COPYIN => DATA & (KERNELS|PARALLEL)
+;;; - KERNELS                   => PARALLEL
 ;;;
 
 (define-syntax define-clauses-separater
@@ -39,21 +41,6 @@
                    (loop cl1 (cons head cl2) rest)
                    ))))))]
     ))
-
-(define-clauses-separater separate-acc-parallelism-clauses
-  (or "NUM_GANGS"
-      "NUM_WORKERS"
-      "VECT_LEN"
-      "GANG"
-      "WORKER"
-      "VECTOR"))
-
-;; For speeding up
-(define (remove-parallelism-clauses! state)
-  (match-let1 (_ clauses _) (sxml:content state)
-    (let-values ([(_ new-clauses) (separate-acc-parallelism-clauses clauses)])
-      (sxml:change-content! clauses (cdr new-clauses))
-      )))
 
 (define-clauses-separater separate-acc-*-loop-clauses
   (or "ASYNC"
@@ -82,13 +69,17 @@
       "DEVICEPTR"
       "PRIVATE"
       "FIRSTPRIVATE"
-      "DEFAULT"))
+      "DEFAULT"
+      "NUM_GANGS"
+      "NUM_WORKERS"
+      "VECT_LEN"
+      ))
 
-(define (split-acc-parallel-loop! state)
-  (match-let1 (_ clauses body) (sxml:content state)
+(define (split-acc-*-loop! state)
+  (match-let1 (('string dirname) clauses body) (sxml:content state)
     (let-values ([(cl1 cl2) (separate-acc-*-loop-clauses clauses)])
       (sxml:change-content! state
-       `((string "PARALLEL")
+       `((string ,(string-drop-right dirname 5))
          ,cl1
          (ACCPragma
           (string "LOOP")
@@ -108,28 +99,172 @@
       "PRESENT_OR_CREATE"))
 
 (define (split-acc-data-clauses! state)
-  (match-let1 (_ clauses body) (sxml:content state)
+  (match-let1 (('string dirname) clauses body) (sxml:content state)
     (let-values ([(cl1 cl2) (separate-acc-data-clauses clauses)])
       (when (> (length cl1) 1)
         (sxml:change-content!
          state
          `((string "DATA")
            ,cl1
-           (ACCPragma (string "PARALLEL") ,cl2 ,body)))
+           (ACCPragma (string ,(string-drop-right dirname 5)) ,cl2 ,body)))
         ))))
 
-;;
-;; FIXME: BUGGY IMPLEMENTATION
-;;
-;; This works correctly only when the top loop is independent.
-;;
-(define (translate-acc-kernels-loop! state)
-  (match-let1 (_ clauses body) (sxml:content state)
-    (sxml:change-content! state `((string "PARALLEL_LOOP") ,clauses ,body))))
-;;
 (define (translate-acc-kernels! state)
-  (match-let1 (_ clauses body) (sxml:content state)
-    (sxml:change-content! state `((string "PARALLEL") ,clauses ,body))))
+  (sxml:change! state (translate-acc-kernels state)))
+
+(define (translate-acc-kernels state)
+  (cond [(not (sxml:element? state)) state]
+
+        [(eq? (sxml:name state) 'ACCPragma)
+         (match-let1 (('string dirname) _ body) (sxml:content state)
+           (if (equal? dirname "KERNELS")
+               (translate-acc-kernels body)
+
+               ;; LOOP
+               (attach-parallel state)))]
+
+        [else
+         (if (parallel-attachable? state)
+             (attach-parallel state)
+             (sxml:change-content
+              state
+              (map translate-acc-kernels (sxml:content state))))]))
+
+(define (parallel-attachable? state)
+  (and (parallel-attachable-form? state)
+       (parallel-attachable-dependency? state)))
+
+(define (parallel-attachable-form? state)
+  (let1 state-name (sxml:name state)
+    (and (or (eq? state-name 'forStatement)
+             (eq? state-name 'compoundStatement))
+
+         (let1 body-content ((content-car-sxpath "body") state)
+           (or (every have-no-loop? body-content)
+
+               (and (= (length body-content) 1)
+                    (let1 body-head (~ body-content 0)
+                      (if (eq? (sxml:name body-head) 'ACCPragma) #t
+
+                          (parallel-attachable-form? body-head))))
+               )))))
+
+(define (have-no-loop? state)
+  (null? 
+   ((node-all
+     (ntype-names?? '(forStatement doStatement whileStatement functionCall)))
+    state)))
+
+(define (parallel-attachable-dependency? state)
+  (and-let*
+      ([for-states ((node-all (ntype?? 'forStatement)) state)]
+       [(pair? for-states)]
+
+       ;; Each forStatement must have valid iteration
+       [(every (.$ pair? extract-loop-counters) for-states)]
+
+       ;; state of innermost forStatement
+       [innermost-body ((car-sxpath "body") (last for-states))]
+
+       [assigns ((node-all (ntype?? 'assignExpr)) innermost-body)]
+       [arrayrefs ((node-all (ntype?? 'arrayRef)) innermost-body)]
+
+       [group-indexes
+        (lambda (indexes)
+          (map
+           (lambda (k) (cons (caar k) (map cdr k)))
+           (group-collection indexes :key car :test string=?)))]
+
+       [indexes-set
+        (group-indexes
+         (map
+          (lambda (ar)
+            (match-let1 (addr index) (sxml:content ar)
+              (cons (sxml:car-content addr) index)))
+          arrayrefs))]
+
+       [all-write-indexes
+        (map
+         (lambda (as)
+           (match-let1 (lv _) (sxml:content as)
+             (and
+              (eq? (sxml:name lv) 'arrayRef)
+              (match-let1 (addr index) (sxml:content lv)
+                (cons (sxml:car-content addr) index)))))
+         assigns)]
+
+       ;; All assignments must be to array elements
+       ;; TODO: iterative data-flow analysis for more accuracy
+       [(every values all-write-indexes)]
+
+       [write-indexes-set (group-indexes all-write-indexes)])
+
+    (every
+     (lambda (indexes)
+       (match-let1 (var . vals) indexes
+         (let1 write-indexes-vals (assoc-ref write-indexes-set var)
+           (or
+            ;; read only
+            (not write-indexes-vals)
+
+            ;; write only
+            (= (length vals) (length write-indexes-vals))
+
+            ;; all vals are same
+            ;; TODO: normalize expression of vals
+            (= (length (delete-duplicates vals)) 1)
+            ))))
+     indexes-set)
+    ))
+
+(define (attach-parallel state)
+  (let1 clauses (collect-parallel-size! state)
+    `(ACCPragma
+      (string "PARALLEL")
+      (list . ,clauses)
+      ,state)))
+
+(define (collect-parallel-size! state)
+  (filter-map
+   (lambda (c)
+     (let ([content (sxml:content c)]
+           [parname ((car-sxpath '(// string *text*)) c)])
+       (and (= (length content) 2)
+
+            (sxml:change-content! c `(,(~ content 0)))
+
+            `(list
+              (string
+               ,(if (equal? parname "VECTOR") "VECT_LEN" #"NUM_~|parname|S"))
+              ,(~ content 1))
+            )))
+   ((sxpath
+     `(// (list (string *text* ,(make-sxpath-query #/^(GANG|WORKER|VECTOR)$/)))))
+    state)))
+
+(define-clauses-separater separate-acc-parallelism-clauses
+  (or "NUM_GANGS"
+      "NUM_WORKERS"
+      "VECT_LEN"))
+
+(define (remove-parallelism-clauses! state)
+  (match-let1 (_ clauses _) (sxml:content state)
+    (let-values ([(_ new-clauses) (separate-acc-parallelism-clauses clauses)])
+      (sxml:change-content! clauses (cdr new-clauses))
+      )))
+
+(define (divide-gangs-by-numgpus! state)
+  (map
+   (lambda (c)
+     (let1 content (sxml:content c)
+       (sxml:change-content!
+        c
+        `(,(~ content 0)
+          (exprStatement (divExpr ,(~ content 1) (Var "__MACC_NUMGPUS"))))
+        )))
+   ((sxpath
+     `(// (list (string *text* ,(make-sxpath-query #/^NUM_GANGS$/)))))
+    state)))
 
 (define (pass0 xm)
   (rlet1 xm (xm-copy xm)
@@ -137,9 +272,13 @@
            [acc-trans!
             (lambda (proc pred?)
               (for-each proc ((sxpath `(// (ACCPragma (string *text* ,(make-sxpath-query pred?))))) decls)))])
-      (acc-trans! remove-parallelism-clauses! #/^(KERNELS|PARALLEL)(_LOOP)?$/)
-      (acc-trans! translate-acc-kernels-loop! #/^KERNELS_LOOP$/)
+      (acc-trans! split-acc-*-loop!           #/^(KERNELS|PARALLEL)_LOOP$/)
+      (acc-trans! split-acc-data-clauses!     #/^(KERNELS|PARALLEL)$/)
       (acc-trans! translate-acc-kernels!      #/^KERNELS$/)
-      (acc-trans! split-acc-parallel-loop!    #/^PARALLEL_LOOP$/)
-      (acc-trans! split-acc-data-clauses!     #/^PARALLEL$/)
+      (acc-trans!
+       (or
+        remove-parallelism-clauses!
+        ;divide-gangs-by-numgpus!
+        )
+       #/^PARALLEL$/)
       )))
