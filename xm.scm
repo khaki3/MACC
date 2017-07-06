@@ -259,7 +259,7 @@
     state-cond
     )
 
-  ;; '((var . op until) ...)
+  ;; '((varname . op until) ...)
   (define (extract-cond-vars state-cond)
     ;; var (<=|<) expr
     (case (sxml:name state-cond)
@@ -279,7 +279,7 @@
       [else '()]
       ))
 
-  ;; '((var . step) ...)
+  ;; '((varname . step) ...)
   (define (extract-iter-vars state-iter)
     ;; i(++|--) | (++|--)i | i (+|-)= n
     ;; TODO
@@ -326,7 +326,7 @@
         [else '()]
         )))
 
-  ;; '((var start) ...)
+  ;; '((varname start) ...)
   (define (extract-init-vars state-init)
     ;; i = ...
     (let1 c (sxml:content state-init)
@@ -334,7 +334,7 @@
         [(assignExpr)
          (match-let1 (var start) c
            (or
-            (and (eq? (sxml:name var)  'Var)
+            (and (eq? (sxml:name var) 'Var)
 
                  (list
                   (cons
@@ -355,14 +355,14 @@
     (filter-map
 
      (^[ini]
-       (and-let* ([var   (car ini)]
-                  [start (cdr ini)]
+       (and-let* ([varname (car ini)]
+                  [start   (cdr ini)]
 
-                  [c     (assoc-ref cond-vars var)]
-                  [op    (~ c 0)]
-                  [until (~ c 1)]
+                  [c       (assoc-ref cond-vars varname)]
+                  [op      (~ c 0)]
+                  [until   (~ c 1)]
 
-                  [step (assoc-ref iter-vars var)])
+                  [step    (assoc-ref iter-vars varname)])
 
          (let* ([int? (lambda (e) (eq? (sxml:name e) 'intConstant))]
                 [reducible (and (int? start) (int? until) (int? step))]
@@ -382,7 +382,7 @@
 
                 [op (if reducible '<= op)])
 
-           (list var start until step op)
+           (list varname start until step op)
            )))
 
      init-vars)
