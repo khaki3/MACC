@@ -236,7 +236,7 @@
          (match-let1 (lv rv) (sxml:content state)
            (let-values ([(new-rv env) (convert-into-ssa rv env)])
              (if (eq? (sxml:name lv) 'Var)
-                 (let1 env (ssa-env-add (sxml:car-content lv) env)
+                 (let1 env (ssa-env-add lv env)
                    (values
                     (sxml:change-content
                      state
@@ -262,7 +262,9 @@
                        ((sxpath '(declarations varDecl name *text*)) state)])
            ;; env except for local variables
            (values (sxml:change-content state ret-content)
-                   (remove (lambda (x) (member (car x) local-varnames)) new-env)
+                   (remove (lambda (x)
+                             (member (sxml:car-content (car x)) local-varnames))
+                           new-env)
                    ))]
 
         [else
@@ -280,8 +282,8 @@
   (delete-duplicates
    (filter
     (lambda (x)
-      (let1 vn (car x)
-        (not (= (assoc-ref env1 vn -1) (assoc-ref env2 vn -1)))))
+      (let1 v (car x)
+        (not (= (assoc-ref env1 v -1) (assoc-ref env2 v -1)))))
     (append env1 env2))
    (lambda (x y) (equal? (car x) (car y)))
    ))
@@ -292,17 +294,17 @@
       (if (null? diffs)
           (values phis env)
 
-          (let* ([vn      (caar diffs)]
-                 [orig-n  (assoc-ref orig vn)]
-                 [chng-n  (assoc-ref chng vn)]
-                 [orig-vn (if orig-n (ssa-rename-varname vn orig-n) vn)]
-                 [last-vn (ssa-rename-varname vn (+ chng-n 1))]
+          (let* ([v       (caar diffs)]
+                 [orig-n  (assoc-ref orig v)]
+                 [chng-n  (assoc-ref chng v)]
+                 [orig-v  (if orig-n (ssa-new-var v orig-n) v)]
+                 [last-v  (ssa-new-var v (+ chng-n 1))]
                  [new-n   (+ (or orig-n -1) 1)]
-                 [new-vn  (ssa-rename-varname vn new-n)])
+                 [new-v   (ssa-new-var v new-n)])
 
             (loop
-             (cons `(phi ,new-vn ,orig-vn ,last-vn) phis)
-             (acons vn new-n env)
+             (cons `(phi ,new-v ,orig-v ,last-v) phis)
+             (acons v new-n env)
              (cdr diffs))
             )))))
 
@@ -312,47 +314,48 @@
       (if (null? diffs)
           (values ret env)
 
-          (let* ([vn  (caar diffs)]
-                 [n1  (assoc-ref env1 vn)]
-                 [n2  (assoc-ref env2 vn)]
-                 [vn1 (if n1 (ssa-rename-varname vn n1) vn)]
-                 [vn2 (if n2 (ssa-rename-varname vn n2) vn)]
-                 [new-n  (+ (max (or n1 0) (or n2 0)) 1)]
-                 [new-vn (ssa-rename-varname vn new-n)])
+          (let* ([v  (caar diffs)]
+                 [n1 (assoc-ref env1 v)]
+                 [n2 (assoc-ref env2 v)]
+                 [v1 (if n1 (ssa-new-var v n1) v)]
+                 [v2 (if n2 (ssa-new-var v n2) v)]
+                 [new-n (+ (max (or n1 0) (or n2 0)) 1)]
+                 [new-v (ssa-new-var v new-n)])
 
             (loop
-             (cons (u new-vn vn1 vn2) ret)
-             (acons vn new-n env)
+             (cons (u new-v v1 v2) ret)
+             (acons v new-n env)
              (cdr diffs))
             )))))
 
 (define (ssa-save-env original-env current-env)
   (ssa-update-env
-   (lambda (new-vn orignal-vn _)
-     `(assignExpr (Var ,new-vn) (Var ,orignal-vn)))
+   (lambda (new-v orignal-v _)
+     `(assignExpr ,new-v ,orignal-v))
    original-env
    current-env))
 
 (define (ssa-join-env env1 env2)
   (ssa-update-env
-   (lambda (new-vn vn1 vn2)
-     `(phi ,new-vn ,vn1 ,vn2))
+   (lambda (new-v v1 v2)
+     `(phi ,new-v ,v1 ,v2))
    env1 env2))
 
-(define (ssa-env-add varname env)
-  (let1 num (assoc-ref env varname -1)
-    (acons varname (+ num 1) env)))
+(define (ssa-env-add var env)
+  (let1 num (assoc-ref env var -1)
+    (acons var (+ num 1) env)))
+
+(define (ssa-new-var var num)
+  `(Var ,(ssa-rename-varname (sxml:car-content var) num)))
 
 (define (ssa-rename-varname varname num)
   #"~|varname|__ssa__~|num|")
 
 (define (ssa-change-var var env)
-  (let1 varname (sxml:car-content var)
-    `(Var
-      (@ ,@(sxml:attr-list var))
-      ,(or (and-let1 num (assoc-ref env varname)
-             (ssa-rename-varname varname num))
-           varname))))
+  (if-let1 num (assoc-ref env var)
+     `(Var (@ ,@(sxml:attr-list var))
+           ,(ssa-rename-varname (sxml:car-content var) num))
+     var))
 
 (define (convert-into-ssa-multi states env)
   (let loop ([orig-states states] [ret-states '()] [env env])
@@ -369,7 +372,8 @@
 (define (iterate-gather-indexes state)
   (let loop ([old-indexes '()] [old-env '()])
     (let-values ([(new-indexes new-env) (gather-indexes state old-env)])
-      (let1 new-indexes (sort (map normalize-index (delete-duplicates new-indexes)))
+      (let1 new-indexes
+          (sort (delete-duplicates (map normalize-index new-indexes)))
         (if (equal? new-indexes old-indexes) new-indexes
             (loop new-indexes new-env))))))
 
@@ -509,8 +513,8 @@
      (let-values ([(var idx) (extract-indexing state)])
        (values
         (if-let1 varname (and var (sxml:car-content var))
-          (let1 vals (or (simplify-expr idx env) '(#f))
-            (map (lambda (v) `(USE ,varname ,v)) vals)))
+           (let1 vals (or (simplify-expr idx env) '(#f))
+             (map (lambda (v) `(USE ,varname ,v)) vals)))
         env))]
 
     [(plusExpr minusExpr mulExpr divExpr
@@ -527,8 +531,8 @@
      (values '() env)]
 
     [(phi)
-     (match-let1 (new-vn vn1 vn2) (sxml:content state)
-       (values '() (gi-update-env-phi new-vn vn1 vn2 env)))]
+     (match-let1 (new-v v1 v2) (sxml:content state)
+       (values '() (gi-update-env-phi new-v v1 v2 env)))]
 
     [else (error #"Unknown statement: ~(sxml:name state)")]
     ))
@@ -548,9 +552,20 @@
         (acons varname
                (and vals
                     (not (any (cut divergence-relation? varname <>) vals))
-                    (delete-duplicates (append vals old-vals)))
+                    (gi-remove-self-references
+                     varname
+                     (delete-duplicates (append vals old-vals))))
                (alist-delete varname env))
         env)))
+
+(define (gi-remove-self-references varname vals)
+  (let1 new-vals
+      (filter (lambda (v)
+                (not (and (eq? (sxml:name v) 'Var)
+                          (equal? (sxml:car-content v) varname))))
+              vals)
+    (if (null? new-vals) vals
+        new-vals)))
 
 (define (divergence-relation? varname value)
   (and (not (eq? (sxml:name value) 'Var))
@@ -561,11 +576,11 @@
         ((node-all (ntype?? 'Var)) value))
        ))
 
-(define (gi-update-env-phi new-vn vn1 vn2 env)
+(define (gi-update-env-phi new-v v1 v2 env)
   (gi-update-env
-   new-vn
-   (and-let* ([vals1 (assoc-ref env vn1 '())]
-              [vals2 (assoc-ref env vn2 '())])
+   (sxml:car-content new-v)
+   (and-let* ([vals1 (assoc-ref env (sxml:car-content v1) `(,v1))]
+              [vals2 (assoc-ref env (sxml:car-content v2) `(,v2))])
      (append vals1 vals2))
    env))
 
@@ -624,10 +639,8 @@
           [(Var)
            (let1 varname (car c)
              (and-let1 x (assoc-ref env varname '())
-               (if (or (null? x) (sxml:attr expr '__macc_info_count-region))
-                   (list expr)
-                   (and-let1 rs (rec-multi x)
-                     (apply append rs)))))]
+               (if (pair? x) x
+                   (list expr))))]
 
           [else
            (and-let* ([x   (rec-multi c)]
