@@ -19,8 +19,6 @@
 ;; Extract indexes in the form of alist of array and indexes for each USE and DEF.
 ;;
 (define (extract-indexes-collections state)
-  (set! state (list-copy-deep state))
-  (transform-asg! state)
   (let1 state-ssa (convert-into-ssa state '())
     (construct-indexes-collections (iterate-gather-indexes state-ssa))
     ))
@@ -41,32 +39,6 @@
                      )))))))
 
    (group-collection all-indexes :key cadr :test string=?)))
-
-(define (transform-asg! state)
-  (for-each
-   (lambda (expr)
-     (sxml:change! expr (convert-asgexpr-into-assignexpr expr)))
-   ((node-all
-     (ntype-names?? '(asgPlusExpr asgMinusExpr asgMulExpr asgDivExpr
-                      asgModExpr asgLshiftExpr asgRshiftExpr asgBitAndExpr
-                      asgBitOrExpr asgBitXorExpr)))
-    state)))
-
-(define (convert-asgexpr-into-assignexpr asgexpr)
-  (match-let1 (var val) (sxml:content asgexpr)
-    (let1 exp (case (sxml:name asgexpr)
-                [(asgPlusExpr)   'plusExpr]
-                [(asgMinusExpr)  'minusExpr]
-                [(asgMulExpr)    'mulExpr]
-                [(asgDivExpr)    'divExpr]
-                [(asgModExpr)    'modExpr]
-                [(asgLshiftExpr) 'LshiftExpr]
-                [(asgRshiftExpr) 'RshiftExpr]
-                [(asgBitAndExpr) 'bitAndExpr]
-                [(asgBitOrExpr)  'bitOrExpr]
-                [(asgBitXorExpr) 'bitXorExpr])
-      (gen-=-expr var (list exp var val))
-      )))
 
 
 ;;;
@@ -159,18 +131,18 @@
 
                ;; convert into whileStatement
                (convert-into-ssa
-                `(compoundStatemet
+                `(compoundStatement
                   (symbols)
                   (declarations)
                   (body
-                   (exprStatement ,@(sxml:content init))
+                   ,@(gen-comma-states (sxml:content init))
 
                    (whileStatement
                     ,cond
 
                     (body
                      ,@(sxml:content body)
-                     (exprStatement ,@(sxml:content iter))))
+                     ,@(gen-comma-states (sxml:content iter))))
                    ))
 
                 env)
@@ -192,10 +164,11 @@
               `(compoundStatement
                 (symbols)
                 (declarations)
-                (whileStatement
-                 (cond (commaExpr ,@fore-phis ,@(sxml:content new-cond)))
-                 ,new-body)
-                ,@(gen-comma-states rear-phis))
+                (body
+                 (whileStatement
+                  (condition (commaExpr ,@fore-phis ,@(sxml:content new-cond)))
+                  ,new-body)
+                 ,@(gen-comma-states rear-phis)))
 
               rear-env)))]
 
@@ -252,6 +225,30 @@
                      (list new-lv new-rv))
                     env))
                  )))]
+
+        [(postIncrExpr postDecrExpr preIncrExpr preDecrExpr)
+         (let ([var (sxml:car-content state)]
+               [val (case (sxml:name state)
+                      [(postIncrExpr preIncrExpr) (gen-int-expr 1)]
+                      [(postDecrExpr preDecrExpr) (gen-int-expr -1)])])
+           (convert-into-ssa (gen-=-expr var `(plusExpr ,var ,val)) env))]
+
+        [(asgPlusExpr asgMinusExpr asgMulExpr asgDivExpr
+          asgModExpr asgLshiftExpr asgRshiftExpr asgBitAndExpr
+          asgBitOrExpr asgBitXorExpr)
+         (match-let1 (var val) (sxml:content state)
+           (let1 exp (case (sxml:name asgexpr)
+                       [(asgPlusExpr)   'plusExpr]
+                       [(asgMinusExpr)  'minusExpr]
+                       [(asgMulExpr)    'mulExpr]
+                       [(asgDivExpr)    'divExpr]
+                       [(asgModExpr)    'modExpr]
+                       [(asgLshiftExpr) 'LshiftExpr]
+                       [(asgRshiftExpr) 'RshiftExpr]
+                       [(asgBitAndExpr) 'bitAndExpr]
+                       [(asgBitOrExpr)  'bitOrExpr]
+                       [(asgBitXorExpr) 'bitXorExpr])
+             (convert-into-ssa (gen-=-expr var (list exp var val)) env)))]
 
         [(Var) (values (ssa-change-var state env) env)]
 
@@ -451,7 +448,7 @@
     [(forStatement)
      (gather-indexes-for state env)]
 
-    [(doStatement whileStatment)
+    [(doStatement whileStatement)
      (gather-indexes-multi
       (append
        ((content-car-sxpath "condition") state)
@@ -548,7 +545,7 @@
 
 (define (gi-update-env varname vals env)
   (let1 old-vals (assoc-ref env varname '()) ; #f means divergence
-    (if (and old-vals (pair? vals))
+    (if old-vals
         (acons varname
                (and vals
                     (not (any (cut divergence-relation? varname <>) vals))

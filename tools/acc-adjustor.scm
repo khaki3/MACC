@@ -43,11 +43,13 @@ p[...]
   (rxmatch #/^for/ line))
 
 (define (for-insert-declaration line env)
-  (and-let1 ma (rxmatch #/^for\((?<var>\w+) (?<rest>.*)$/ line)
-    (let1 var (ma 'var)
-      (if-let1 type (assoc-ref env var)
-        (string-append "for(" type " " var (ma 'rest))
-        line))))
+  (or
+   (and-let1 ma (rxmatch #/^for\((?<var>\w+) (?<rest>.*)$/ line)
+     (let1 var (ma 'var)
+       (if-let1 type (assoc-ref env var)
+         (string-append "for(" type " " var (ma 'rest))
+         line)))
+   line))
 
 ;; drop the first brace pair ('{' and '}')
 (define (drop-brace-pair states)
