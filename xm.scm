@@ -343,14 +343,13 @@
             '()))]
         )))
 
-  (let* ([init ((ccc-sxpath "init")      state-for)]
-         [cond ((ccc-sxpath "condition") state-for)]
-         [cond (normalize-cond           cond)]
-         [iter ((ccc-sxpath "iter")      state-for)]
-
-         [init-vars (extract-init-vars init)]
-         [cond-vars (extract-cond-vars cond)]
-         [iter-vars (extract-iter-vars iter)])
+  (let* ([init ((if-ccc-sxpath "init")      state-for)]
+         [cond ((if-ccc-sxpath "condition") state-for)]
+         [iter ((if-ccc-sxpath "iter")      state-for)]
+         [cond (map normalize-cond cond)]
+         [init-vars (if init (extract-init-vars init) '())]
+         [cond-vars (if cond (extract-cond-vars cond) '())]
+         [iter-vars (if iter (extract-iter-vars iter) '())])
 
     (filter-map
 
