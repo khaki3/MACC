@@ -63,6 +63,8 @@ main(int argc, char *argv[])
   float  gosa,target;
   double  cpu0,cpu1,cpu,flop;
   char   size[10];
+  size_t bs; /* box size */
+  float *a_m, *b_m, *c_m, *p_m, *bnd_m, *wrk1_m, *wrk2_m;
 
   if(argc == 2){
     strcpy(size,argv[1]);
@@ -86,6 +88,7 @@ main(int argc, char *argv[])
   imax= mimax-1;
   jmax= mjmax-1;
   kmax= mkmax-1;
+  bs = mimax * mjmax * mkmax;
 
   target = 60.0;
 
@@ -121,38 +124,56 @@ main(int argc, char *argv[])
   /*
    *    Start measuring
    */
-  jacobi(1,&a,&b,&c,&p,&bnd,&wrk1,&wrk2); /* wake up */
 
-  nn= 3;
-  printf(" Start rehearsal measurement process.\n");
-  printf(" Measure the performance in %d times.\n\n",nn);
+  a_m = a.m;
+  b_m = b.m;
+  c_m = c.m;
+  p_m = p.m;
+  bnd_m = bnd.m;
+  wrk1_m = wrk1.m;
+  wrk2_m = wrk2.m;
 
-  cpu0= second();
-  gosa= jacobi(nn,&a,&b,&c,&p,&bnd,&wrk1,&wrk2);
-  cpu1= second();
-  cpu= cpu1 - cpu0;
-  flop= fflop(imax,jmax,kmax);
+  #pragma acc data copy (p_m[0:bs])
+  #pragma acc data copyin \
+      (a_m[0:bs * 4], b_m[0:bs * 3], c_m[0:bs * 3], \
+       bnd_m[0:bs], wrk1_m[0:bs], wrk2_m[0:bs])
+  {
+      jacobi(1,&a,&b,&c,&p,&bnd,&wrk1,&wrk2); /* wake up */
 
-  printf(" MFLOPS: %f time(s): %f %e\n\n",
-         mflops(nn,cpu,flop),cpu,gosa);
+      nn= 3;
+      printf(" Start rehearsal measurement process.\n");
+      printf(" Measure the performance in %d times.\n\n",nn);
 
-  nn= (int)(target/(cpu/3.0));
+      cpu0= second();
+      gosa= jacobi(nn,&a,&b,&c,&p,&bnd,&wrk1,&wrk2);
+      cpu1= second();
+      cpu= cpu1 - cpu0;
+      flop= fflop(imax,jmax,kmax);
 
-  printf(" Now, start the actual measurement process.\n");
-  printf(" The loop will be excuted in %d times\n",nn);
-  printf(" This will take about one minute.\n");
-  printf(" Wait for a while\n\n");
+      printf(" MFLOPS: %f time(s): %f %e\n\n",
+             mflops(nn,cpu,flop),cpu,gosa);
 
-  cpu0 = second();
-  gosa = jacobi(nn,&a,&b,&c,&p,&bnd,&wrk1,&wrk2);
-  cpu1 = second();
-  cpu = cpu1 - cpu0;
+      nn= (int)(target/(cpu/3.0));
 
-  printf(" Loop executed for %d times\n",nn);
-  printf(" Gosa : %e \n",gosa);
-  printf(" MFLOPS measured : %f\tcpu : %f\n",mflops(nn,cpu,flop),cpu);
-  printf(" Score based on Pentium III 600MHz using Fortran 77: %f\n",
-         mflops(nn,cpu,flop)/82,84);
+      printf(" Now, start the actual measurement process.\n");
+      printf(" The loop will be excuted in %d times\n",nn);
+      printf(" This will take about one minute.\n");
+      printf(" Wait for a while\n\n");
+
+      for (i = 1; i <= 10; i++) {
+          cpu0 = second();
+          gosa = jacobi(nn,&a,&b,&c,&p,&bnd,&wrk1,&wrk2);
+          cpu1 = second();
+          cpu = cpu1 - cpu0;
+
+          printf(" [%d]\n", i);
+          printf(" Loop executed for %d times\n",nn);
+          printf(" Gosa : %e \n",gosa);
+          printf(" MFLOPS measured : %f\tcpu : %f\n",mflops(nn,cpu,flop),cpu);
+          printf(" Score based on Pentium III 600MHz using Fortran 77: %f\n",
+                 mflops(nn,cpu,flop)/82,84);
+      }
+  }
 
   /*
    *   Matrix free
@@ -291,7 +312,6 @@ jacobi(int nn, Matrix* a,Matrix* b,Matrix* c,
   float  gosa,s0,ss;
 
   float *a_m, *b_m, *c_m, *p_m, *bnd_m, *wrk1_m, *wrk2_m;
-  size_t bs; /* box size */
 
   imax= mrows-1;
   jmax= mcols-1;
@@ -305,12 +325,7 @@ jacobi(int nn, Matrix* a,Matrix* b,Matrix* c,
   wrk1_m = wrk1->m;
   wrk2_m = wrk2->m;
 
-  bs = mrows * mcols * mdeps;
-
-  #pragma acc data copy (p_m[0:bs])
-  #pragma acc data copyin \
-      (a_m[0:bs * 4], b_m[0:bs * 3], c_m[0:bs * 3], \
-       bnd_m[0:bs], wrk1_m[0:bs], wrk2_m[0:bs])
+  #pragma acc data present (a_m, b_m, c_m, p_m, bnd_m, wrk1_m, wrk2_m)
   for(n=0 ; n<nn ; n++){
     gosa = 0.0;
 
