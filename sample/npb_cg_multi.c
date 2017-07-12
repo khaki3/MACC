@@ -1,4 +1,8 @@
 /*
+  Generated from
+  https://github.com/uhhpctools/openacc-npb/blob/master/CG/CG/cg.c
+*/
+/*
  * Original Source  : /tmp/tmp.HGpj0gDuBm/cg_1.c
  * Language         : C
  * Compiled Time    : 2017-07-07 07:28:17
