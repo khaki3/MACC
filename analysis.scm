@@ -237,7 +237,7 @@
           asgModExpr asgLshiftExpr asgRshiftExpr asgBitAndExpr
           asgBitOrExpr asgBitXorExpr)
          (match-let1 (var val) (sxml:content state)
-           (let1 exp (case (sxml:name asgexpr)
+           (let1 exp (case (sxml:name state)
                        [(asgPlusExpr)   'plusExpr]
                        [(asgMinusExpr)  'minusExpr]
                        [(asgMulExpr)    'mulExpr]
