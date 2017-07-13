@@ -260,7 +260,12 @@
        (sxml:change-content!
         c
         `(,(~ content 0)
-          (exprStatement (divExpr ,(~ content 1) (Var "__MACC_NUMGPUS"))))
+          (exprStatement
+           (divExpr
+            (minusExpr
+             (plusExpr ,(~ content 1) (Var "__MACC_NUMGPUS"))
+             (intConstant "1"))
+            (Var "__MACC_NUMGPUS"))))
         )))
    ((sxpath
      `(// (list (string *text* ,(make-sxpath-query #/^NUM_GANGS$/)))))
