@@ -329,7 +329,7 @@ jacobi(int nn, Matrix* a,Matrix* b,Matrix* c,
   for(n=0 ; n<nn ; n++){
     gosa = 0.0;
 
-    #pragma acc parallel loop independent gang num_gangs(imax) reduction (+ : gosa)
+    #pragma acc parallel loop independent gang num_gangs(imax+1) reduction (+ : gosa)
     for(i=1 ; i<imax; i++)
       #pragma acc loop
       for(j=1 ; j<jmax ; j++)
@@ -358,7 +358,7 @@ jacobi(int nn, Matrix* a,Matrix* b,Matrix* c,
           MR(wrk2,0,i,j,k)= MR(p,0,i,j,k) + omega*ss;
         }
 
-    #pragma acc parallel loop independent gang num_gangs(imax)
+    #pragma acc parallel loop independent gang num_gangs(imax+1)
     for(i=1 ; i<imax ; i++)
       #pragma acc loop independent
       for(j=1 ; j<jmax ; j++)
