@@ -112,23 +112,24 @@
 (define (translate-acc-kernels! state)
   (sxml:change! state (translate-acc-kernels state)))
 
-(define (translate-acc-kernels state)
+(define (translate-acc-kernels state :optional (clauses '(list)))
   (cond [(not (sxml:element? state)) state]
 
         [(eq? (sxml:name state) 'ACCPragma)
-         (match-let1 (('string dirname) _ body) (sxml:content state)
+         (match-let1 (('string dirname) cl body) (sxml:content state)
            (if (equal? dirname "KERNELS")
-               (translate-acc-kernels body)
-
+               ;; KERNELS
+               (translate-acc-kernels body (append clauses (cdr cl)))
                ;; LOOP
-               (attach-parallel state)))]
+               (attach-parallel state clauses)))]
 
         [else
          (if (parallel-attachable? state)
-             (attach-parallel state)
+             (attach-parallel state clauses)
              (sxml:change-content
               state
-              (map translate-acc-kernels (sxml:content state))))]))
+              (map (cut translate-acc-kernels <> clauses)
+                   (sxml:content state))))]))
 
 (define (parallel-attachable? state)
   (and (parallel-attachable-form? state)
@@ -217,11 +218,11 @@
      indexes-set)
     ))
 
-(define (attach-parallel state)
-  (let1 clauses (collect-parallel-size! state)
+(define (attach-parallel state clauses)
+  (let1 clauses (append clauses (collect-parallel-size! state))
     `(ACCPragma
       (string "PARALLEL")
-      (list . ,clauses)
+      ,clauses
       ,state)))
 
 (define (collect-parallel-size! state)
