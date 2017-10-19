@@ -106,7 +106,7 @@
          state
          `((string "DATA")
            ,cl1
-           (ACCPragma (string ,(string-drop-right dirname 5)) ,cl2 ,body)))
+           (ACCPragma (string ,dirname) ,cl2 ,body)))
         ))))
 
 (define (translate-acc-kernels! state)
