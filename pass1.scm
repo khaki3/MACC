@@ -27,7 +27,7 @@
      (sxml:content (xm-type-table xm))
      )))
 
-(define (fetch-inner-type decl)
+(define (fetch-element-type decl)
   (sxml:attr
    decl
    (case (sxml:name decl)
@@ -35,21 +35,22 @@
      [(arrayType)   'element_type]
      [(basicType)   'name])))
 
-(define (search-inner-type ht type)
+(define (search-element-type ht type)
   (or (and-let* ([type]
                  [decl (ref ht type #f)]
-                 [type (fetch-inner-type decl)])
-        (search-inner-type ht type))
+                 [type (fetch-element-type decl)])
+        (search-element-type ht type))
       type))
 
 (define (search-array-size ht type)
   (and-let* ([type] [decl (ref ht type #f)])
-    (if (eq? (sxml:name decl) 'arrayType)
-        (and-let1 s (sxml:attr decl 'array_size)
-          (string->number s))
+    (let1 inner (search-array-size ht (fetch-element-type decl))
+      (if (eq? (sxml:name decl) 'arrayType)
+          (and-let1 s (sxml:attr decl 'array_size)
+            (cons (string->number s) (or inner '())))
 
-        (search-array-size ht (fetch-inner-type decl))
-        )))
+          inner
+          ))))
 
 (define (extract-global-env xm)
   (update-env '() (xm-global-symbols xm)))
@@ -93,9 +94,11 @@
                        [array-size (search-array-size type-ht type)])
               `(list
                 ,x
-                (list
-                 ,(gen-int-expr 0)
-                 ,(gen-int-expr array-size))))
+                ,@(map (lambda (s)
+                         `(list ,(gen-int-expr 0)
+                                ,(gen-int-expr s)))
+                       array-size)
+                ))
             x))
          (sxml:content args)))))
 
@@ -109,7 +112,7 @@
         v
         (list
          'ptype
-         (search-inner-type type-ht (fetch-type env (sxml:car-content v))))))
+         (search-element-type type-ht (fetch-type env (sxml:car-content v))))))
      vars)))
 
 (define (insert-data-info-acc-data! type-ht env state)
