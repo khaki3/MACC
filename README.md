@@ -1,10 +1,6 @@
 # macc
 
-Source-to-Source compiler of OpenACC for automatic multiple GPUs use.
-
-- From OpenACC 1.0 to OpenACC 2.5 + OpenMP.
-- Kernels which the write accesses are affine will be rewritten to use multi-GPUs. Others will be executed on single GPU.
-- Data transfers are generated according to the intersection of the write region and the read region.
+An OpenACC transpiler for automatic multi-GPU use.
 
 ## Requirements
 * Gauche 0.9.5
@@ -13,11 +9,5 @@ Source-to-Source compiler of OpenACC for automatic multiple GPUs use.
 
 ## Usage
 ```
-% ./tools/c-to-xcodeml acc.c > acc.xml
-% gosh main.scm < acc.xml > out.xml
-% ./tools/xcodeml-to-c out.xml > out.c
+% cat input.c | ./tools/c-to-xcodeml | gosh main.scm | ./tools/xcodeml-to-c > output.c
 ```
-
-## TODO
-- Wrap OpenACC's routines.
-- Multidimensional array
