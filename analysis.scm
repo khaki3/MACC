@@ -487,14 +487,16 @@
 
            [(arrayRef pointerRef)
             (let-values ([(var idx) (extract-indexing lv)])
-              (values
-               (append
-                (if-let1 varname (and var (sxml:car-content var))
-                   (let1 vals (or (simplify-expr idx env) '(#f))
-                     (map (lambda (v) `(DEF ,varname ,v)) vals))
-                   '())
-                indexes)
-               env))]
+              (let ([vars (if var (simplify-expr var env) '())]
+                    [vals (or (simplify-expr idx env) '(#f))])
+                (values
+                 (append
+                  (append-map
+                   (lambda (varname) (map (lambda (v) `(DEF ,varname ,v)) vals))
+                   (map sxml:car-content vars))
+                  indexes)
+                 env)))]
+
            )))]
 
     [(postIncrExpr postDecrExpr preIncrExpr preDecrExpr)
@@ -508,11 +510,13 @@
 
     [(arrayRef pointerRef)
      (let-values ([(var idx) (extract-indexing state)])
-       (values
-        (if-let1 varname (and var (sxml:car-content var))
-           (let1 vals (or (simplify-expr idx env) '(#f))
-             (map (lambda (v) `(USE ,varname ,v)) vals)))
-        env))]
+       (let ([vars (if var (simplify-expr var env) '())]
+             [vals (or (simplify-expr idx env) '(#f))])
+         (values
+          (append-map
+           (lambda (varname) (map (lambda (v) `(USE ,varname ,v)) vals))
+           (map sxml:car-content vars))
+          env)))]
 
     [(plusExpr minusExpr mulExpr divExpr
       modExpr LshiftExpr RshiftExpr bitAndExpr bitOrExpr bitXorExpr
@@ -524,7 +528,7 @@
 
     [(Var caseLabel defaultLabel breakStatement
       intConstant longlongConstant floatConstant
-      stringConstant moeConstant funcAddr)
+      stringConstant moeConstant funcAddr arrayAddr)
      (values '() env)]
 
     [(phi)
