@@ -67,7 +67,7 @@
      fun-name
      '(Var "__macc_tnum")
      var
-     `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'ptype)))))
+     `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'element_type)))))
      start
      length)
     ))
@@ -120,7 +120,7 @@
      fun-name
      '(Var "__macc_tnum")
      var
-     `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'ptype)))))
+     `(sizeOfExpr (typeName (@ (type ,(sxml:attr var 'element_type)))))
      start
      length)
     ))
