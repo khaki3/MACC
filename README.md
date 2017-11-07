@@ -9,5 +9,5 @@ An OpenACC transpiler for automatic multi-GPU use.
 
 ## Usage
 ```
-% cat input.c | ./tools/c-to-xcodeml | gosh main.scm | ./tools/xcodeml-to-c > output.c
+% cat input.c | ./tools/c-to-xcodeml -m | gosh main.scm | ./tools/xcodeml-to-c > output.c
 ```

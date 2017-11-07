@@ -25,8 +25,12 @@ OUT="${TEMP_DIR}/out.xml"
 cat > "${C_FILE}"
 ${GOSH} "${LINT}" < "${C_FILE}" >&2
 ${OMNI_HOME}/libexec/om_replace_pragma -I${OMNI_HOME}/include "${C_FILE}" -o "${TMP0}"
-cat "${MACC_H}" "${TMP0}" > "${TMP1}"
-${CC} -E -I${OMNI_HOME}/include -D_OPENACC=201111 "${TMP1}" > "${TMP2}"
+if [ "$1" = "-m" ]; then
+    cat "${MACC_H}" "${TMP0}" > "${TMP1}"
+else
+    cat "${TMP0}" > "${TMP1}"
+fi
+${CC} -ta=tesla:managed -E -I${OMNI_HOME}/include -D_OPENACC=201111 "${TMP1}" > "${TMP2}"
 ${OMNI_HOME}/bin/C_Front --no-builtin-va-arg -facc -fopenmp "${TMP2}" -o "${OUT}"
 cat "${OUT}"
 rm -rf "${TEMP_DIR}"
