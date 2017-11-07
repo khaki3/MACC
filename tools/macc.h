@@ -189,6 +189,29 @@ void __macc_create(int gpu_num, void *p, int type_size, int lb, int length)
     acc_wait(gpu_num);
 }
 
+
+void *__macc_malloc(unsigned long size)
+{
+    void *ret = malloc(size);
+
+    #pragma omp parallel num_threads(__MACC_NUMGPUS)
+    {
+        __macc_create(omp_get_thread_num(), ret, 1, 0, size);
+    }
+
+    return ret;
+}
+
+void __macc_free(void *ptr)
+{
+    #pragma omp parallel num_threads(__MACC_NUMGPUS)
+    {
+        struct __MaccDataTableEntry *entry =
+            __macc_data_table_find(gpu_num, p);
+        __macc_delete(omp_get_thread_num(), ret, 1, 0, entry->entire_ub + 1);
+    }
+}
+
 void __macc_update_self(int gpu_num, void *p, int type_size, int lb, int length)
 {
     struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, p);

@@ -6,6 +6,7 @@ OMNI_JAVA=java
 
 GOSH=gosh
 ADJUSTOR="$(cd $(dirname $0) && pwd)/acc-adjustor.scm"
+REPLACER="$(cd $(dirname $0) && pwd)/replacer"
 
 if test -z "${OMNI_HOME}"; then
     echo 'Please set the environmental variable OMNI_HOME to point to the directory in which Omni Compiler is installed' >&2
@@ -22,5 +23,9 @@ OMNI_JAR3="${OMNI_HOME}/share/xcalablemp/om-exc-tools.jar"
 
 cat > "${XM_FILE}"
 ${OMNI_JAVA} -Xmx200m -Xms200m -cp ${OMNI_JAR1}:${OMNI_JAR2}:${OMNI_JAR3} exc.util.omompx -decomp -xc "${XM_FILE}" >/dev/null
-cat "${C_FILE}" | ${GOSH} "${ADJUSTOR}"
+if [ "$1" = "-m" ]; then
+    cat "${C_FILE}" | ${GOSH} "${ADJUSTOR}" | "${REPLACER}"
+else
+    cat "${C_FILE}" | ${GOSH} "${ADJUSTOR}"
+fi
 rm -rf "${TEMP_DIR}"
