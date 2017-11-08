@@ -22,25 +22,38 @@
   )
 
 (define (rename-var! sxml)
+  (define arraytypes
+    ((sxpath '(// arrayType)) sxml))
+
   (for-each
    (lambda (x)
      (for-each
       (lambda (y)
         (and-let* ([oldname (let1 c (sxml:content y) (and (pair? c) (car c)))]
-                   [newname (string-append oldname (NEWSYM))])
+                   [newname (string-append oldname (NEWSYM))]
+                   [rename  (lambda (z)
+                              (when (equal? (car (sxml:content z)) oldname)
+                                (sxml:change-content! z (list newname))))])
           (sxml:change-content! y (list newname))
 
+          ;; arraySize using const int
           (for-each
-           (lambda (z)
-             (when (equal? (car (sxml:content z)) oldname)
-               (sxml:change-content! z (list newname))))
-           ((sxpath `(// symbols id name)) x))
+           (lambda (id)
+             (for-each 
+              (lambda (z)
+                (when (equal? (sxml:attr z 'type) id)
+                  (rename z)))
+              ((sxpath '(// Var)) arraytypes)))
+           ((sxpath '(// id @ type *text*)) x))
 
+          ;; symbol
           (for-each
-           (lambda (z)
-             (when (equal? (car (sxml:content z)) oldname)
-               (sxml:change-content! z (list newname))))
+           rename
+           ((sxpath '(// symbols id name)) x))
 
+          ;; variable reference
+          (for-each
+           rename
            ((sxpath
              `(// ,(make-sxpath-query
                     (lambda (z)
