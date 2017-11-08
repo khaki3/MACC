@@ -30,7 +30,7 @@ if [ "$1" = "-m" ]; then
 else
     cat "${TMP0}" > "${TMP1}"
 fi
-${CC} -ta=tesla:managed -E -I${OMNI_HOME}/include -D_OPENACC=201111 "${TMP1}" > "${TMP2}"
+${CC} -E -I ${OMNI_HOME}/include "${TMP1}" > "${TMP2}"
 ${OMNI_HOME}/bin/C_Front --no-builtin-va-arg -facc -fopenmp "${TMP2}" -o "${OUT}"
 cat "${OUT}"
 rm -rf "${TEMP_DIR}"
