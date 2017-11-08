@@ -206,9 +206,10 @@ void __macc_free(void *ptr)
 {
     #pragma omp parallel num_threads(__MACC_NUMGPUS)
     {
+        int gpu_num = omp_get_thread_num();
         struct __MaccDataTableEntry *entry =
-            __macc_data_table_find(gpu_num, p);
-        __macc_delete(omp_get_thread_num(), ret, 1, 0, entry->entire_ub + 1);
+            __macc_data_table_find(gpu_num, ptr);
+        __macc_delete(gpu_num, ptr, 1, 0, entry->entire_ub + 1);
     }
 }
 
