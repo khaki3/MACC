@@ -27,10 +27,11 @@ ${GOSH} "${LINT}" < "${C_FILE}" >&2
 ${OMNI_HOME}/libexec/om_replace_pragma -I${OMNI_HOME}/include "${C_FILE}" -o "${TMP0}"
 if [ "$1" = "-m" ]; then
     cat "${MACC_H}" "${TMP0}" > "${TMP1}"
+    ${CC} -E -ta=tesla:managed -I ${OMNI_HOME}/include "${TMP1}" > "${TMP2}"
 else
     cat "${TMP0}" > "${TMP1}"
+    ${CC} -E -I ${OMNI_HOME}/include "${TMP1}" > "${TMP2}"
 fi
-${CC} -E -I ${OMNI_HOME}/include "${TMP1}" > "${TMP2}"
 ${OMNI_HOME}/bin/C_Front --no-builtin-va-arg -facc -fopenmp "${TMP2}" -o "${OUT}"
 cat "${OUT}"
 rm -rf "${TEMP_DIR}"

@@ -1,5 +1,8 @@
 #!/bin/bash
 
-sed -e 's/acc_malloc/__macc_malloc/g;
+sed -e '
+s/__macc_malloc/acc_malloc/g;
+s/__macc_free/acc_free/g;
+s/acc_malloc/__macc_malloc/g;
 s/acc_free/__macc_free/g;
 s/ deviceptr/ present/g'
