@@ -4,7 +4,7 @@ N-dim → 1-dim
 
 ## example
 ```
-% pgcc -E -I <incdir> *.c | ../tools/c-to-xcodeml > tmp.xml
+% pgcc -acc -E -I <incdir> *.c | ../tools/c-to-xcodeml -m > tmp.xml
 % gosh rename.scm | ../tools/xcodeml-to-c | gosh convdim.scm > out.c
 ```
 
