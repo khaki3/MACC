@@ -1,3 +1,7 @@
-- 2d array in struct
-- pointer to pointer
-- '@' of convdim
+- (convdim/restyle.scm) N-dim array in struct is not renamed
+- (convdim/convdim.scm) '@'
+- (pass2.scm) Array of pointer to pointer is not supported
+- (tools/replacer) is just using sed
+- (c-to-xcodeml) '-m' option must be applied before transpilation
+- (c-to-xcodeml) '-m' option can be applied only for first preprocessing
+- (xcodeml-to-c) '-m' option must be applied just after transpilation
