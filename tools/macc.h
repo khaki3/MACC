@@ -211,6 +211,7 @@ void __macc_free(void *ptr)
             __macc_data_table_find(gpu_num, ptr);
         __macc_delete(gpu_num, ptr, 1, 0, entry->entire_ub + 1);
     }
+    free(ptr);
 }
 
 void __macc_update_self(int gpu_num, void *p, int type_size, int lb, int length)
