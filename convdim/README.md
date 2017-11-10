@@ -9,4 +9,4 @@ N-dim → 1-dim
 ```
 
 ## Requirements
-* Gauche 0.9.5
+* Gauche (>= 0.9.5)
