@@ -92,6 +92,7 @@
       "COPYIN"
       "COPYOUT"
       "CREATE"
+      "DEVICEPTR"
       "PRESENT"
       "PRESENT_OR_COPY"
       "PRESENT_OR_COPYIN"

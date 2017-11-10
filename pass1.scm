@@ -225,7 +225,7 @@
      (insert-present-multi! ((content-car-sxpath "body") state) vars)]
 
     [(ifStatement)
-     (insert-present! (map cadr (sxml:content state)) vars)]
+     (insert-present-multi! (map cadr (sxml:content state)) vars)]
     ))
 
 (define (pass1 xm)
