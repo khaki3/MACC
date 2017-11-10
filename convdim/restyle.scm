@@ -65,9 +65,10 @@
                       ))))
             x))
           ))
-      (append ((sxpath '(// params name)) x)
-              ((sxpath '(// declarations varDecl name)) x))))
-   ((sxpath '(// functionDefinition)) sxml)
+      (append ((sxpath '(params name)) x)
+              ((sxpath '(declarations varDecl name)) x))))
+   (append ((sxpath '(// functionDefinition)) sxml)
+           ((sxpath '(// compoundStatement)) sxml))
    ))
 
 (define (rename sxml)
@@ -76,10 +77,16 @@
   (rename-var! sxml)
   sxml)
 
+(define (replace-statics sxml)
+  sxml)
+
+(define (restyle sxml)
+  (replace-statics (rename sxml)))
+
 (define (main args)
   (let* ([iport    (current-input-port)]
          [oport    (current-output-port)]
          [sxml-in  (~ (ssax:xml->sxml iport '()) 2)]
-         [sxml-out (rename sxml-in)])
+         [sxml-out (restyle sxml-in)])
     (srl:sxml->xml sxml-out oport))
   0)
