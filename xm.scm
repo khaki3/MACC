@@ -366,7 +366,7 @@
          (let* ([int? (lambda (e) (eq? (sxml:name e) 'intConstant))]
                 [reducible (and (int? start) (int? until) (int? step))]
 
-                [until (if (not reducible) until
+                [until (if reducible
                            (let* ([nc (.$ string->number sxml:car-content)]
                                   [start-n (nc start)]
                                   [until-n (nc until)]
@@ -377,9 +377,12 @@
 
                              (gen-int-expr
                               (if (and (not until-equal) (= until-n new-until-n))
-                                  (- new-until-n step-n) new-until-n))))]
+                                  (- new-until-n step-n) new-until-n)))
 
-                [op (if reducible '<= op)])
+                           (if (eq? op '<=) until
+                               `(minusExpr ,until ,(gen-int-expr 1))))]
+
+                [op '<=])
 
            (list varname start until step op)
            )))
