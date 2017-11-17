@@ -296,6 +296,15 @@
        (map (lambda (e) (gen-funcall "__macc_update_access_region"
                                      macc-gpu-num-var def-lb-set-var def-ub-set-var e))
             (append-map extend-loop-counter (or def-indexes '()) )))
+
+      (gen-funcall
+       "__macc_adjust_data_region"
+       `(Var ,col-varname) macc-gpu-num-var use-lb-set-var use-ub-set-var)
+
+      (gen-funcall
+       "__macc_adjust_data_region"
+       `(Var ,col-varname) macc-gpu-num-var def-lb-set-var def-ub-set-var)
+
       ))))
 
 ;; '( (op . var) ... )

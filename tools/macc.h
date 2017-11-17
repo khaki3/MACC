@@ -36,15 +36,19 @@ void __macc_set_gpu_num(int i)
 }
 
 #define MACC_DATA_TABLE_SIZE 256
+#define MACC_DATA_TABLE_WRAP_CACHE_SIZE 512
+#define TABLE_INDEX(ptr) (((long)ptr / 16) % MACC_DATA_TABLE_SIZE)
 
 struct __MaccDataTableEntry {
     void *addr;
+    void *addr_ub;
     int  type_size;
     int  entire_lb;
     int  entire_ub;
     bool dirty;
     int  dirty_lb;
     int  dirty_ub;
+    int  offset;
     struct __MaccDataTableEntry *next;
 };
 
@@ -52,7 +56,14 @@ struct __MaccDataTable {
     struct __MaccDataTableEntry *entries[MACC_DATA_TABLE_SIZE];
 };
 
+struct __MaccDataTableEntryWrap {
+    struct __MaccDataTableEntry *entry;
+    int offset;
+};
+
 struct __MaccDataTable *__MACC_DATA_TABLE_SET;
+struct __MaccDataTableEntryWrap __MACC_DATA_TABLE_WRAP_CACHE[MACC_DATA_TABLE_WRAP_CACHE_SIZE];
+int __MACC_NUMBER_OF_WRAP_CACHE = 0;
 
 void __macc_init()
 {
@@ -87,13 +98,14 @@ void __macc_init()
 }
 
 void __macc_data_table_insert(
-    int gpu_num, void *p, int type_size, int entire_lb, int entire_ub)
+    int gpu_num, void *ptr, int type_size, int entire_lb, int entire_ub)
 {
-    int index = (long)p % MACC_DATA_TABLE_SIZE;
+    int index = TABLE_INDEX(ptr);
 
     struct __MaccDataTableEntry *new_entry = malloc(sizeof(struct __MaccDataTableEntry));
 
-    new_entry->addr      = p;
+    new_entry->addr      = ptr;
+    new_entry->addr_ub   = ptr + entire_ub * type_size;
     new_entry->type_size = type_size;
     new_entry->entire_lb = entire_lb;
     new_entry->entire_ub = entire_ub;
@@ -105,33 +117,49 @@ void __macc_data_table_insert(
     __MACC_DATA_TABLE_SET[gpu_num].entries[index] = new_entry;
 }
 
-struct __MaccDataTableEntry *__macc_data_table_find(int gpu_num, void *p)
+struct __MaccDataTableEntry *__macc_data_table_find(int gpu_num, void *ptr)
 {
-    int index = (long)p % MACC_DATA_TABLE_SIZE;
+    int index = TABLE_INDEX(ptr);
     struct __MaccDataTableEntry *entry = __MACC_DATA_TABLE_SET[gpu_num].entries[index];
 
     while (entry != NULL)
     {
-        if (entry->addr == p)
+        if (entry->addr == ptr) {
+            entry->offset = 0;
             return entry;
+        }
 
         entry = entry->next;
     }
 
-    fprintf(stderr, "Error on __macc_data_table_find: Not found the item %p\n", p);
+    for (int i = 0; i < MACC_DATA_TABLE_SIZE; i++)
+    {
+        entry = __MACC_DATA_TABLE_SET[gpu_num].entries[i];
+
+        while (entry != NULL) {
+            if (entry->addr <= ptr && ptr <= entry->addr_ub) {
+                entry->offset = (ptr - entry->addr) / entry->type_size;
+                return entry;
+            }
+
+            entry = entry->next;
+        }
+    }
+
+    fprintf(stderr, "Error on __macc_data_table_find: Not found the item %p\n", ptr);
     exit(-1);
 
     return NULL;
 }
 
-void __macc_data_table_delete(int gpu_num, void *p)
+void __macc_data_table_delete(int gpu_num, void *ptr)
 {
-    int index = (long)p % MACC_DATA_TABLE_SIZE;
+    int index = TABLE_INDEX(ptr);
     struct __MaccDataTableEntry *entry = __MACC_DATA_TABLE_SET[gpu_num].entries[index];
     struct __MaccDataTableEntry *pre = NULL;
 
     if (entry != NULL) {
-        if(entry->addr == p) {
+        if(entry->addr == ptr) {
             __MACC_DATA_TABLE_SET[gpu_num].entries[index] = entry->next;
             return;
         }
@@ -142,7 +170,7 @@ void __macc_data_table_delete(int gpu_num, void *p)
 
     while (pre != NULL && entry != NULL)
     {
-        if (entry->addr == p) {
+        if (entry->addr == ptr) {
             pre->next = entry->next;
             free(entry);
             return;
@@ -152,43 +180,42 @@ void __macc_data_table_delete(int gpu_num, void *p)
         entry = entry->next;
     }
 
-    fprintf(stderr, "Error on __macc_data_table_delete: Not found the item %p\n", p);
+    fprintf(stderr, "Error on __macc_data_table_delete: Not found the item %p\n", ptr);
     exit(-1);
 }
 
-void __macc_delete(int gpu_num, void *p, int type_size, int lb, int length)
+void __macc_delete(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    acc_delete_async(TOPADDR(p, lb, type_size), length * type_size, gpu_num);
-    __macc_data_table_delete(gpu_num, p);
+    acc_delete_async(TOPADDR(ptr, lb, type_size), length * type_size, gpu_num);
+    __macc_data_table_delete(gpu_num, ptr);
     acc_wait(gpu_num);
 }
 
-void __macc_copyout(int gpu_num, void *p, int type_size, int lb, int length)
+void __macc_copyout(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, p);
+    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, ptr);
 
     if (entry->dirty)
         acc_update_self_async(TOPADDR(entry->addr, entry->dirty_lb, entry->type_size),
                               LENGTH_BYTE(entry->dirty_lb, entry->dirty_ub, entry->type_size),
                               gpu_num);
 
-    __macc_delete(gpu_num, p, type_size, lb, length);
+    __macc_delete(gpu_num, ptr, type_size, lb, length);
 }
 
-void __macc_copyin(int gpu_num, void *p, int type_size, int lb, int length)
+void __macc_copyin(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    acc_copyin_async(TOPADDR(p, lb, type_size), length * type_size, gpu_num);
-    __macc_data_table_insert(gpu_num, p, type_size, lb, lb + length - 1);
+    acc_copyin_async(TOPADDR(ptr, lb, type_size), length * type_size, gpu_num);
+    __macc_data_table_insert(gpu_num, ptr, type_size, lb, lb + length - 1);
     acc_wait(gpu_num);
 }
 
-void __macc_create(int gpu_num, void *p, int type_size, int lb, int length)
+void __macc_create(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    acc_create_async(TOPADDR(p, lb, type_size), length * type_size, gpu_num);
-    __macc_data_table_insert(gpu_num, p, type_size, lb, lb + length - 1);
+    acc_create_async(TOPADDR(ptr, lb, type_size), length * type_size, gpu_num);
+    __macc_data_table_insert(gpu_num, ptr, type_size, lb, lb + length - 1);
     acc_wait(gpu_num);
 }
-
 
 void *__macc_malloc(unsigned long size)
 {
@@ -214,21 +241,23 @@ void __macc_free(void *ptr)
     free(ptr);
 }
 
-void __macc_update_self(int gpu_num, void *p, int type_size, int lb, int length)
+void __macc_update_self(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, p);
+    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, ptr);
+    ptr = entry->addr;
+    lb += entry->offset;
     int ub = lb + length - 1;
 
     if (entry->dirty && ARE_OVERLAPPING(entry->dirty_lb, entry->dirty_ub, lb, ub)) {
         int new_lb = MAX(entry->dirty_lb, lb);
         int new_ub = MIN(entry->dirty_ub, ub);
-        acc_update_self(TOPADDR(p, new_lb, type_size), LENGTH_BYTE(new_lb, new_ub, type_size));
+        acc_update_self(TOPADDR(ptr, new_lb, type_size), LENGTH_BYTE(new_lb, new_ub, type_size));
     }
 }
 
-void __macc_update_device(int gpu_num, void *p, int type_size, int lb, int length)
+void __macc_update_device(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    acc_update_device(TOPADDR(p, lb, type_size), length * type_size);
+    acc_update_device(TOPADDR(ptr, lb, type_size), length * type_size);
 }
 
 void __macc_init_access_region(int gpu_num, int *lb_set, int *ub_set)
@@ -275,6 +304,14 @@ void __macc_calc_loop_region
         loop_ub_set[tail] -= step;
 }
 
+void __macc_adjust_data_region(void *ptr, int gpu_num, int *lb_set, int *ub_set)
+{
+    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, ptr);
+
+    lb_set[gpu_num] += entry->offset;
+    ub_set[gpu_num] += entry->offset;
+}
+
 void __macc_rewrite_loop_region_into_single(int *loop_lb_set, int *loop_ub_set)
 {
     loop_ub_set[0] = loop_ub_set[__MACC_NUMGPUS - 1];
@@ -292,9 +329,9 @@ void __macc_rewrite_data_region_into_single(int *lb_set, int *ub_set)
     ub_set[0] = MAX(ub_set[0], ub_set[gpu_ub]);
 }
 
-void __macc_sync_data(int gpu_num, void *p, int type_size, int lb, int ub)
+void __macc_sync_data(int gpu_num, void *ptr, int type_size, int lb, int ub)
 {
-    void *update_addr = TOPADDR(p, lb, type_size);
+    void *update_addr = TOPADDR(ptr, lb, type_size);
     size_t length_b   = LENGTH_BYTE(lb, ub, type_size);
 
     acc_update_self(update_addr, length_b);
@@ -312,11 +349,12 @@ void __macc_sync_data(int gpu_num, void *p, int type_size, int lb, int ub)
 }
 
 // (use|def)_type: 0->non-affine, 1->nothing, 2->affine
-void __macc_set_data_region(int gpu_num, void *p, int multi,
+void __macc_set_data_region(int gpu_num, void *ptr, int multi,
                             int use_type, int *use_lb_set, int *use_ub_set,
                             int def_type, int *def_lb_set, int *def_ub_set)
 {
-    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, p);
+    struct __MaccDataTableEntry *entry = __macc_data_table_find(gpu_num, ptr);
+    ptr = entry->addr;
 
     //
     // update: dirty /\ DEF_{*-i}, dirty /\ USE_{*-i}
@@ -369,7 +407,7 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
 
         // update all dirty
         if (update_all) {
-            __macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
+            __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
             entry->dirty = false;
         }
 
@@ -378,7 +416,7 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
             int thread_num = multi ? __MACC_NUMGPUS : 1;
 
             if (update_all_DtoH)
-                acc_update_self(TOPADDR(p, entry->dirty_lb, entry->type_size),
+                acc_update_self(TOPADDR(ptr, entry->dirty_lb, entry->type_size),
                                 LENGTH_BYTE(entry->dirty_lb, entry->dirty_ub, entry->type_size));
 
             #pragma omp parallel num_threads (thread_num)
@@ -391,7 +429,7 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
                                                     use_ub_set[i])) {
                     int update_lb = MAX(entry->dirty_lb, use_lb_set[i]);
                     int update_ub = MIN(entry->dirty_ub, use_ub_set[i]);
-                    void *update_addr = TOPADDR(p, update_lb, entry->type_size);
+                    void *update_addr = TOPADDR(ptr, update_lb, entry->type_size);
                     size_t length_b = LENGTH_BYTE(update_lb, update_ub, entry->type_size);
 
                     if (!update_all_DtoH) {
@@ -439,7 +477,7 @@ void __macc_set_data_region(int gpu_num, void *p, int multi,
         }
 
         else {
-            __macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
+            __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
             entry->dirty_lb = def_lb_set[gpu_num];
             entry->dirty_ub = def_ub_set[gpu_num];
         }

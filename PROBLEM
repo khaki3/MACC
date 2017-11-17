@@ -1,7 +1,9 @@
 - (convdim/restyle.scm) N-dim array in struct is not renamed
 - (convdim/convdim.scm) '@'
+- (convdim/convdim.scm) array form in string must be keep
 - (pass2.scm) Array of pointer to pointer is not supported
 - (tools/replacer) is just using sed
+- (tools/replacer) replace more acc routines
 - (c-to-xcodeml) '-m' option must be applied before transpilation
 - (c-to-xcodeml) '-m' option can be applied only for first preprocessing
 - (xcodeml-to-c) '-m' option must be applied just after transpilation
