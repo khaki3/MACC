@@ -1,7 +1,13 @@
 #!/bin/bash
 
+set -e
+
+GOSH=gosh
+TOOLS_DIR="$(cd $(dirname $0) && pwd)"
+SCMFILE="$TOOLS_DIR/replacer.scm"
+
 sed -e '
 s/__macc_malloc/acc_malloc/g;
 s/__macc_free/acc_free/g;
 s/acc_malloc/__macc_malloc/g;
-s/acc_free/__macc_free/g'
+s/acc_free/__macc_free/g' | ${GOSH} ${SCMFILE}
