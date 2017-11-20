@@ -287,21 +287,23 @@ void __macc_calc_loop_region
 (int *loop_lb_set, int *loop_ub_set,
  int entire_start, int entire_end, int step, int until_equal)
 {
-    int pos = entire_start;
-    int width = (int)(((float)entire_end - entire_start + (until_equal ? 1 : 0)) / __MACC_NUMGPUS + 0.9);
+    int tmp = entire_start + step * ((entire_end - entire_start) / step);
+    entire_end = tmp - ((until_equal || entire_end != tmp) ? 0 : step);
+
+    int len = entire_end - entire_start + step;
+    int width = (int)((float)len / __MACC_NUMGPUS);
     width -= width % step;
+    int rem = (len - width * __MACC_NUMGPUS) / step;
+    width -= step;
+
+    int pos = entire_start;
 
     for (int i = 0; i < __MACC_NUMGPUS; i++) {
         loop_lb_set[i] = pos;
-        pos += (width - 1);
+        pos = (width < 0) ? pos : MIN(pos + width + ((i < rem) ? step : 0), entire_end);
         loop_ub_set[i] = pos;
-        pos += step;
+        pos = MIN(pos + step, entire_end);
     }
-
-    int tail = __MACC_NUMGPUS - 1;
-    loop_ub_set[tail] = entire_end;
-    if (!until_equal && loop_ub_set[tail] == entire_end)
-        loop_ub_set[tail] -= step;
 }
 
 void __macc_adjust_data_region(void *ptr, int gpu_num, int *lb_set, int *ub_set)
