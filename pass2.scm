@@ -544,7 +544,8 @@
             `((list (string "DATA_PRIVATE") (list ,@privates)))))
 
        :state
-       (gen-compound
+       (gen-compound-with-local-vars
+        '(("int" "__macc_num_gangs")) ; to avoid PGI's bug
 
         (apply gen-compound
          (map
