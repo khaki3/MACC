@@ -262,12 +262,11 @@
        (sxml:change-content!
         c
         `(,(~ content 0)
-          (exprStatement
-           (divExpr
-            (minusExpr
-             (plusExpr ,(~ content 1) (Var "__MACC_NUMGPUS"))
-             (intConstant "1"))
-            (Var "__MACC_NUMGPUS"))))
+          (divExpr
+           (minusExpr
+            (plusExpr ,(~ content 1) (Var "__MACC_NUMGPUS"))
+            (intConstant "1"))
+           (Var "__MACC_NUMGPUS")))
         )))
    ((sxpath
      `(// (list (string *text* ,(make-sxpath-query #/^NUM_GANGS$/)))))
@@ -284,8 +283,8 @@
       (acc-trans! translate-acc-kernels!      #/^KERNELS$/)
       (acc-trans!
        (or
-        remove-parallelism-clauses!
-        ;divide-gangs-by-numgpus!
+        ;remove-parallelism-clauses!
+        divide-gangs-by-numgpus!
         )
        #/^PARALLEL$/)
       )))
