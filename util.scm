@@ -2,8 +2,6 @@
   (use util.match)
   (use sxml.tools)
   (use sxml.sxpath)
-  (use sxml.serializer)
-  (use sxml.ssax)
   (use srfi-1)
   (use srfi-14)
   (use srfi-27)
@@ -18,9 +16,6 @@
    make-sxpath-query
    sxpath:name
 
-   serialize-shape
-   deserialize-shape
-
    dprint
    list-copy-deep
    match1
@@ -28,14 +23,6 @@
    values-map
    ))
 (select-module util)
-
-(define (serialize-shape shape)
-  (srl:parameterizable (cons 'shape shape)))
-
-(define (deserialize-shape string)
-  (let1 sxml (sxml:car-content
-              (call-with-input-string string (cut ssax:xml->sxml <> '())))
-    (sxml:content sxml)))
 
 (define-syntax match1
   (syntax-rules ()
