@@ -47,7 +47,10 @@
     (let1 inner (search-array-size ht (fetch-element-type decl))
       (if (eq? (sxml:name decl) 'arrayType)
           (and-let1 s (sxml:attr decl 'array_size)
-            (cons (string->number s) (or inner '())))
+            (cons (if-let1 n (string->number s)
+                    (gen-int-expr n)
+                    (sxml:car-content (sxml:car-content decl)))
+                  (or inner '())))
 
           inner
           ))))
@@ -92,13 +95,9 @@
                        [varname    (sxml:car-content x)]
                        [type       (fetch-type env varname)]
                        [array-size (search-array-size type-ht type)])
-              `(list
-                ,x
-                ,@(map (lambda (s)
-                         `(list ,(gen-int-expr 0)
-                                ,(gen-int-expr s)))
-                       array-size)
-                ))
+              `(list ,x
+                     ,@(map (lambda (s) `(list ,(gen-int-expr 0) ,s))
+                            array-size)))
             x))
          (sxml:content args)))))
 
