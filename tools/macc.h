@@ -5,6 +5,7 @@
 #include <openacc.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <limits.h>
 
 // Including stdbool.h may cause conflicting.
@@ -36,7 +37,6 @@ void __macc_set_gpu_num(int i)
 }
 
 #define MACC_DATA_TABLE_SIZE 256
-#define MACC_DATA_TABLE_WRAP_CACHE_SIZE 512
 #define TABLE_INDEX(ptr) (((long)ptr / 16) % MACC_DATA_TABLE_SIZE)
 
 struct __MaccDataTableEntry {
@@ -56,46 +56,20 @@ struct __MaccDataTable {
     struct __MaccDataTableEntry *entries[MACC_DATA_TABLE_SIZE];
 };
 
-struct __MaccDataTableEntryWrap {
-    struct __MaccDataTableEntry *entry;
-    int offset;
+struct __MaccDataTable * __MACC_DATA_TABLE_SET;
+
+#define MACC_DATA_WRAP_CACHE_LEN 16
+#define MACC_DATA_WRAP_CACHE_SIZE 16
+#define CACHE_LANE(ptr) (((long)ptr / 16) % MACC_DATA_WRAP_CACHE_LEN)
+
+struct __MaccDataWrapCache {
+    void * addr[MACC_DATA_WRAP_CACHE_LEN * MACC_DATA_WRAP_CACHE_SIZE];
+    struct __MaccDataTableEntry * entry[MACC_DATA_WRAP_CACHE_LEN * MACC_DATA_WRAP_CACHE_SIZE];
+    int offset[MACC_DATA_WRAP_CACHE_LEN * MACC_DATA_WRAP_CACHE_SIZE];
+    int cachenum[MACC_DATA_WRAP_CACHE_LEN];
 };
 
-struct __MaccDataTable *__MACC_DATA_TABLE_SET;
-struct __MaccDataTableEntryWrap __MACC_DATA_TABLE_WRAP_CACHE[MACC_DATA_TABLE_WRAP_CACHE_SIZE];
-int __MACC_NUMBER_OF_WRAP_CACHE = 0;
-
-void __macc_init()
-{
-    char *env_macc_numgpus = getenv("MACC_NUMGPUS");
-
-    if (env_macc_numgpus != NULL) {
-        __MACC_NUMGPUS = atoi(env_macc_numgpus);
-    }
-    else {
-        __MACC_NUMGPUS = __macc_get_num_gpus();
-    }
-
-    if (__MACC_NUMGPUS <= 0) {
-        fputs("[MACC ERROR] No GPU device found.", stderr);
-        exit(-1);
-    }
-
-    if (getenv("OMP_NESTED") == NULL || getenv("OMP_MAX_ACTIVE_LEVELS") == NULL) {
-        fputs("[MACC ERROR] Improper setting.\n"
-              "\n"
-              "In order to make nested-parallel available,\n"
-              "run the commands below before running the program.\n"
-              "\n"
-              "\t" "export OMP_NESTED=TRUE\n"
-              "\t" "export OMP_MAX_ACTIVE_LEVELS=2\n"
-              "\n",
-              stderr);
-        exit(-1);
-    }
-
-    __MACC_DATA_TABLE_SET = calloc(__MACC_NUMGPUS, sizeof(struct __MaccDataTable));
-}
+struct __MaccDataWrapCache * __MACC_DATA_WRAP_CACHE_SET;
 
 void __macc_data_table_insert(
     int gpu_num, void *ptr, int type_size, int entire_lb, int entire_ub)
@@ -122,8 +96,7 @@ struct __MaccDataTableEntry *__macc_data_table_find(int gpu_num, void *ptr)
     int index = TABLE_INDEX(ptr);
     struct __MaccDataTableEntry *entry = __MACC_DATA_TABLE_SET[gpu_num].entries[index];
 
-    while (entry != NULL)
-    {
+    while (entry != NULL) {
         if (entry->addr == ptr) {
             entry->offset = 0;
             return entry;
@@ -132,13 +105,37 @@ struct __MaccDataTableEntry *__macc_data_table_find(int gpu_num, void *ptr)
         entry = entry->next;
     }
 
-    for (int i = 0; i < MACC_DATA_TABLE_SIZE; i++)
-    {
+    struct __MaccDataWrapCache wrap_cache = __MACC_DATA_WRAP_CACHE_SET[gpu_num];
+    int lane = CACHE_LANE(ptr);
+
+    for (int i = 0; i < wrap_cache.cachenum[lane]; i++) {
+        if (ptr == wrap_cache.addr[lane * MACC_DATA_WRAP_CACHE_SIZE + i]) {
+            entry = wrap_cache.entry[lane * MACC_DATA_WRAP_CACHE_SIZE + i];
+            entry->offset = wrap_cache.offset[lane * MACC_DATA_WRAP_CACHE_SIZE + i];
+            return entry;
+        }
+    }
+
+    for (int i = 0; i < MACC_DATA_TABLE_SIZE; i++) {
         entry = __MACC_DATA_TABLE_SET[gpu_num].entries[i];
 
         while (entry != NULL) {
             if (entry->addr <= ptr && ptr <= entry->addr_ub) {
-                entry->offset = (ptr - entry->addr) / entry->type_size;
+                int offset = (ptr - entry->addr) / entry->type_size;
+
+                int cachenum = wrap_cache.cachenum[lane];
+
+                if (cachenum == MACC_DATA_WRAP_CACHE_SIZE) {
+                    cachenum = 0;
+                }
+
+                wrap_cache.addr[lane * MACC_DATA_WRAP_CACHE_SIZE + cachenum] = entry->addr;
+                wrap_cache.entry[lane * MACC_DATA_WRAP_CACHE_SIZE + cachenum] = entry;
+                wrap_cache.offset[lane * MACC_DATA_WRAP_CACHE_SIZE + cachenum] = offset;
+
+                wrap_cache.cachenum[lane] = cachenum + 1;
+
+                entry->offset = offset;
                 return entry;
             }
 
@@ -158,9 +155,12 @@ void __macc_data_table_delete(int gpu_num, void *ptr)
     struct __MaccDataTableEntry *entry = __MACC_DATA_TABLE_SET[gpu_num].entries[index];
     struct __MaccDataTableEntry *pre = NULL;
 
+    memset(__MACC_DATA_WRAP_CACHE_SET[gpu_num].cachenum, 0, MACC_DATA_WRAP_CACHE_LEN * sizeof(int));
+
     if (entry != NULL) {
         if(entry->addr == ptr) {
             __MACC_DATA_TABLE_SET[gpu_num].entries[index] = entry->next;
+            free(entry);
             return;
         }
 
@@ -168,8 +168,7 @@ void __macc_data_table_delete(int gpu_num, void *ptr)
         entry = entry->next;
     }
 
-    while (pre != NULL && entry != NULL)
-    {
+    while (pre != NULL && entry != NULL) {
         if (entry->addr == ptr) {
             pre->next = entry->next;
             free(entry);
@@ -483,6 +482,62 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
             entry->dirty_lb = def_lb_set[gpu_num];
             entry->dirty_ub = def_ub_set[gpu_num];
         }
+    }
+}
+
+void __macc_init()
+{
+    char *env_macc_numgpus = getenv("MACC_NUMGPUS");
+
+    if (env_macc_numgpus != NULL) {
+        __MACC_NUMGPUS = atoi(env_macc_numgpus);
+    }
+    else {
+        __MACC_NUMGPUS = __macc_get_num_gpus();
+    }
+
+    if (__MACC_NUMGPUS <= 0) {
+        fputs("[MACC ERROR] No GPU device found.", stderr);
+        exit(-1);
+    }
+
+    if (getenv("OMP_NESTED") == NULL || getenv("OMP_MAX_ACTIVE_LEVELS") == NULL) {
+        fputs("[MACC ERROR] Improper setting.\n"
+              "\n"
+              "In order to make nested-parallel available,\n"
+              "run the commands below before running the program.\n"
+              "\n"
+              "\t" "export OMP_NESTED=TRUE\n"
+              "\t" "export OMP_MAX_ACTIVE_LEVELS=2\n"
+              "\n",
+              stderr);
+        exit(-1);
+    }
+
+    __MACC_DATA_TABLE_SET = calloc(__MACC_NUMGPUS, sizeof(struct __MaccDataTable));
+    __MACC_DATA_WRAP_CACHE_SET = calloc(__MACC_NUMGPUS, sizeof(struct __MaccDataWrapCache));
+
+    // Wake up
+    for (int t = 0; t < 10; t++) {
+        printf("[MACC] Wake up (%d)\n", t);
+
+        int n = 256 * 1024 * 1024;
+        int * tmp = malloc(n * sizeof(int));
+
+        #pragma acc data copy(tmp[0:n])
+        {
+            #pragma acc parallel loop\
+                num_gangs(512) vector_length(1024) gang vector
+            for (int i = 1; i < n; i++)
+                tmp[i] = i;
+
+            #pragma acc parallel loop\
+                num_gangs(512) vector_length(1024) gang vector
+            for (int i = 1; i < n; i++)
+                tmp[n - i] += i;
+        }
+
+        free(tmp);
     }
 }
 
