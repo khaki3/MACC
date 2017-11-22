@@ -22,7 +22,7 @@ OMNI_JAR2="${OMNI_HOME}/share/xcalablemp/om-common.jar"
 OMNI_JAR3="${OMNI_HOME}/share/xcalablemp/om-exc-tools.jar"
 
 cat > "${XM_FILE}"
-${OMNI_JAVA} -Xmx200m -Xms200m -cp ${OMNI_JAR1}:${OMNI_JAR2}:${OMNI_JAR3} exc.util.omompx -decomp -xc "${XM_FILE}" >/dev/null
+${OMNI_JAVA} -cp ${OMNI_JAR1}:${OMNI_JAR2}:${OMNI_JAR3} exc.util.omompx -decomp -xc "${XM_FILE}" >/dev/null
 if [ "$1" = "-m" ]; then
     cat "${C_FILE}" | ${GOSH} "${ADJUSTOR}" | "${REPLACER}"
 else
