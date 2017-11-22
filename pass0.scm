@@ -262,11 +262,14 @@
        (sxml:change-content!
         c
         `(,(~ content 0)
-          (divExpr
-           (minusExpr
-            (plusExpr ,(~ content 1) (Var "__MACC_NUMGPUS"))
-            (intConstant "1"))
-           (Var "__MACC_NUMGPUS")))
+          (condExpr
+           (Var "__macc_multi")
+           (divExpr
+            (minusExpr
+             (plusExpr ,(~ content 1) (Var "__MACC_NUMGPUS"))
+             (intConstant "1"))
+            (Var "__MACC_NUMGPUS"))
+           ,(~ content 1)))
         )))
    ((sxpath
      `(// (list (string *text* ,(make-sxpath-query #/^NUM_GANGS$/)))))
