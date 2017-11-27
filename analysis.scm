@@ -276,13 +276,11 @@
       `((exprStatement (commaExpr ,@exprs)))))
 
 (define (ssa-diff-env env1 env2)
-  (delete-duplicates
-   (filter
-    (lambda (x)
-      (let1 v (car x)
-        (not (= (assoc-ref env1 v -1) (assoc-ref env2 v -1)))))
-    (append env1 env2))
-   (lambda (x y) (equal? (car x) (car y)))
+  (filter
+   (lambda (x)
+     (let1 v (car x)
+       (not (= (assoc-ref env1 v -1) (assoc-ref env2 v -1)))))
+   (lset-union (lambda (x y) (equal? (car x) (car y))) env1 env2)
    ))
 
 (define (ssa-loop-top-env orig chng)
@@ -555,7 +553,7 @@
                     (not (any (cut divergence-relation? varname <>) vals))
                     (gi-remove-self-references
                      varname
-                     (delete-duplicates (append vals old-vals))))
+                     (lset-union equal? vals old-vals)))
                (alist-delete varname env))
         env)))
 
