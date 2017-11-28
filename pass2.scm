@@ -9,6 +9,7 @@
   (use sxml.tools)
   (use sxml.sxpath)
   (use util.combinations)
+  (use gauche.sequence)
 
   (export
    pass2
@@ -21,22 +22,23 @@
 ;;; Parallelize acc regions individually
 ;;;
 
-(define (gen-par :key (clauses '()) (state #f))
+(define (gen-par :key (clauses '()) (state #f) (with_tnum #t) (num_threads '(Var "__MACC_NUMGPUS")))
   `
   (OMPPragma
    (string "PARALLEL")
    (list
-    (list (string "DIR_NUM_THREADS") (Var "__MACC_NUMGPUS"))
+    (list (string "DIR_NUM_THREADS") ,num_threads)
     ,@clauses)
 
    ,
-   (gen-compound-with-local-vars
-    `(("int" "__macc_tnum" ,(gen-funcall-expr "omp_get_thread_num")))
+   (if with_tnum
+       (gen-compound-with-local-vars
+        `(("int" "__macc_tnum" ,(gen-funcall-expr "omp_get_thread_num")))
+        (gen-funcall "__macc_set_gpu_num" '(Var "__macc_tnum"))
+        state)
 
-    (gen-funcall "__macc_set_gpu_num" '(Var "__macc_tnum"))
-
-    state
-    )))
+       state)
+   ))
 
 (define (generate-data-state label arg enter)
   (and-let*
@@ -547,20 +549,43 @@
        (gen-compound-with-local-vars
         '(("int" "__macc_num_gangs")) ; to avoid PGI's bug
 
-        (apply gen-compound
-         (map
-          (^[set]
-            (gen-funcall "__macc_set_data_region"
-             '(Var "__macc_tnum")
-             `(Var ,(~ set 0))
-             '(Var "__macc_multi")
-             (gen-int-expr (~ set 1))
-             `(Var ,(~ set 2))
-             `(Var ,(~ set 3))
-             (gen-int-expr (~ set 4))
-             `(Var ,(~ set 5))
-             `(Var ,(~ set 6))))
-          data-sets))
+        (gen-par
+         :num_threads (gen-int-expr (length data-sets))
+         :with_tnum #f
+         :state
+         `(switchStatement
+           (value ,(gen-funcall-expr "omp_get_thread_num"))
+
+           ,
+           (apply append '(body)
+
+            (map-with-index
+             (^[i set]
+               `((caseLabel (value ,(gen-int-expr i)))
+
+                 ,(gen-funcall
+                   "__macc_set_gpu_num"
+                   '(Var "__macc_tnum"))
+
+                 ,(gen-funcall
+                   "__macc_set_data_region"
+                   '(Var "__macc_tnum")
+                   `(Var ,(~ set 0))
+                   '(Var "__macc_multi")
+                   (gen-int-expr (~ set 1))
+                   `(Var ,(~ set 2))
+                   `(Var ,(~ set 3))
+                   (gen-int-expr (~ set 4))
+                   `(Var ,(~ set 5))
+                   `(Var ,(~ set 6)))
+
+                 (breakStatement)))
+
+             data-sets))))
+
+        (gen-funcall
+         "__macc_set_gpu_num"
+         '(Var "__macc_tnum"))
 
         (gen-barrier)
 

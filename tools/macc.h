@@ -508,7 +508,7 @@ void __macc_init()
               "run the commands below before running the program.\n"
               "\n"
               "\t" "export OMP_NESTED=TRUE\n"
-              "\t" "export OMP_MAX_ACTIVE_LEVELS=2\n"
+              "\t" "export OMP_MAX_ACTIVE_LEVELS=3\n"
               "\n",
               stderr);
         exit(-1);
