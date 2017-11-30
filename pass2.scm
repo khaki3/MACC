@@ -306,7 +306,7 @@
                  (list
                   (gen-var=-expr
                    top-loop-counter-varname
-                   (gen-arrayref-var-expr top-loop-lb-set-name "__macc_tnum")
+                   `(Var "__macc_top_loop_lb")
                    )))
 
                 (sxml:change-content!
@@ -314,7 +314,7 @@
                  (list
                   (gen-var<=-expr
                    top-loop-counter-varname
-                   (gen-arrayref-var-expr top-loop-ub-set-name "__macc_tnum")
+                   `(Var "__macc_top_loop_ub")
                    )))
 
                 (list (cons top-loop-lb-set-name (add-setting-array! xm))
@@ -390,10 +390,6 @@
       `(("int" "__macc_region_is_changed" (intConstant "1") "static")
         ("int" "__macc_multi" (intConstant "1") "static")
 
-        ("int" "__macc_gpu_num")
-        ("int" "__macc_top_loop_lb")
-        ("int" "__macc_top_loop_ub")
-
         (,pvoid-array-type "__macc_ptrs"        #f "static")
         (,int-array-type   "__macc_use_types"   #f "static")
         (,pint-array-type  "__macc_use_lb_sets" #f "static")
@@ -418,7 +414,11 @@
        '(Var "__macc_region_is_changed")
 
        ;; then
-       (gen-compound
+       (gen-compound-with-local-vars
+        '(("int" "__macc_gpu_num")
+          ("int" "__macc_top_loop_lb")
+          ("int" "__macc_top_loop_ub"))
+
         (gen-var=int "__macc_multi"             1)
         (gen-var=int "__macc_region_is_changed" 0)
 
@@ -435,21 +435,23 @@
            (~ top-loop-counter 3)
            (gen-int-expr (if (eq? (~ top-loop-counter 4) '<=) 1 0))))
 
-        (gen-for
-         ((gen-var=int-expr "__macc_gpu_num" 0)
-          (gen-var<-expr
-           "__macc_gpu_num" (if is-loop `(Var "__MACC_NUMGPUS") (gen-int-expr 1)))
-          (gen-var++-expr   "__macc_gpu_num"))
+        (gen-par
+         :num_threads (if is-loop `(Var "__MACC_NUMGPUS") (gen-int-expr 1))
+         :with_tnum #f
+         :state
+         (gen-compound
 
-         (gen-when is-loop
-           (gen-var=
-            "__macc_top_loop_lb"
-            (gen-arrayref-var-expr top-loop-lb-set-name "__macc_gpu_num"))
-           (gen-var=
-            "__macc_top_loop_ub"
-            (gen-arrayref-var-expr top-loop-ub-set-name "__macc_gpu_num")))
+          (gen-var= "__macc_gpu_num" (gen-funcall-expr "omp_get_thread_num"))
 
-         (apply gen-compound region-calculation))
+          (gen-when is-loop
+            (gen-var=
+             "__macc_top_loop_lb"
+             (gen-arrayref-var-expr top-loop-lb-set-name "__macc_gpu_num"))
+            (gen-var=
+             "__macc_top_loop_ub"
+             (gen-arrayref-var-expr top-loop-ub-set-name "__macc_gpu_num")))
+
+          (apply gen-compound region-calculation)))
 
         (gen-if
          ;; cond
@@ -498,7 +500,7 @@
                data-sets))
              ))))
 
-        )) ; ifStatement __macc_region_is_changed
+          )) ; ifStatement __macc_region_is_changed
 
       (gen-par
        :clauses
@@ -513,7 +515,16 @@
 
        :state
        (gen-compound-with-local-vars
-        '(("int" "__macc_num_gangs")) ; to avoid PGI's bug
+        '(("int" "__macc_num_gangs") ; to avoid PGI's bug
+          ("int" "__macc_top_loop_lb")
+          ("int" "__macc_top_loop_ub"))
+
+        (gen-var=
+         "__macc_top_loop_lb"
+         (gen-arrayref-var-expr top-loop-lb-set-name "__macc_tnum"))
+        (gen-var=
+         "__macc_top_loop_ub"
+         (gen-arrayref-var-expr top-loop-ub-set-name "__macc_tnum"))
 
         (gen-funcall
          "__macc_set_data_region_multi"
