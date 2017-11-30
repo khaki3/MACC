@@ -30,7 +30,9 @@
    gen-var=int
    gen-funcall
    gen-funcall-expr
-   gen-arrayref-int-var-expr
+   gen-arrayref-expr
+   gen-arrayref-int-expr
+   gen-arrayref-var-expr
    gen-barrier
    gen-if
    gen-!-expr
@@ -157,8 +159,14 @@
    (arguments
     ,@args)))
 
-(define (gen-arrayref-int-var-expr array-name varname)
-  `(arrayRef (@ (type "int")) (arrayAddr ,array-name) (Var ,varname)))
+(define (gen-arrayref-expr array-name index)
+  `(arrayRef (@ (type "int")) (arrayAddr ,array-name) ,index))
+
+(define (gen-arrayref-int-expr array-name i)
+  (gen-arrayref-expr array-name (gen-int-expr i)))
+
+(define (gen-arrayref-var-expr array-name varname)
+  (gen-arrayref-expr array-name `(Var ,varname)))
 
 (define (gen-barrier)
   '(OMPPragma (string "BARRIER") (list)))

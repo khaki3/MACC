@@ -337,9 +337,10 @@ void __macc_sync_data(int gpu_num, void *ptr, int type_size, int lb, int ub)
 
     acc_update_self(update_addr, length_b);
 
-    #pragma omp parallel num_threads (__MACC_NUMGPUS)
+    //#pragma omp parallel num_threads (__MACC_NUMGPUS)
+    for (int i = 0; i < __MACC_NUMGPUS; i++)
     {
-        int i = omp_get_thread_num();
+        //int i = omp_get_thread_num();
         if (i != gpu_num) {
             __macc_set_gpu_num(i);
             acc_update_device(update_addr, length_b);
@@ -420,9 +421,10 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
                 acc_update_self(TOPADDR(ptr, entry->dirty_lb, entry->type_size),
                                 LENGTH_BYTE(entry->dirty_lb, entry->dirty_ub, entry->type_size));
 
-            #pragma omp parallel num_threads (thread_num)
+            //#pragma omp parallel num_threads(thread_num)
+            for (int i = 0; i < thread_num; i++)
             {
-                int i = omp_get_thread_num();
+                //int i = omp_get_thread_num();
 
                 if (i != gpu_num && ARE_OVERLAPPING(entry->dirty_lb,
                                                     entry->dirty_ub,
@@ -485,6 +487,26 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
     }
 }
 
+void __macc_set_data_region_multi(
+    int gpu_num, int multi, int len, void **ptrs,
+    int *use_type, int **use_lb_set, int **use_ub_set,
+    int *def_type, int **def_lb_set, int **def_ub_set)
+{
+    //#pragma omp parallel num_threads(len)
+    for (int i = 0; i < len; i++)
+    {
+        //int tnum = omp_get_thread_num();
+        int tnum = i;
+
+        __macc_set_gpu_num(gpu_num);
+
+        __macc_set_data_region(
+            gpu_num, ptrs[tnum], multi,
+            use_type[tnum], use_lb_set[tnum], use_ub_set[tnum],
+            def_type[tnum], def_lb_set[tnum], def_ub_set[tnum]);
+    }
+}
+
 void __macc_init()
 {
     char *env_macc_numgpus = getenv("MACC_NUMGPUS");
@@ -501,18 +523,18 @@ void __macc_init()
         exit(-1);
     }
 
-    if (getenv("OMP_NESTED") == NULL || getenv("OMP_MAX_ACTIVE_LEVELS") == NULL) {
-        fputs("[MACC ERROR] Improper setting.\n"
-              "\n"
-              "In order to make nested-parallel available,\n"
-              "run the commands below before running the program.\n"
-              "\n"
-              "\t" "export OMP_NESTED=TRUE\n"
-              "\t" "export OMP_MAX_ACTIVE_LEVELS=3\n"
-              "\n",
-              stderr);
-        exit(-1);
-    }
+    /* if (getenv("OMP_NESTED") == NULL || getenv("OMP_MAX_ACTIVE_LEVELS") == NULL) { */
+    /*     fputs("[MACC ERROR] Improper setting.\n" */
+    /*           "\n" */
+    /*           "In order to make nested-parallel available,\n" */
+    /*           "run the commands below before running the program.\n" */
+    /*           "\n" */
+    /*           "\t" "export OMP_NESTED=TRUE\n" */
+    /*           "\t" "export OMP_MAX_ACTIVE_LEVELS=3\n" */
+    /*           "\n", */
+    /*           stderr); */
+    /*     exit(-1); */
+    /* } */
 
     __MACC_DATA_TABLE_SET = calloc(__MACC_NUMGPUS, sizeof(struct __MaccDataTable));
     __MACC_DATA_WRAP_CACHE_SET = calloc(__MACC_NUMGPUS, sizeof(struct __MaccDataWrapCache));

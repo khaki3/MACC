@@ -138,13 +138,22 @@
 (define (new-array-type)
   #"macc__A~(inc! NEW_TYPE_COUNT)")
 
+(define (new-pointer-type)
+  #"macc__P~(inc! NEW_TYPE_COUNT)")
+
 (define-constant MAX_GPU_NUM "10")
 
-(define (add-setting-array! xm :optional (size MAX_GPU_NUM))
+(define (add-setting-array! xm :optional (type "int") (size MAX_GPU_NUM))
   (rlet1 atype (new-array-type)
     (sxml:content-push!
      (xm-type-table xm)
-     `(arrayType (@ (type ,atype) (element_type "int") (array_size ,size))))))
+     `(arrayType (@ (type ,atype) (element_type ,type) (array_size ,size))))))
+
+(define (add-pointer! xm type)
+  (rlet1 ptype (new-array-type)
+    (sxml:content-push!
+     (xm-type-table xm)
+     `(pointerType (@ (type ,ptype) (ref ,type))))))
 
 ;; extract vars without loop-counters
 (define (extract-dynamic-vars expr)
@@ -259,8 +268,6 @@
          [top-loop-lb-set-name (and is-loop #"__macc_~|top-loop-counter-varname|_loop_lb_set")]
          [top-loop-ub-set-name (and is-loop #"__macc_~|top-loop-counter-varname|_loop_ub_set")]
 
-         [data-sets '()]
-
          [dynamic-vars
           (delete-duplicates
            (append-map
@@ -277,6 +284,16 @@
              (if is-loop (drop (take top-loop-counter 3) 1) '())
              )))]
 
+         [pint-type  (add-pointer! xm "int")]
+         [pvoid-type (add-pointer! xm "void")]
+
+         [numcols (length indexes-cols)]
+
+         [int-array-type   (add-setting-array! xm "int"      numcols)]
+         [pint-array-type  (add-setting-array! xm pint-type  numcols)]
+         [pvoid-array-type (add-setting-array! xm pvoid-type numcols)]
+
+         [data-sets '()]
          [statics
           (if (not is-loop) '()
 
@@ -289,7 +306,7 @@
                  (list
                   (gen-var=-expr
                    top-loop-counter-varname
-                   (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_tnum")
+                   (gen-arrayref-var-expr top-loop-lb-set-name "__macc_tnum")
                    )))
 
                 (sxml:change-content!
@@ -297,7 +314,7 @@
                  (list
                   (gen-var<=-expr
                    top-loop-counter-varname
-                   (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_tnum")
+                   (gen-arrayref-var-expr top-loop-ub-set-name "__macc_tnum")
                    )))
 
                 (list (cons top-loop-lb-set-name (add-setting-array! xm))
@@ -312,8 +329,8 @@
            dynamic-vars)]
 
          [region-calculation
-          (filter-map
-           (lambda (col)
+          (map-with-index
+           (lambda (i col)
              (let-values ([(set-names state)
                            (generate-access-region-calcs
                             col '(Var "__macc_gpu_num") top-loop-counter-varname)])
@@ -342,7 +359,25 @@
                    use-type use-lb-name use-ub-name
                    def-type def-lb-name def-ub-name))
 
-                 state
+                 (gen-compound
+                  state
+
+                  (gen-= (gen-arrayref-int-expr "__macc_ptrs" i)
+                         `(Var ,varname))
+
+                  (gen-= (gen-arrayref-int-expr "__macc_use_types" i)
+                         (gen-int-expr use-type))
+                  (gen-= (gen-arrayref-int-expr "__macc_use_lb_sets" i)
+                         `(Var ,use-lb-name))
+                  (gen-= (gen-arrayref-int-expr "__macc_use_ub_sets" i)
+                         `(Var ,use-ub-name))
+
+                  (gen-= (gen-arrayref-int-expr "__macc_def_types" i)
+                         (gen-int-expr def-type))
+                  (gen-= (gen-arrayref-int-expr "__macc_def_lb_sets" i)
+                         `(Var ,def-lb-name))
+                  (gen-= (gen-arrayref-int-expr "__macc_def_ub_sets" i)
+                         `(Var ,def-ub-name)))
 
                  )))
            indexes-cols)])
@@ -358,6 +393,14 @@
         ("int" "__macc_gpu_num")
         ("int" "__macc_top_loop_lb")
         ("int" "__macc_top_loop_ub")
+
+        (,pvoid-array-type "__macc_ptrs"        #f "static")
+        (,int-array-type   "__macc_use_types"   #f "static")
+        (,pint-array-type  "__macc_use_lb_sets" #f "static")
+        (,pint-array-type  "__macc_use_ub_sets" #f "static")
+        (,int-array-type   "__macc_def_types"   #f "static")
+        (,pint-array-type  "__macc_def_lb_sets" #f "static")
+        (,pint-array-type  "__macc_def_ub_sets" #f "static")
 
         ,@(map
            (match-lambda1 (name . type)
@@ -401,10 +444,10 @@
          (gen-when is-loop
            (gen-var=
             "__macc_top_loop_lb"
-            (gen-arrayref-int-var-expr top-loop-lb-set-name "__macc_gpu_num"))
+            (gen-arrayref-var-expr top-loop-lb-set-name "__macc_gpu_num"))
            (gen-var=
             "__macc_top_loop_ub"
-            (gen-arrayref-int-var-expr top-loop-ub-set-name "__macc_gpu_num")))
+            (gen-arrayref-var-expr top-loop-ub-set-name "__macc_gpu_num")))
 
          (apply gen-compound region-calculation))
 
@@ -472,43 +515,18 @@
        (gen-compound-with-local-vars
         '(("int" "__macc_num_gangs")) ; to avoid PGI's bug
 
-        (gen-par
-         :num_threads (gen-int-expr (length data-sets))
-         :with_tnum #f
-         :state
-         `(switchStatement
-           (value ,(gen-funcall-expr "omp_get_thread_num"))
-
-           ,
-           (apply append '(body)
-
-            (map-with-index
-             (^[i set]
-               `((caseLabel (value ,(gen-int-expr i)))
-
-                 ,(gen-funcall
-                   "__macc_set_gpu_num"
-                   '(Var "__macc_tnum"))
-
-                 ,(gen-funcall
-                   "__macc_set_data_region"
-                   '(Var "__macc_tnum")
-                   `(Var ,(~ set 0))
-                   '(Var "__macc_multi")
-                   (gen-int-expr (~ set 1))
-                   `(Var ,(~ set 2))
-                   `(Var ,(~ set 3))
-                   (gen-int-expr (~ set 4))
-                   `(Var ,(~ set 5))
-                   `(Var ,(~ set 6)))
-
-                 (breakStatement)))
-
-             data-sets))))
-
         (gen-funcall
-         "__macc_set_gpu_num"
-         '(Var "__macc_tnum"))
+         "__macc_set_data_region_multi"
+         '(Var "__macc_tnum")
+         '(Var "__macc_multi")
+         (gen-int-expr numcols)
+         '(Var "__macc_ptrs")
+         '(Var "__macc_use_types")
+         '(Var "__macc_use_lb_sets")
+         '(Var "__macc_use_ub_sets")
+         '(Var "__macc_def_types")
+         '(Var "__macc_def_lb_sets")
+         '(Var "__macc_def_ub_sets"))
 
         (gen-barrier)
 
