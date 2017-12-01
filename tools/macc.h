@@ -442,8 +442,9 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
                     __macc_set_gpu_num(i);
                     acc_update_device(update_addr, length_b);
                 }
-                __macc_set_gpu_num(gpu_num);
+                //__macc_set_gpu_num(gpu_num);
             }
+            __macc_set_gpu_num(gpu_num);
         }
     }
 
