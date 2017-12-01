@@ -414,11 +414,7 @@
        '(Var "__macc_region_is_changed")
 
        ;; then
-       (gen-compound-with-local-vars
-        '(("int" "__macc_gpu_num")
-          ("int" "__macc_top_loop_lb")
-          ("int" "__macc_top_loop_ub"))
-
+       (gen-compound
         (gen-var=int "__macc_multi"             1)
         (gen-var=int "__macc_region_is_changed" 0)
 
@@ -439,7 +435,10 @@
          :num_threads (if is-loop `(Var "__MACC_NUMGPUS") (gen-int-expr 1))
          :with_tnum #f
          :state
-         (gen-compound
+         (gen-compound-with-local-vars
+          '(("int" "__macc_gpu_num")
+            ("int" "__macc_top_loop_lb")
+            ("int" "__macc_top_loop_ub"))
 
           (gen-var= "__macc_gpu_num" (gen-funcall-expr "omp_get_thread_num"))
 
