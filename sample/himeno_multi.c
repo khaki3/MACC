@@ -1,11 +1,11 @@
 /*
- * Original Source  : /tmp/tmp.Sr5PXuFYA9/himeno_1.c
+ * Original Source  : /tmp/tmp.EduUHIB9bj/1.c
  * Language         : C
- * Compiled Time    : 2017-07-12 15:08:32
+ * Compiled Time    : 2017-12-01 16:14:49
  * Compiler Info    : XcodeML/C-FrontEnd
  * Compiler Version : 1.0.3
  */
-# 1 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 1 "/tmp/tmp.EduUHIB9bj/1.c"
 typedef void * omp_lock_t;
 typedef void * omp_nest_lock_t;
 enum anon_type_1_acc_device_t {
@@ -279,6 +279,8 @@ unsigned short __init;
 unsigned long long __a;
 };
 typedef int (* __compar_fn_t)(void const * , void const * );
+struct __locale_data {
+};
 struct timezone {
 int tz_minuteswest;
 int tz_dsttime;
@@ -390,73 +392,42 @@ struct anon_type_21___data __data;
 char __size[56];
 long __align;
 };
+struct __locale_struct {
+struct __locale_data * __locales[13];
+unsigned short const * __ctype_b;
+int const * __ctype_tolower;
+int const * __ctype_toupper;
+char const * __names[13];
+};
+typedef struct __locale_struct * __locale_t;
+typedef struct __locale_struct * locale_t;
 struct __MaccDataTableEntry;
 struct __MaccDataTableEntry {
 void * addr;
+void * addr_ub;
 int type_size;
 int entire_lb;
 int entire_ub;
 int dirty;
 int dirty_lb;
 int dirty_ub;
+int offset;
 struct __MaccDataTableEntry * next;
 };
 struct __MaccDataTable {
 struct __MaccDataTableEntry * entries[256];
+};
+struct __MaccDataWrapCache {
+void * addr[256];
+struct __MaccDataTableEntry * entry[256];
+int offset[256];
+int cachenum[16];
 };
 union anon_type_15_pthread_mutex_t {
 struct __pthread_mutex_s __data;
 char __size[40];
 long __align;
 };
-int __macc__wrk2_m_def_ub_set_48[10];
-int __macc__wrk2_m_def_lb_set_47[10];
-int __macc__wrk2_m_use_ub_set_46[10];
-int __macc__wrk2_m_use_lb_set_45[10];
-int __macc__p_m_def_ub_set_44[10];
-int __macc__p_m_def_lb_set_43[10];
-int __macc__p_m_use_ub_set_42[10];
-int __macc__p_m_use_lb_set_41[10];
-int __macc__i_loop_ub_set_36[10];
-int __macc__i_loop_lb_set_35[10];
-int __macc__imax_last_40 = -1;
-unsigned long __macc__mrows_last_39 = -1;
-unsigned long __macc__mcols_last_38 = -1;
-unsigned long __macc__mdeps_last_37 = -1;
-int __macc__wrk1_m_def_ub_set_34[10];
-int __macc__wrk1_m_def_lb_set_33[10];
-int __macc__wrk1_m_use_ub_set_32[10];
-int __macc__wrk1_m_use_lb_set_31[10];
-int __macc__p_m_def_ub_set_30[10];
-int __macc__p_m_def_lb_set_29[10];
-int __macc__p_m_use_ub_set_28[10];
-int __macc__p_m_use_lb_set_27[10];
-int __macc__c_m_def_ub_set_26[10];
-int __macc__c_m_def_lb_set_25[10];
-int __macc__c_m_use_ub_set_24[10];
-int __macc__c_m_use_lb_set_23[10];
-int __macc__bnd_m_def_ub_set_22[10];
-int __macc__bnd_m_def_lb_set_21[10];
-int __macc__bnd_m_use_ub_set_20[10];
-int __macc__bnd_m_use_lb_set_19[10];
-int __macc__b_m_def_ub_set_18[10];
-int __macc__b_m_def_lb_set_17[10];
-int __macc__b_m_use_ub_set_16[10];
-int __macc__b_m_use_lb_set_15[10];
-int __macc__a_m_def_ub_set_14[10];
-int __macc__a_m_def_lb_set_13[10];
-int __macc__a_m_use_ub_set_12[10];
-int __macc__a_m_use_lb_set_11[10];
-int __macc__wrk2_m_def_ub_set_10[10];
-int __macc__wrk2_m_def_lb_set_9[10];
-int __macc__wrk2_m_use_ub_set_8[10];
-int __macc__wrk2_m_use_lb_set_7[10];
-int __macc__i_loop_ub_set_2[10];
-int __macc__i_loop_lb_set_1[10];
-int __macc__imax_last_6 = -1;
-unsigned long __macc__mrows_last_5 = -1;
-unsigned long __macc__mcols_last_4 = -1;
-unsigned long __macc__mdeps_last_3 = -1;
 void omp_set_num_threads(int num);
 int omp_get_num_threads(void);
 int omp_get_max_threads(void);
@@ -479,6 +450,8 @@ void omp_unset_lock(void * * lock);
 void omp_unset_nest_lock(void * * lock);
 int omp_test_lock(void * * lock);
 int omp_test_nest_lock(void * * lock);
+void acc_set_default_async(int async);
+int acc_get_default_async(void);
 extern int acc_get_num_devices(enum anon_type_1_acc_device_t devtype);
 extern enum anon_type_1_acc_device_t acc_get_device(void);
 extern void acc_set_device_num(int devnum, enum anon_type_1_acc_device_t devtype);
@@ -496,7 +469,7 @@ extern void acc_wait_async(long arg, long async);
 extern void acc_wait_all(void);
 extern void acc_wait_all_async(long async);
 extern int acc_on_device(enum anon_type_1_acc_device_t devtype);
-extern void acc_free(void * );
+extern void __macc_free(void * );
 extern void * acc_memcpy(void * targetptr, void * srcptr, unsigned long bytes);
 extern void * acc_memcpy_async(void * targetptr, void * srcptr, unsigned long bytes, long async);
 extern void * acc_copyin(void * hostptr, unsigned long bytes);
@@ -528,14 +501,18 @@ extern void acc_memcpy_from_device_async(void * hostptr, void * devptr, unsigned
 extern void * acc_memcpy_device(void * targetdevptr, void * srcdevptr, unsigned long bytes);
 extern void * acc_memcpy_device_async(void * targetdevptr, void * srcdevptr, unsigned long bytes, long async);
 extern void acc_attach(void * * hostptrptr);
+extern void acc_attach_async(void * * hostptrptr, long async);
+extern void acc_detach(void * * hostptrptr);
+extern void acc_detach_async(void * * hostptrptr, long async);
 extern void acc_set_device_type(enum anon_type_1_acc_device_t devtype);
 extern enum anon_type_1_acc_device_t acc_get_device_type(void);
-extern void * acc_malloc(unsigned long);
+extern void * __macc_malloc(unsigned long);
 extern void * acc_deviceptr(void * hostptr);
 extern void * acc_hostptr(void * devptr);
 extern void acc_map_data(void * hostptr, void * devptr, unsigned long bytes);
 extern void acc_unmap_data(void * hostptr);
 extern int acc_is_present(void * hostptr, unsigned long bytes);
+extern int acc_present_count(void * hostptr);
 extern void acc_updatein(void * hostptr, unsigned long bytes);
 extern void acc_updatein_async(void * hostptr, unsigned long bytes, long async);
 extern void acc_updateout(void * hostptr, unsigned long bytes);
@@ -596,6 +573,7 @@ extern int __pgi_vectoridx(void);
 extern int __pgi_blockidx(int);
 extern int __pgi_threadidx(int);
 extern void * __builtin_va_arg();
+extern int __builtin_va_start();
 # 315 "/usr/include/libio.h"
 extern struct _IO_FILE_plus _IO_2_1_stdin_;
 # 316 "/usr/include/libio.h"
@@ -840,251 +818,387 @@ extern int rpmatch(char const * __response);
 extern int getsubopt(char * * restrict __optionp, char * const * restrict __tokens, char * * restrict __valuep);
 extern int getloadavg(double __loadavg[], int __nelem);
 int __builtin_abs(int);
-# 26 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+extern void * malloc_managed(unsigned long);
+extern void * calloc_managed(unsigned long, unsigned long);
+extern void free_managed(void * );
+extern void cfree_managed(void * );
+extern void * realloc_managed(void * , unsigned long);
+extern void * valloc_managed(unsigned long);
+extern void * pvalloc_managed(unsigned long);
+extern void * memalign_managed(unsigned long, unsigned long);
+extern int posix_memalign_managed(void * * , unsigned long, unsigned long);
+extern char * tmpnam_managed(char * );
+extern void * memcpy(void * restrict __dest, void const * restrict __src, unsigned long __n);
+extern void * memmove(void * __dest, void const * __src, unsigned long __n);
+extern void * memccpy(void * restrict __dest, void const * restrict __src, int __c, unsigned long __n);
+extern void * memset(void * __s, int __c, unsigned long __n);
+extern int memcmp(void const * __s1, void const * __s2, unsigned long __n);
+extern void * memchr(void const * __s, int __c, unsigned long __n);
+extern char * strcpy(char * restrict __dest, char const * restrict __src);
+extern char * strncpy(char * restrict __dest, char const * restrict __src, unsigned long __n);
+extern char * strcat(char * restrict __dest, char const * restrict __src);
+extern char * strncat(char * restrict __dest, char const * restrict __src, unsigned long __n);
+extern int strcmp(char const * __s1, char const * __s2);
+extern int strncmp(char const * __s1, char const * __s2, unsigned long __n);
+extern int strcoll(char const * __s1, char const * __s2);
+extern unsigned long strxfrm(char * restrict __dest, char const * restrict __src, unsigned long __n);
+extern int strcoll_l(char const * __s1, char const * __s2, struct __locale_struct * __l);
+extern unsigned long strxfrm_l(char * __dest, char const * __src, unsigned long __n, struct __locale_struct * __l);
+extern char * strdup(char const * __s);
+extern char * strndup(char const * __string, unsigned long __n);
+extern char * strchr(char const * __s, int __c);
+extern char * strrchr(char const * __s, int __c);
+extern unsigned long strcspn(char const * __s, char const * __reject);
+extern unsigned long strspn(char const * __s, char const * __accept);
+extern char * strpbrk(char const * __s, char const * __accept);
+extern char * strstr(char const * __haystack, char const * __needle);
+extern char * strtok(char * restrict __s, char const * restrict __delim);
+extern char * __strtok_r(char * restrict __s, char const * restrict __delim, char * * restrict __save_ptr);
+extern char * strtok_r(char * restrict __s, char const * restrict __delim, char * * restrict __save_ptr);
+extern unsigned long strlen(char const * __s);
+extern unsigned long strnlen(char const * __string, unsigned long __maxlen);
+extern char * strerror(int __errnum);
+extern int __xpg_strerror_r(int __errnum, char * __buf, unsigned long __buflen);
+extern char * strerror_l(int __errnum, struct __locale_struct * __l);
+extern void __bzero(void * __s, unsigned long __n);
+extern void bcopy(void const * __src, void * __dest, unsigned long __n);
+extern void bzero(void * __s, unsigned long __n);
+extern int bcmp(void const * __s1, void const * __s2, unsigned long __n);
+extern char * index(char const * __s, int __c);
+extern char * rindex(char const * __s, int __c);
+extern __attribute__((const)) int ffs(int __i);
+extern int strcasecmp(char const * __s1, char const * __s2);
+extern int strncasecmp(char const * __s1, char const * __s2, unsigned long __n);
+extern char * strsep(char * * restrict __stringp, char const * restrict __delim);
+extern char * strsignal(int __sig);
+extern char * __stpcpy(char * restrict __dest, char const * restrict __src);
+extern char * stpcpy(char * restrict __dest, char const * restrict __src);
+extern char * __stpncpy(char * restrict __dest, char const * restrict __src, unsigned long __n);
+extern char * stpncpy(char * restrict __dest, char const * restrict __src, unsigned long __n);
+# 27 "/tmp/tmp.EduUHIB9bj/1.c"
 int __MACC_NUMGPUS = -(1);
-# 28 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 29 "/tmp/tmp.EduUHIB9bj/1.c"
 int __macc_get_num_gpus()
 {
-# 30 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 31 "/tmp/tmp.EduUHIB9bj/1.c"
 return acc_get_num_devices(acc_device_nvidia);
 }
-# 33 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 34 "/tmp/tmp.EduUHIB9bj/1.c"
 void __macc_set_gpu_num(int i)
 {
-# 35 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 36 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_set_device_num(i, acc_device_nvidia);
 }
-# 55 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 59 "/tmp/tmp.EduUHIB9bj/1.c"
 struct __MaccDataTable * __MACC_DATA_TABLE_SET;
-# 57 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_init()
+# 72 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataWrapCache * __MACC_DATA_WRAP_CACHE_SET;
+# 74 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_data_table_insert(int gpu_num, void * ptr, int type_size, int entire_lb, int entire_ub)
 {
-# 59 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-char * env_macc_numgpus = getenv("MACC_NUMGPUS");
-# 61 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-if(env_macc_numgpus != ((void * )(0))) {
-# 62 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__MACC_NUMGPUS = (atoi(env_macc_numgpus));
-}
-else {
-# 65 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__MACC_NUMGPUS = (__macc_get_num_gpus());
-}
-# 68 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-if(__MACC_NUMGPUS <= (0)) {
-# 69 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-fputs("[MACC ERROR] No GPU device found.", stderr);
-# 70 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-exit(-(1));
-}
-# 73 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-if(((getenv("OMP_NESTED")) == ((void * )(0))) || ((getenv("OMP_MAX_ACTIVE_LEVELS")) == ((void * )(0)))) {
-# 74 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-fputs("[MACC ERROR] Improper setting.\n\nIn order to make nested-parallel available,\nrun the commands below before running the program.\n\n\texport OMP_NESTED=TRUE\n\texport OMP_MAX_ACTIVE_LEVELS=2\n\n", stderr);
-# 83 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-exit(-(1));
-}
-# 86 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__MACC_DATA_TABLE_SET = (calloc(__MACC_NUMGPUS, sizeof(struct __MaccDataTable)));
-}
-# 89 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_data_table_insert(int gpu_num, void * p, int type_size, int entire_lb, int entire_ub)
-{
-# 92 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-int index = ((long)(p)) % (256);
-# 94 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-struct __MaccDataTableEntry * new_entry = malloc(sizeof(struct __MaccDataTableEntry));
-# 96 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-(new_entry->addr) = p;
-# 97 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 77 "/tmp/tmp.EduUHIB9bj/1.c"
+int index = (((long)(ptr)) / (16)) % (256);
+# 79 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataTableEntry * new_entry = malloc_managed(sizeof(struct __MaccDataTableEntry));
+# 81 "/tmp/tmp.EduUHIB9bj/1.c"
+(new_entry->addr) = ptr;
+# 82 "/tmp/tmp.EduUHIB9bj/1.c"
+(new_entry->addr_ub) = (ptr + (entire_ub * type_size));
+# 83 "/tmp/tmp.EduUHIB9bj/1.c"
 (new_entry->type_size) = type_size;
-# 98 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 84 "/tmp/tmp.EduUHIB9bj/1.c"
 (new_entry->entire_lb) = entire_lb;
-# 99 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 85 "/tmp/tmp.EduUHIB9bj/1.c"
 (new_entry->entire_ub) = entire_ub;
-# 100 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 86 "/tmp/tmp.EduUHIB9bj/1.c"
 (new_entry->dirty) = (0);
-# 101 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 87 "/tmp/tmp.EduUHIB9bj/1.c"
 (new_entry->dirty_lb) = (-(1));
-# 102 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 88 "/tmp/tmp.EduUHIB9bj/1.c"
 (new_entry->dirty_ub) = (-(1));
-# 103 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 89 "/tmp/tmp.EduUHIB9bj/1.c"
 (new_entry->next) = (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index));
-# 105 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 91 "/tmp/tmp.EduUHIB9bj/1.c"
 (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index)) = new_entry;
 }
-# 108 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-struct __MaccDataTableEntry * __macc_data_table_find(int gpu_num, void * p)
+# 94 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataTableEntry * __macc_data_table_find(int gpu_num, void * ptr)
 {
-# 110 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-int index = ((long)(p)) % (256);
-# 111 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 96 "/tmp/tmp.EduUHIB9bj/1.c"
+int index = (((long)(ptr)) / (16)) % (256);
+# 97 "/tmp/tmp.EduUHIB9bj/1.c"
 struct __MaccDataTableEntry * entry = *(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index);
-# 113 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 99 "/tmp/tmp.EduUHIB9bj/1.c"
 while(entry != ((void * )(0))) {
 {
-# 115 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-if((entry->addr) == p) {
-# 116 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 100 "/tmp/tmp.EduUHIB9bj/1.c"
+if((entry->addr) == ptr) {
+# 101 "/tmp/tmp.EduUHIB9bj/1.c"
+(entry->offset) = (0);
+# 102 "/tmp/tmp.EduUHIB9bj/1.c"
 return entry;
 }
-# 118 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 105 "/tmp/tmp.EduUHIB9bj/1.c"
 entry = (entry->next);
 }
 }
-# 121 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-fprintf(stderr, "Error on __macc_data_table_find: Not found the item %p\n", p);
-# 122 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+{
+# 108 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataWrapCache wrap_cache = __MACC_DATA_WRAP_CACHE_SET[gpu_num];
+# 109 "/tmp/tmp.EduUHIB9bj/1.c"
+int lane = (((long)(ptr)) / (16)) % (16);
+{
+# 111 "/tmp/tmp.EduUHIB9bj/1.c"
+int i;
+# 111 "/tmp/tmp.EduUHIB9bj/1.c"
+for(i = (0); i < (*(((&(wrap_cache))->cachenum) + lane)); i++) {
+{
+# 112 "/tmp/tmp.EduUHIB9bj/1.c"
+if(ptr == (*(((&(wrap_cache))->addr) + ((lane * (16)) + i)))) {
+# 113 "/tmp/tmp.EduUHIB9bj/1.c"
+entry = (*(((&(wrap_cache))->entry) + ((lane * (16)) + i)));
+# 114 "/tmp/tmp.EduUHIB9bj/1.c"
+(entry->offset) = (*(((&(wrap_cache))->offset) + ((lane * (16)) + i)));
+# 115 "/tmp/tmp.EduUHIB9bj/1.c"
+return entry;
+}
+}
+}
+}
+{
+# 119 "/tmp/tmp.EduUHIB9bj/1.c"
+int i;
+# 119 "/tmp/tmp.EduUHIB9bj/1.c"
+for(i = (0); i < (256); i++) {
+{
+# 120 "/tmp/tmp.EduUHIB9bj/1.c"
+entry = (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + i));
+# 122 "/tmp/tmp.EduUHIB9bj/1.c"
+while(entry != ((void * )(0))) {
+{
+# 123 "/tmp/tmp.EduUHIB9bj/1.c"
+if(((entry->addr) <= ptr) && (ptr <= (entry->addr_ub))) {
+# 124 "/tmp/tmp.EduUHIB9bj/1.c"
+int offset = (ptr - (entry->addr)) / (entry->type_size);
+# 126 "/tmp/tmp.EduUHIB9bj/1.c"
+int cachenum = *(((&(wrap_cache))->cachenum) + lane);
+# 128 "/tmp/tmp.EduUHIB9bj/1.c"
+if(cachenum == (16)) {
+# 129 "/tmp/tmp.EduUHIB9bj/1.c"
+cachenum = (0);
+}
+# 132 "/tmp/tmp.EduUHIB9bj/1.c"
+(*(((&(wrap_cache))->addr) + ((lane * (16)) + cachenum))) = (entry->addr);
+# 133 "/tmp/tmp.EduUHIB9bj/1.c"
+(*(((&(wrap_cache))->entry) + ((lane * (16)) + cachenum))) = entry;
+# 134 "/tmp/tmp.EduUHIB9bj/1.c"
+(*(((&(wrap_cache))->offset) + ((lane * (16)) + cachenum))) = offset;
+# 136 "/tmp/tmp.EduUHIB9bj/1.c"
+(*(((&(wrap_cache))->cachenum) + lane)) = (cachenum + (1));
+# 138 "/tmp/tmp.EduUHIB9bj/1.c"
+(entry->offset) = offset;
+# 139 "/tmp/tmp.EduUHIB9bj/1.c"
+return entry;
+}
+# 142 "/tmp/tmp.EduUHIB9bj/1.c"
+entry = (entry->next);
+}
+}
+}
+}
+}
+# 146 "/tmp/tmp.EduUHIB9bj/1.c"
+fprintf(stderr, "Error on __macc_data_table_find: Not found the item %p\n", ptr);
+# 147 "/tmp/tmp.EduUHIB9bj/1.c"
 exit(-(1));
-# 124 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 149 "/tmp/tmp.EduUHIB9bj/1.c"
 return (void * )(0);
 }
-# 127 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_data_table_delete(int gpu_num, void * p)
+}
+# 152 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_data_table_delete(int gpu_num, void * ptr)
 {
-# 129 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-int index = ((long)(p)) % (256);
-# 130 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 154 "/tmp/tmp.EduUHIB9bj/1.c"
+int index = (((long)(ptr)) / (16)) % (256);
+# 155 "/tmp/tmp.EduUHIB9bj/1.c"
 struct __MaccDataTableEntry * entry = *(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index);
-# 131 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 156 "/tmp/tmp.EduUHIB9bj/1.c"
 struct __MaccDataTableEntry * pre = (void * )(0);
-# 133 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 158 "/tmp/tmp.EduUHIB9bj/1.c"
+memset((__MACC_DATA_WRAP_CACHE_SET + gpu_num)->cachenum, 0, (16) * (sizeof(int)));
+# 160 "/tmp/tmp.EduUHIB9bj/1.c"
 if(entry != ((void * )(0))) {
-# 134 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-if((entry->addr) == p) {
-# 135 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 161 "/tmp/tmp.EduUHIB9bj/1.c"
+if((entry->addr) == ptr) {
+# 162 "/tmp/tmp.EduUHIB9bj/1.c"
 (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index)) = (entry->next);
-# 136 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 163 "/tmp/tmp.EduUHIB9bj/1.c"
+free_managed(entry);
+# 164 "/tmp/tmp.EduUHIB9bj/1.c"
 return ;
 }
-# 139 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 167 "/tmp/tmp.EduUHIB9bj/1.c"
 pre = entry;
-# 140 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 168 "/tmp/tmp.EduUHIB9bj/1.c"
 entry = (entry->next);
 }
-# 143 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 171 "/tmp/tmp.EduUHIB9bj/1.c"
 while((pre != ((void * )(0))) && (entry != ((void * )(0)))) {
 {
-# 145 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-if((entry->addr) == p) {
-# 146 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 172 "/tmp/tmp.EduUHIB9bj/1.c"
+if((entry->addr) == ptr) {
+# 173 "/tmp/tmp.EduUHIB9bj/1.c"
 (pre->next) = (entry->next);
-# 147 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-free(entry);
-# 148 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 174 "/tmp/tmp.EduUHIB9bj/1.c"
+free_managed(entry);
+# 175 "/tmp/tmp.EduUHIB9bj/1.c"
 return ;
 }
-# 151 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 178 "/tmp/tmp.EduUHIB9bj/1.c"
 pre = entry;
-# 152 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 179 "/tmp/tmp.EduUHIB9bj/1.c"
 entry = (entry->next);
 }
 }
-# 155 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-fprintf(stderr, "Error on __macc_data_table_delete: Not found the item %p\n", p);
-# 156 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 182 "/tmp/tmp.EduUHIB9bj/1.c"
+fprintf(stderr, "Error on __macc_data_table_delete: Not found the item %p\n", ptr);
+# 183 "/tmp/tmp.EduUHIB9bj/1.c"
 exit(-(1));
 }
-# 159 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_delete(int gpu_num, void * p, int type_size, int lb, int length)
+# 186 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_delete(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 161 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-acc_delete_async(p + (lb * type_size), length * type_size, gpu_num);
-# 162 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__macc_data_table_delete(gpu_num, p);
-# 163 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 188 "/tmp/tmp.EduUHIB9bj/1.c"
+acc_delete_async(ptr + (lb * type_size), length * type_size, gpu_num);
+# 189 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_data_table_delete(gpu_num, ptr);
+# 190 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_wait(gpu_num);
 }
-# 166 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_copyout(int gpu_num, void * p, int type_size, int lb, int length)
+# 193 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_copyout(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 168 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, p);
-# 170 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 195 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
+# 197 "/tmp/tmp.EduUHIB9bj/1.c"
 if(entry->dirty) {
-# 171 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 198 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_update_self_async((entry->addr) + ((entry->dirty_lb) * (entry->type_size)), (((entry->dirty_ub) - (entry->dirty_lb)) + (1)) * (entry->type_size), gpu_num);
 }
-# 175 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__macc_delete(gpu_num, p, type_size, lb, length);
+# 202 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_delete(gpu_num, ptr, type_size, lb, length);
 }
-# 178 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_copyin(int gpu_num, void * p, int type_size, int lb, int length)
+# 205 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_copyin(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 180 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-acc_copyin_async(p + (lb * type_size), length * type_size, gpu_num);
-# 181 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__macc_data_table_insert(gpu_num, p, type_size, lb, (lb + length) - (1));
-# 182 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 207 "/tmp/tmp.EduUHIB9bj/1.c"
+acc_copyin_async(ptr + (lb * type_size), length * type_size, gpu_num);
+# 208 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_data_table_insert(gpu_num, ptr, type_size, lb, (lb + length) - (1));
+# 209 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_wait(gpu_num);
 }
-# 185 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_create(int gpu_num, void * p, int type_size, int lb, int length)
+# 212 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_create(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 187 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-acc_create_async(p + (lb * type_size), length * type_size, gpu_num);
-# 188 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__macc_data_table_insert(gpu_num, p, type_size, lb, (lb + length) - (1));
-# 189 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 214 "/tmp/tmp.EduUHIB9bj/1.c"
+acc_create_async(ptr + (lb * type_size), length * type_size, gpu_num);
+# 215 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_data_table_insert(gpu_num, ptr, type_size, lb, (lb + length) - (1));
+# 216 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_wait(gpu_num);
 }
-# 192 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_update_self(int gpu_num, void * p, int type_size, int lb, int length)
+# 219 "/tmp/tmp.EduUHIB9bj/1.c"
+void * __macc_malloc(unsigned long size)
 {
-# 194 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, p);
-# 195 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 221 "/tmp/tmp.EduUHIB9bj/1.c"
+void * ret = malloc_managed(size);
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+# 225 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_create(omp_get_thread_num(), ret, 1, 0, size);
+}
+# 228 "/tmp/tmp.EduUHIB9bj/1.c"
+return ret;
+}
+# 231 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_free(void * ptr)
+{
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+# 235 "/tmp/tmp.EduUHIB9bj/1.c"
+int gpu_num = omp_get_thread_num();
+# 236 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
+# 238 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_delete(gpu_num, ptr, 1, 0, (entry->entire_ub) + (1));
+}
+# 240 "/tmp/tmp.EduUHIB9bj/1.c"
+free_managed(ptr);
+}
+# 243 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_update_self(int gpu_num, void * ptr, int type_size, int lb, int length)
+{
+# 245 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
+# 246 "/tmp/tmp.EduUHIB9bj/1.c"
+ptr = (entry->addr);
+# 247 "/tmp/tmp.EduUHIB9bj/1.c"
+lb += (entry->offset);
+{
+# 248 "/tmp/tmp.EduUHIB9bj/1.c"
 int ub = (lb + length) - (1);
-# 197 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 250 "/tmp/tmp.EduUHIB9bj/1.c"
 if((entry->dirty) && (!(((entry->dirty_lb) > ub) || ((entry->dirty_ub) < lb)))) {
-# 198 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 251 "/tmp/tmp.EduUHIB9bj/1.c"
 int new_lb = ((entry->dirty_lb) > lb) ?(entry->dirty_lb) : lb;
-# 199 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 252 "/tmp/tmp.EduUHIB9bj/1.c"
 int new_ub = ((entry->dirty_ub) < ub) ?(entry->dirty_ub) : ub;
-# 200 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-acc_update_self(p + (new_lb * type_size), ((new_ub - new_lb) + (1)) * type_size);
+# 253 "/tmp/tmp.EduUHIB9bj/1.c"
+acc_update_self(ptr + (new_lb * type_size), ((new_ub - new_lb) + (1)) * type_size);
 }
 }
-# 204 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_update_device(int gpu_num, void * p, int type_size, int lb, int length)
+}
+# 257 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_update_device(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 206 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-acc_update_device(p + (lb * type_size), length * type_size);
+# 259 "/tmp/tmp.EduUHIB9bj/1.c"
+acc_update_device(ptr + (lb * type_size), length * type_size);
 }
-# 209 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 262 "/tmp/tmp.EduUHIB9bj/1.c"
 void __macc_init_access_region(int gpu_num, int * lb_set, int * ub_set)
 {
-# 211 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 264 "/tmp/tmp.EduUHIB9bj/1.c"
 (lb_set[gpu_num]) = (2147483647);
-# 212 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 265 "/tmp/tmp.EduUHIB9bj/1.c"
 (ub_set[gpu_num]) = (-(1));
 }
-# 215 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 268 "/tmp/tmp.EduUHIB9bj/1.c"
 void __macc_update_access_region(int gpu_num, int * lb_set, int * ub_set, int val)
 {
-# 217 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 270 "/tmp/tmp.EduUHIB9bj/1.c"
 (lb_set[gpu_num]) = (((lb_set[gpu_num]) < val) ?(lb_set[gpu_num]) : val);
-# 218 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 271 "/tmp/tmp.EduUHIB9bj/1.c"
 (ub_set[gpu_num]) = (((ub_set[gpu_num]) > val) ?(ub_set[gpu_num]) : val);
 }
-# 221 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 274 "/tmp/tmp.EduUHIB9bj/1.c"
 int __macc_region_is_overlapping(int * lb_set, int * ub_set)
 {
 {
-# 223 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 276 "/tmp/tmp.EduUHIB9bj/1.c"
 int i;
-# 223 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 276 "/tmp/tmp.EduUHIB9bj/1.c"
 for(i = (0); i < (__MACC_NUMGPUS - (1)); i++) {
 {
 {
-# 224 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 277 "/tmp/tmp.EduUHIB9bj/1.c"
 int j;
-# 224 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 277 "/tmp/tmp.EduUHIB9bj/1.c"
 for(j = (i + (1)); j < __MACC_NUMGPUS; j++) {
 {
-# 225 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 278 "/tmp/tmp.EduUHIB9bj/1.c"
 if(!(((lb_set[i]) > (ub_set[j])) || ((ub_set[i]) < (lb_set[j])))) {
-# 226 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 279 "/tmp/tmp.EduUHIB9bj/1.c"
 return 1;
 }
 }
@@ -1093,130 +1207,151 @@ return 1;
 }
 }
 }
-# 228 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 281 "/tmp/tmp.EduUHIB9bj/1.c"
 return 0;
 }
-# 232 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 285 "/tmp/tmp.EduUHIB9bj/1.c"
 void __macc_calc_loop_region(int * loop_lb_set, int * loop_ub_set, int entire_start, int entire_end, int step, int until_equal)
 {
-# 236 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-int pos = entire_start;
-# 237 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-int width = (int)((((((float)(entire_end)) - entire_start) + (until_equal ?(1) : (0))) / __MACC_NUMGPUS) + (0.9));
-# 238 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 289 "/tmp/tmp.EduUHIB9bj/1.c"
+int tmp = entire_start + (step * ((entire_end - entire_start) / step));
+# 290 "/tmp/tmp.EduUHIB9bj/1.c"
+entire_end = (tmp - ((until_equal || (entire_end != tmp)) ?(0) : step));
+{
+# 292 "/tmp/tmp.EduUHIB9bj/1.c"
+int len = (entire_end - entire_start) + step;
+# 293 "/tmp/tmp.EduUHIB9bj/1.c"
+int width = (int)(((float)(len)) / __MACC_NUMGPUS);
+# 294 "/tmp/tmp.EduUHIB9bj/1.c"
 width -= (width % step);
 {
-# 240 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 295 "/tmp/tmp.EduUHIB9bj/1.c"
+int rem = (len - (width * __MACC_NUMGPUS)) / step;
+# 296 "/tmp/tmp.EduUHIB9bj/1.c"
+width -= step;
+{
+# 298 "/tmp/tmp.EduUHIB9bj/1.c"
+int pos = entire_start;
+{
+# 300 "/tmp/tmp.EduUHIB9bj/1.c"
 int i;
-# 240 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 300 "/tmp/tmp.EduUHIB9bj/1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 241 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 301 "/tmp/tmp.EduUHIB9bj/1.c"
 (loop_lb_set[i]) = pos;
-# 242 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-pos += (width - (1));
-# 243 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 302 "/tmp/tmp.EduUHIB9bj/1.c"
+pos = ((width < (0)) ? pos : ((((pos + width) + ((i < rem) ? step : (0))) < entire_end) ?((pos + width) + ((i < rem) ? step : (0))) : entire_end));
+# 303 "/tmp/tmp.EduUHIB9bj/1.c"
 (loop_ub_set[i]) = pos;
-# 244 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-pos += step;
+# 304 "/tmp/tmp.EduUHIB9bj/1.c"
+pos = (((pos + step) < entire_end) ?(pos + step) : entire_end);
 }
 }
 }
+}
+}
+}
+}
+# 308 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_adjust_data_region(void * ptr, int gpu_num, int * lb_set, int * ub_set)
 {
-# 247 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-int tail = __MACC_NUMGPUS - (1);
-# 248 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-(loop_ub_set[tail]) = entire_end;
-# 249 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-if((! until_equal) && ((loop_ub_set[tail]) == entire_end)) {
-# 250 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-(loop_ub_set[tail]) -= step;
+# 310 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
+# 312 "/tmp/tmp.EduUHIB9bj/1.c"
+(lb_set[gpu_num]) += (entry->offset);
+# 313 "/tmp/tmp.EduUHIB9bj/1.c"
+(ub_set[gpu_num]) += (entry->offset);
 }
-}
-}
-# 253 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 316 "/tmp/tmp.EduUHIB9bj/1.c"
 void __macc_rewrite_loop_region_into_single(int * loop_lb_set, int * loop_ub_set)
 {
-# 255 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 318 "/tmp/tmp.EduUHIB9bj/1.c"
 (loop_ub_set[(0)]) = (loop_ub_set[(__MACC_NUMGPUS - (1))]);
 {
-# 257 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 320 "/tmp/tmp.EduUHIB9bj/1.c"
 int i;
-# 257 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 320 "/tmp/tmp.EduUHIB9bj/1.c"
 for(i = (1); i < __MACC_NUMGPUS; i++) {
 {
-# 258 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 321 "/tmp/tmp.EduUHIB9bj/1.c"
 (loop_lb_set[i]) = (1);
-# 259 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 322 "/tmp/tmp.EduUHIB9bj/1.c"
 (loop_ub_set[i]) = (0);
 }
 }
 }
 }
-# 263 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 326 "/tmp/tmp.EduUHIB9bj/1.c"
 void __macc_rewrite_data_region_into_single(int * lb_set, int * ub_set)
 {
-# 265 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 328 "/tmp/tmp.EduUHIB9bj/1.c"
 int gpu_ub = __MACC_NUMGPUS - (1);
-# 266 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 329 "/tmp/tmp.EduUHIB9bj/1.c"
 (lb_set[(0)]) = (((lb_set[(0)]) < (lb_set[gpu_ub])) ?(lb_set[(0)]) : (lb_set[gpu_ub]));
-# 267 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 330 "/tmp/tmp.EduUHIB9bj/1.c"
 (ub_set[(0)]) = (((ub_set[(0)]) > (ub_set[gpu_ub])) ?(ub_set[(0)]) : (ub_set[gpu_ub]));
 }
-# 270 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_sync_data(int gpu_num, void * p, int type_size, int lb, int ub)
+# 333 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_sync_data(int gpu_num, void * ptr, int type_size, int lb, int ub)
 {
-# 272 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void * update_addr = p + (lb * type_size);
-# 273 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 335 "/tmp/tmp.EduUHIB9bj/1.c"
+void * update_addr = ptr + (lb * type_size);
+# 336 "/tmp/tmp.EduUHIB9bj/1.c"
 unsigned long length_b = ((ub - lb) + (1)) * type_size;
-# 275 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 338 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_update_self(update_addr, length_b);
-#pragma omp parallel num_threads ( __MACC_NUMGPUS )
 {
-# 279 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-int i = omp_get_thread_num();
-# 280 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 341 "/tmp/tmp.EduUHIB9bj/1.c"
+int i;
+# 341 "/tmp/tmp.EduUHIB9bj/1.c"
+for(i = (0); i < __MACC_NUMGPUS; i++) {
+{
+# 344 "/tmp/tmp.EduUHIB9bj/1.c"
 if(i != gpu_num) {
-# 281 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 345 "/tmp/tmp.EduUHIB9bj/1.c"
 __macc_set_gpu_num(i);
-# 282 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 346 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_update_device(update_addr, length_b);
 }
 }
-# 286 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+}
+}
+# 350 "/tmp/tmp.EduUHIB9bj/1.c"
 __macc_set_gpu_num(gpu_num);
 }
-# 290 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void __macc_set_data_region(int gpu_num, void * p, int multi, int use_type, int * use_lb_set, int * use_ub_set, int def_type, int * def_lb_set, int * def_ub_set)
+# 354 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_set_data_region(int gpu_num, void * ptr, int multi, int use_type, int * use_lb_set, int * use_ub_set, int def_type, int * def_lb_set, int * def_ub_set)
 {
-# 294 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, p);
-# 299 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 358 "/tmp/tmp.EduUHIB9bj/1.c"
+struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
+# 359 "/tmp/tmp.EduUHIB9bj/1.c"
+ptr = (entry->addr);
+# 364 "/tmp/tmp.EduUHIB9bj/1.c"
 if(((entry->dirty) && (multi || (gpu_num != (0)))) && (__MACC_NUMGPUS > (1))) {
-# 300 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 365 "/tmp/tmp.EduUHIB9bj/1.c"
 int update_all = 0;
-# 301 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 366 "/tmp/tmp.EduUHIB9bj/1.c"
 int update_all_DtoH = 0;
-# 303 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 368 "/tmp/tmp.EduUHIB9bj/1.c"
 if((use_type == (0)) || (def_type == (0))) {
-# 304 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 369 "/tmp/tmp.EduUHIB9bj/1.c"
 update_all = (1);
 }
 else {
-# 306 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 371 "/tmp/tmp.EduUHIB9bj/1.c"
 if(def_type == (2)) {
 {
-# 307 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 372 "/tmp/tmp.EduUHIB9bj/1.c"
 int i;
-# 307 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 372 "/tmp/tmp.EduUHIB9bj/1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 308 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 373 "/tmp/tmp.EduUHIB9bj/1.c"
 if((i != gpu_num) && (!(((entry->dirty_lb) > (def_ub_set[i])) || ((entry->dirty_ub) < (def_lb_set[i]))))) {
-# 311 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 376 "/tmp/tmp.EduUHIB9bj/1.c"
 update_all = (1);
-# 312 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 377 "/tmp/tmp.EduUHIB9bj/1.c"
 break;
 }
 }
@@ -1224,39 +1359,39 @@ break;
 }
 }
 }
-# 317 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 382 "/tmp/tmp.EduUHIB9bj/1.c"
 if(! update_all) {
-# 318 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 383 "/tmp/tmp.EduUHIB9bj/1.c"
 int every_whole = 1;
-# 319 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 384 "/tmp/tmp.EduUHIB9bj/1.c"
 int unused_lb = entry->dirty_lb;
-# 320 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 385 "/tmp/tmp.EduUHIB9bj/1.c"
 int unused_ub = entry->dirty_ub;
 {
-# 322 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 387 "/tmp/tmp.EduUHIB9bj/1.c"
 int i;
-# 322 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 387 "/tmp/tmp.EduUHIB9bj/1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 323 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 388 "/tmp/tmp.EduUHIB9bj/1.c"
 if(i != gpu_num) {
-# 324 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 389 "/tmp/tmp.EduUHIB9bj/1.c"
 if(((use_lb_set[i]) <= (entry->dirty_lb)) && ((entry->dirty_ub) <= (use_ub_set[i]))) {
-# 326 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 391 "/tmp/tmp.EduUHIB9bj/1.c"
 update_all_DtoH = (1);
 }
 else {
-# 329 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 394 "/tmp/tmp.EduUHIB9bj/1.c"
 every_whole = (0);
-# 331 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 396 "/tmp/tmp.EduUHIB9bj/1.c"
 if((use_lb_set[i]) <= unused_lb) {
-# 332 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 397 "/tmp/tmp.EduUHIB9bj/1.c"
 unused_lb = ((unused_lb > ((use_ub_set[i]) + (1))) ? unused_lb : ((use_ub_set[i]) + (1)));
 }
 else {
-# 333 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 398 "/tmp/tmp.EduUHIB9bj/1.c"
 if((use_ub_set[i]) >= unused_ub) {
-# 334 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 399 "/tmp/tmp.EduUHIB9bj/1.c"
 unused_ub = ((unused_ub < ((use_lb_set[i]) - (1))) ? unused_ub : ((use_lb_set[i]) - (1)));
 }
 }
@@ -1265,107 +1400,402 @@ unused_ub = ((unused_ub < ((use_lb_set[i]) - (1))) ? unused_ub : ((use_lb_set[i]
 }
 }
 }
-# 339 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 404 "/tmp/tmp.EduUHIB9bj/1.c"
 if(every_whole) {
-# 340 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 405 "/tmp/tmp.EduUHIB9bj/1.c"
 update_all = (1);
 }
-# 341 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 406 "/tmp/tmp.EduUHIB9bj/1.c"
 if(unused_ub < unused_lb) {
-# 342 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 407 "/tmp/tmp.EduUHIB9bj/1.c"
 update_all_DtoH = (1);
 }
 }
-# 346 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 411 "/tmp/tmp.EduUHIB9bj/1.c"
 if(update_all) {
-# 347 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
-# 348 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 412 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
+# 413 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty) = (0);
 }
 else {
-# 352 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 417 "/tmp/tmp.EduUHIB9bj/1.c"
 if((entry->dirty) && (use_type == (2))) {
-# 353 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 418 "/tmp/tmp.EduUHIB9bj/1.c"
 int thread_num = multi ? __MACC_NUMGPUS : (1);
-# 355 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 420 "/tmp/tmp.EduUHIB9bj/1.c"
 if(update_all_DtoH) {
-# 356 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-acc_update_self(p + ((entry->dirty_lb) * (entry->type_size)), (((entry->dirty_ub) - (entry->dirty_lb)) + (1)) * (entry->type_size));
+# 421 "/tmp/tmp.EduUHIB9bj/1.c"
+acc_update_self(ptr + ((entry->dirty_lb) * (entry->type_size)), (((entry->dirty_ub) - (entry->dirty_lb)) + (1)) * (entry->type_size));
 }
-#pragma omp parallel num_threads ( thread_num )
 {
-# 361 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-int i = omp_get_thread_num();
-# 363 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 425 "/tmp/tmp.EduUHIB9bj/1.c"
+int i;
+# 425 "/tmp/tmp.EduUHIB9bj/1.c"
+for(i = (0); i < thread_num; i++) {
+{
+# 429 "/tmp/tmp.EduUHIB9bj/1.c"
 if((i != gpu_num) && (!(((entry->dirty_lb) > (use_ub_set[i])) || ((entry->dirty_ub) < (use_lb_set[i]))))) {
-# 367 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 433 "/tmp/tmp.EduUHIB9bj/1.c"
 int update_lb = ((entry->dirty_lb) > (use_lb_set[i])) ?(entry->dirty_lb) : (use_lb_set[i]);
-# 368 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 434 "/tmp/tmp.EduUHIB9bj/1.c"
 int update_ub = ((entry->dirty_ub) < (use_ub_set[i])) ?(entry->dirty_ub) : (use_ub_set[i]);
-# 369 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-void * update_addr = p + (update_lb * (entry->type_size));
-# 370 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 435 "/tmp/tmp.EduUHIB9bj/1.c"
+void * update_addr = ptr + (update_lb * (entry->type_size));
+# 436 "/tmp/tmp.EduUHIB9bj/1.c"
 unsigned long length_b = ((update_ub - update_lb) + (1)) * (entry->type_size);
-# 372 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 438 "/tmp/tmp.EduUHIB9bj/1.c"
 if(! update_all_DtoH) {
-# 373 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 439 "/tmp/tmp.EduUHIB9bj/1.c"
 __macc_set_gpu_num(gpu_num);
-# 374 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 440 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_update_self(update_addr, length_b);
 }
-# 376 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 442 "/tmp/tmp.EduUHIB9bj/1.c"
 __macc_set_gpu_num(i);
-# 377 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 443 "/tmp/tmp.EduUHIB9bj/1.c"
 acc_update_device(update_addr, length_b);
 }
-# 379 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+}
+}
+}
+# 447 "/tmp/tmp.EduUHIB9bj/1.c"
 __macc_set_gpu_num(gpu_num);
 }
 }
 }
-}
-# 389 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 456 "/tmp/tmp.EduUHIB9bj/1.c"
 if((multi || (gpu_num == (0))) && (def_type != (1))) {
-# 390 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 457 "/tmp/tmp.EduUHIB9bj/1.c"
 if(def_type == (0)) {
-# 391 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 458 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty) = (1);
-# 392 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 459 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty_lb) = (entry->entire_lb);
-# 393 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 460 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty_ub) = (entry->entire_ub);
 }
 else {
-# 396 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 463 "/tmp/tmp.EduUHIB9bj/1.c"
 if(!(entry->dirty)) {
-# 397 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 464 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty) = (1);
-# 398 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 465 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty_lb) = (def_lb_set[gpu_num]);
-# 399 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 466 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty_ub) = (def_ub_set[gpu_num]);
 }
 else {
-# 404 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 471 "/tmp/tmp.EduUHIB9bj/1.c"
 if(((!(((entry->dirty_lb) > (def_ub_set[gpu_num])) || ((entry->dirty_ub) < (def_lb_set[gpu_num])))) || ((entry->dirty_lb) == ((def_ub_set[gpu_num]) + (1)))) || ((def_lb_set[gpu_num]) == ((entry->dirty_ub) + (1)))) {
-# 412 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 479 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty_lb) = (((entry->dirty_lb) < (def_lb_set[gpu_num])) ?(entry->dirty_lb) : (def_lb_set[gpu_num]));
-# 413 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 480 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty_ub) = (((entry->dirty_ub) > (def_ub_set[gpu_num])) ?(entry->dirty_ub) : (def_ub_set[gpu_num]));
 }
 else {
-# 417 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
-__macc_sync_data(gpu_num, p, entry->type_size, entry->dirty_lb, entry->dirty_ub);
-# 418 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 484 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
+# 485 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty_lb) = (def_lb_set[gpu_num]);
-# 419 "/tmp/tmp.Sr5PXuFYA9/himeno_1.c"
+# 486 "/tmp/tmp.EduUHIB9bj/1.c"
 (entry->dirty_ub) = (def_ub_set[gpu_num]);
 }
 }
 }
 }
 }
+# 491 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_set_data_region_multi(int gpu_num, int multi, int len, void * * ptrs, int * use_type, int * * use_lb_set, int * * use_ub_set, int * def_type, int * * def_lb_set, int * * def_ub_set)
+{
+{
+# 497 "/tmp/tmp.EduUHIB9bj/1.c"
+int i;
+# 497 "/tmp/tmp.EduUHIB9bj/1.c"
+for(i = (0); i < len; i++) {
+{
+# 500 "/tmp/tmp.EduUHIB9bj/1.c"
+int tnum = i;
+# 502 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_set_gpu_num(gpu_num);
+# 504 "/tmp/tmp.EduUHIB9bj/1.c"
+__macc_set_data_region(gpu_num, ptrs[tnum], multi, use_type[tnum], use_lb_set[tnum], use_ub_set[tnum], def_type[tnum], def_lb_set[tnum], def_ub_set[tnum]);
+}
+}
+}
+}
+# 511 "/tmp/tmp.EduUHIB9bj/1.c"
+void __macc_init()
+{
+# 513 "/tmp/tmp.EduUHIB9bj/1.c"
+char * env_macc_numgpus = getenv("MACC_NUMGPUS");
+# 515 "/tmp/tmp.EduUHIB9bj/1.c"
+if(env_macc_numgpus != ((void * )(0))) {
+# 516 "/tmp/tmp.EduUHIB9bj/1.c"
+__MACC_NUMGPUS = (atoi(env_macc_numgpus));
+}
+else {
+# 519 "/tmp/tmp.EduUHIB9bj/1.c"
+__MACC_NUMGPUS = (__macc_get_num_gpus());
+}
+# 522 "/tmp/tmp.EduUHIB9bj/1.c"
+if(__MACC_NUMGPUS <= (0)) {
+# 523 "/tmp/tmp.EduUHIB9bj/1.c"
+fputs("[MACC ERROR] No GPU device found.", stderr);
+# 524 "/tmp/tmp.EduUHIB9bj/1.c"
+exit(-(1));
+}
+# 540 "/tmp/tmp.EduUHIB9bj/1.c"
+__MACC_DATA_TABLE_SET = (calloc_managed(__MACC_NUMGPUS, sizeof(struct __MaccDataTable)));
+# 541 "/tmp/tmp.EduUHIB9bj/1.c"
+__MACC_DATA_WRAP_CACHE_SET = (calloc_managed(__MACC_NUMGPUS, sizeof(struct __MaccDataWrapCache)));
+{
+# 544 "/tmp/tmp.EduUHIB9bj/1.c"
+int t;
+# 544 "/tmp/tmp.EduUHIB9bj/1.c"
+for(t = (0); t < (10); t++) {
+{
+# 545 "/tmp/tmp.EduUHIB9bj/1.c"
+printf("[MACC] Wake up (%d)\n", t);
+{
+# 547 "/tmp/tmp.EduUHIB9bj/1.c"
+int n = ((256) * (1024)) * (1024);
+# 548 "/tmp/tmp.EduUHIB9bj/1.c"
+int * tmp = malloc_managed(n * (sizeof(int)));
+{
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+int __macc_tnum = omp_get_thread_num();
+__macc_set_gpu_num(__macc_tnum);
+{
+__macc_copyin(__macc_tnum, tmp, sizeof(int), 0, n);
+}
+}
+{
+{
+static int __macc_region_is_changed = 1;
+static int __macc_multi = 1;
+static void * __macc_ptrs[1];
+static int __macc_use_types[1];
+static int * __macc_use_lb_sets[1];
+static int * __macc_use_ub_sets[1];
+static int __macc_def_types[1];
+static int * __macc_def_lb_sets[1];
+static int * __macc_def_ub_sets[1];
+static int __macc_tmp_def_ub_set[10];
+static int __macc_tmp_def_lb_set[10];
+static int __macc_tmp_use_ub_set[10];
+static int __macc_tmp_use_lb_set[10];
+static int __macc_n_last;
+static int __macc_i_loop_lb_set[10];
+static int __macc_i_loop_ub_set[10];
+__macc_region_is_changed = (__macc_region_is_changed || (n != __macc_n_last));
+if(__macc_region_is_changed) {
+int __macc_gpu_num;
+int __macc_top_loop_lb;
+int __macc_top_loop_ub;
+__macc_multi = (1);
+__macc_region_is_changed = (0);
+{
+__macc_n_last = n;
+}
+{
+__macc_calc_loop_region(__macc_i_loop_lb_set, __macc_i_loop_ub_set, 1, n - (1), 1, 1);
+}
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+__macc_gpu_num = (omp_get_thread_num());
+{
+__macc_top_loop_lb = (__macc_i_loop_lb_set[__macc_gpu_num]);
+__macc_top_loop_ub = (__macc_i_loop_ub_set[__macc_gpu_num]);
+}
+{
+{
+{
+__macc_init_access_region(__macc_gpu_num, __macc_tmp_use_lb_set, __macc_tmp_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_tmp_def_lb_set, __macc_tmp_def_ub_set);
+{
+}
+{
+__macc_update_access_region(__macc_gpu_num, __macc_tmp_def_lb_set, __macc_tmp_def_ub_set, __macc_top_loop_lb);
+__macc_update_access_region(__macc_gpu_num, __macc_tmp_def_lb_set, __macc_tmp_def_ub_set, __macc_top_loop_ub);
+}
+__macc_adjust_data_region(tmp, __macc_gpu_num, __macc_tmp_use_lb_set, __macc_tmp_use_ub_set);
+__macc_adjust_data_region(tmp, __macc_gpu_num, __macc_tmp_def_lb_set, __macc_tmp_def_ub_set);
+}
+(__macc_ptrs[0]) = tmp;
+(__macc_use_types[0]) = (1);
+(__macc_use_lb_sets[0]) = __macc_tmp_use_lb_set;
+(__macc_use_ub_sets[0]) = __macc_tmp_use_ub_set;
+(__macc_def_types[0]) = (2);
+(__macc_def_lb_sets[0]) = __macc_tmp_def_lb_set;
+(__macc_def_ub_sets[0]) = __macc_tmp_def_ub_set;
+}
+}
+}
+if(__macc_region_is_overlapping(__macc_tmp_def_lb_set, __macc_tmp_def_ub_set)) {
+__macc_multi = (0);
+{
+__macc_rewrite_loop_region_into_single(__macc_i_loop_lb_set, __macc_i_loop_ub_set);
+{
+__macc_rewrite_data_region_into_single(__macc_tmp_def_lb_set, __macc_tmp_def_ub_set);
+}
+}
+}
+}
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+int __macc_tnum = omp_get_thread_num();
+__macc_set_gpu_num(__macc_tnum);
+{
+int __macc_num_gangs;
+int __macc_top_loop_lb;
+int __macc_top_loop_ub;
+__macc_top_loop_lb = (__macc_i_loop_lb_set[__macc_tnum]);
+__macc_top_loop_ub = (__macc_i_loop_ub_set[__macc_tnum]);
+__macc_set_data_region_multi(__macc_tnum, __macc_multi, 1, __macc_ptrs, __macc_use_types, __macc_use_lb_sets, __macc_use_ub_sets, __macc_def_types, __macc_def_lb_sets, __macc_def_ub_sets);
+#pragma omp barrier
+__macc_num_gangs = ( __macc_multi ? (((512) + __MACC_NUMGPUS) - (1)) / __MACC_NUMGPUS : 512 );
+#pragma acc parallel present ( tmp ) num_gangs  (__macc_num_gangs)  vector_length ( 1024 )
+#pragma acc loop gang vector
+# 554 "/tmp/tmp.EduUHIB9bj/1.c"
+# 554 "/tmp/tmp.EduUHIB9bj/1.c"
+for(int i= __macc_top_loop_lb; i <= __macc_top_loop_ub; i++) {
+{
+# 555 "/tmp/tmp.EduUHIB9bj/1.c"
+(tmp[i]) = i;
+}
+}
+}
+}
+}
+{
+static int __macc_region_is_changed = 1;
+static int __macc_multi = 1;
+static void * __macc_ptrs[1];
+static int __macc_use_types[1];
+static int * __macc_use_lb_sets[1];
+static int * __macc_use_ub_sets[1];
+static int __macc_def_types[1];
+static int * __macc_def_lb_sets[1];
+static int * __macc_def_ub_sets[1];
+static int __macc_tmp_def_ub_set[10];
+static int __macc_tmp_def_lb_set[10];
+static int __macc_tmp_use_ub_set[10];
+static int __macc_tmp_use_lb_set[10];
+static int __macc_n_last;
+static int __macc_i_loop_lb_set[10];
+static int __macc_i_loop_ub_set[10];
+__macc_region_is_changed = (__macc_region_is_changed || (n != __macc_n_last));
+if(__macc_region_is_changed) {
+int __macc_gpu_num;
+int __macc_top_loop_lb;
+int __macc_top_loop_ub;
+__macc_multi = (1);
+__macc_region_is_changed = (0);
+{
+__macc_n_last = n;
+}
+{
+__macc_calc_loop_region(__macc_i_loop_lb_set, __macc_i_loop_ub_set, 1, n - (1), 1, 1);
+}
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+__macc_gpu_num = (omp_get_thread_num());
+{
+__macc_top_loop_lb = (__macc_i_loop_lb_set[__macc_gpu_num]);
+__macc_top_loop_ub = (__macc_i_loop_ub_set[__macc_gpu_num]);
+}
+{
+{
+{
+__macc_init_access_region(__macc_gpu_num, __macc_tmp_use_lb_set, __macc_tmp_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_tmp_def_lb_set, __macc_tmp_def_ub_set);
+{
+__macc_update_access_region(__macc_gpu_num, __macc_tmp_use_lb_set, __macc_tmp_use_ub_set, n - __macc_top_loop_lb);
+__macc_update_access_region(__macc_gpu_num, __macc_tmp_use_lb_set, __macc_tmp_use_ub_set, n - __macc_top_loop_ub);
+}
+{
+__macc_update_access_region(__macc_gpu_num, __macc_tmp_def_lb_set, __macc_tmp_def_ub_set, n - __macc_top_loop_lb);
+__macc_update_access_region(__macc_gpu_num, __macc_tmp_def_lb_set, __macc_tmp_def_ub_set, n - __macc_top_loop_ub);
+}
+__macc_adjust_data_region(tmp, __macc_gpu_num, __macc_tmp_use_lb_set, __macc_tmp_use_ub_set);
+__macc_adjust_data_region(tmp, __macc_gpu_num, __macc_tmp_def_lb_set, __macc_tmp_def_ub_set);
+}
+(__macc_ptrs[0]) = tmp;
+(__macc_use_types[0]) = (2);
+(__macc_use_lb_sets[0]) = __macc_tmp_use_lb_set;
+(__macc_use_ub_sets[0]) = __macc_tmp_use_ub_set;
+(__macc_def_types[0]) = (2);
+(__macc_def_lb_sets[0]) = __macc_tmp_def_lb_set;
+(__macc_def_ub_sets[0]) = __macc_tmp_def_ub_set;
+}
+}
+}
+if(__macc_region_is_overlapping(__macc_tmp_def_lb_set, __macc_tmp_def_ub_set)) {
+__macc_multi = (0);
+{
+__macc_rewrite_loop_region_into_single(__macc_i_loop_lb_set, __macc_i_loop_ub_set);
+{
+__macc_rewrite_data_region_into_single(__macc_tmp_use_lb_set, __macc_tmp_use_ub_set);
+__macc_rewrite_data_region_into_single(__macc_tmp_def_lb_set, __macc_tmp_def_ub_set);
+}
+}
+}
+}
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+int __macc_tnum = omp_get_thread_num();
+__macc_set_gpu_num(__macc_tnum);
+{
+int __macc_num_gangs;
+int __macc_top_loop_lb;
+int __macc_top_loop_ub;
+__macc_top_loop_lb = (__macc_i_loop_lb_set[__macc_tnum]);
+__macc_top_loop_ub = (__macc_i_loop_ub_set[__macc_tnum]);
+__macc_set_data_region_multi(__macc_tnum, __macc_multi, 1, __macc_ptrs, __macc_use_types, __macc_use_lb_sets, __macc_use_ub_sets, __macc_def_types, __macc_def_lb_sets, __macc_def_ub_sets);
+#pragma omp barrier
+__macc_num_gangs = ( __macc_multi ? (((512) + __MACC_NUMGPUS) - (1)) / __MACC_NUMGPUS : 512 );
+#pragma acc parallel present ( tmp ) num_gangs  (__macc_num_gangs)  vector_length ( 1024 )
+#pragma acc loop gang vector
+# 559 "/tmp/tmp.EduUHIB9bj/1.c"
+# 559 "/tmp/tmp.EduUHIB9bj/1.c"
+for(int i= __macc_top_loop_lb; i <= __macc_top_loop_ub; i++) {
+{
+# 560 "/tmp/tmp.EduUHIB9bj/1.c"
+(tmp[(n - i)]) += i;
+}
+}
+}
+}
+}
+}
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
+{
+int __macc_tnum = omp_get_thread_num();
+__macc_set_gpu_num(__macc_tnum);
+{
+__macc_copyout(__macc_tnum, tmp, sizeof(int), 0, n);
+}
+}
+}
+# 563 "/tmp/tmp.EduUHIB9bj/1.c"
+free_managed(tmp);
+}
+}
+}
+}
+}
+extern void * malloc_managed(unsigned long);
+extern void * calloc_managed(unsigned long, unsigned long);
+extern void free_managed(void * );
+extern void cfree_managed(void * );
+extern void * realloc_managed(void * , unsigned long);
+extern void * valloc_managed(unsigned long);
+extern void * pvalloc_managed(unsigned long);
+extern void * memalign_managed(unsigned long, unsigned long);
+extern int posix_memalign_managed(void * * , unsigned long, unsigned long);
+extern char * tmpnam_managed(char * );
 extern int gettimeofday(struct timeval * restrict __tv, struct timezone * restrict __tz);
 extern int settimeofday(struct timeval const * __tv, struct timezone const * __tz);
 extern int adjtime(struct timeval const * __delta, struct timeval * __olddelta);
@@ -1382,210 +1812,210 @@ void mat_set_init(struct Mat * Mat);
 float jacobi(int nn, struct Mat * a, struct Mat * b, struct Mat * c, struct Mat * p, struct Mat * bnd, struct Mat * wrk1, struct Mat * wrk2);
 double fflop(int mx, int my, int mz);
 double mflops(int nn, double cpu, double flop);
-# 32 "sample/himeno.c"
+# 32 "/tmp/tmp.EduUHIB9bj/in.c"
 double second()
 {
-# 35 "sample/himeno.c"
+# 35 "/tmp/tmp.EduUHIB9bj/in.c"
 struct timeval tm;
-# 36 "sample/himeno.c"
+# 36 "/tmp/tmp.EduUHIB9bj/in.c"
 double t;
-# 38 "sample/himeno.c"
+# 38 "/tmp/tmp.EduUHIB9bj/in.c"
 static int base_sec = 0;
-# 38 "sample/himeno.c"
+# 38 "/tmp/tmp.EduUHIB9bj/in.c"
 static int base_usec = 0;
-# 40 "sample/himeno.c"
+# 40 "/tmp/tmp.EduUHIB9bj/in.c"
 gettimeofday(&(tm), (void * )(0));
-# 42 "sample/himeno.c"
+# 42 "/tmp/tmp.EduUHIB9bj/in.c"
 if((base_sec == (0)) && (base_usec == (0))) {
-# 44 "sample/himeno.c"
+# 44 "/tmp/tmp.EduUHIB9bj/in.c"
 base_sec = ((&(tm))->tv_sec);
-# 45 "sample/himeno.c"
+# 45 "/tmp/tmp.EduUHIB9bj/in.c"
 base_usec = ((&(tm))->tv_usec);
-# 46 "sample/himeno.c"
+# 46 "/tmp/tmp.EduUHIB9bj/in.c"
 t = (0.0);
 }
 else {
-# 48 "sample/himeno.c"
+# 48 "/tmp/tmp.EduUHIB9bj/in.c"
 t = (((double)(((&(tm))->tv_sec) - base_sec)) + (((double)(((&(tm))->tv_usec) - base_usec)) / (1.0e6)));
 }
-# 52 "sample/himeno.c"
+# 52 "/tmp/tmp.EduUHIB9bj/in.c"
 return t;
 }
-# 55 "sample/himeno.c"
+# 55 "/tmp/tmp.EduUHIB9bj/in.c"
 float omega = 0.8;
-# 56 "sample/himeno.c"
+# 56 "/tmp/tmp.EduUHIB9bj/in.c"
 struct Mat a;
-# 56 "sample/himeno.c"
+# 56 "/tmp/tmp.EduUHIB9bj/in.c"
 struct Mat b;
-# 56 "sample/himeno.c"
+# 56 "/tmp/tmp.EduUHIB9bj/in.c"
 struct Mat c;
-# 56 "sample/himeno.c"
+# 56 "/tmp/tmp.EduUHIB9bj/in.c"
 struct Mat p;
-# 56 "sample/himeno.c"
+# 56 "/tmp/tmp.EduUHIB9bj/in.c"
 struct Mat bnd;
-# 56 "sample/himeno.c"
+# 56 "/tmp/tmp.EduUHIB9bj/in.c"
 struct Mat wrk1;
-# 56 "sample/himeno.c"
+# 56 "/tmp/tmp.EduUHIB9bj/in.c"
 struct Mat wrk2;
-# 58 "sample/himeno.c"
+# 58 "/tmp/tmp.EduUHIB9bj/in.c"
 int main(int argc, char * argv[])
 {
 __macc_init();
 {
-# 61 "sample/himeno.c"
+# 61 "/tmp/tmp.EduUHIB9bj/in.c"
 int i;
-# 61 "sample/himeno.c"
+# 61 "/tmp/tmp.EduUHIB9bj/in.c"
 int j;
-# 61 "sample/himeno.c"
+# 61 "/tmp/tmp.EduUHIB9bj/in.c"
 int k;
-# 61 "sample/himeno.c"
+# 61 "/tmp/tmp.EduUHIB9bj/in.c"
 int nn;
-# 62 "sample/himeno.c"
+# 62 "/tmp/tmp.EduUHIB9bj/in.c"
 int imax;
-# 62 "sample/himeno.c"
+# 62 "/tmp/tmp.EduUHIB9bj/in.c"
 int jmax;
-# 62 "sample/himeno.c"
+# 62 "/tmp/tmp.EduUHIB9bj/in.c"
 int kmax;
-# 62 "sample/himeno.c"
+# 62 "/tmp/tmp.EduUHIB9bj/in.c"
 int mimax;
-# 62 "sample/himeno.c"
+# 62 "/tmp/tmp.EduUHIB9bj/in.c"
 int mjmax;
-# 62 "sample/himeno.c"
+# 62 "/tmp/tmp.EduUHIB9bj/in.c"
 int mkmax;
-# 62 "sample/himeno.c"
+# 62 "/tmp/tmp.EduUHIB9bj/in.c"
 int msize[3];
-# 63 "sample/himeno.c"
+# 63 "/tmp/tmp.EduUHIB9bj/in.c"
 float gosa;
-# 63 "sample/himeno.c"
+# 63 "/tmp/tmp.EduUHIB9bj/in.c"
 float target;
-# 64 "sample/himeno.c"
+# 64 "/tmp/tmp.EduUHIB9bj/in.c"
 double cpu0;
-# 64 "sample/himeno.c"
+# 64 "/tmp/tmp.EduUHIB9bj/in.c"
 double cpu1;
-# 64 "sample/himeno.c"
+# 64 "/tmp/tmp.EduUHIB9bj/in.c"
 double cpu;
-# 64 "sample/himeno.c"
+# 64 "/tmp/tmp.EduUHIB9bj/in.c"
 double flop;
-# 65 "sample/himeno.c"
+# 65 "/tmp/tmp.EduUHIB9bj/in.c"
 char size[10];
-# 66 "sample/himeno.c"
+# 66 "/tmp/tmp.EduUHIB9bj/in.c"
 unsigned long bs;
-# 67 "sample/himeno.c"
+# 67 "/tmp/tmp.EduUHIB9bj/in.c"
 float * a_m;
-# 67 "sample/himeno.c"
+# 67 "/tmp/tmp.EduUHIB9bj/in.c"
 float * b_m;
-# 67 "sample/himeno.c"
+# 67 "/tmp/tmp.EduUHIB9bj/in.c"
 float * c_m;
-# 67 "sample/himeno.c"
+# 67 "/tmp/tmp.EduUHIB9bj/in.c"
 float * p_m;
-# 67 "sample/himeno.c"
+# 67 "/tmp/tmp.EduUHIB9bj/in.c"
 float * bnd_m;
-# 67 "sample/himeno.c"
+# 67 "/tmp/tmp.EduUHIB9bj/in.c"
 float * wrk1_m;
-# 67 "sample/himeno.c"
+# 67 "/tmp/tmp.EduUHIB9bj/in.c"
 float * wrk2_m;
-# 69 "sample/himeno.c"
+# 69 "/tmp/tmp.EduUHIB9bj/in.c"
 if(argc == (2)) {
-# 70 "sample/himeno.c"
+# 70 "/tmp/tmp.EduUHIB9bj/in.c"
 strcpy(size, argv[1]);
 }
 else {
-# 72 "sample/himeno.c"
+# 72 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("For example: \n");
-# 73 "sample/himeno.c"
+# 73 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" Grid-size= XS (32x32x64)\n");
-# 74 "sample/himeno.c"
+# 74 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("\t    S  (64x64x128)\n");
-# 75 "sample/himeno.c"
+# 75 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("\t    M  (128x128x256)\n");
-# 76 "sample/himeno.c"
+# 76 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("\t    L  (256x256x512)\n");
-# 77 "sample/himeno.c"
+# 77 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("\t    XL (512x512x1024)\n\n");
-# 78 "sample/himeno.c"
+# 78 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("Grid-size = ");
-# 79 "sample/himeno.c"
+# 79 "/tmp/tmp.EduUHIB9bj/in.c"
 __isoc99_scanf("%s", size);
-# 80 "sample/himeno.c"
+# 80 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("\n");
 }
-# 83 "sample/himeno.c"
+# 83 "/tmp/tmp.EduUHIB9bj/in.c"
 set_param(msize, size);
-# 85 "sample/himeno.c"
+# 85 "/tmp/tmp.EduUHIB9bj/in.c"
 mimax = (msize[0]);
-# 86 "sample/himeno.c"
+# 86 "/tmp/tmp.EduUHIB9bj/in.c"
 mjmax = (msize[1]);
-# 87 "sample/himeno.c"
+# 87 "/tmp/tmp.EduUHIB9bj/in.c"
 mkmax = (msize[2]);
-# 88 "sample/himeno.c"
+# 88 "/tmp/tmp.EduUHIB9bj/in.c"
 imax = (mimax - (1));
-# 89 "sample/himeno.c"
+# 89 "/tmp/tmp.EduUHIB9bj/in.c"
 jmax = (mjmax - (1));
-# 90 "sample/himeno.c"
+# 90 "/tmp/tmp.EduUHIB9bj/in.c"
 kmax = (mkmax - (1));
-# 91 "sample/himeno.c"
+# 91 "/tmp/tmp.EduUHIB9bj/in.c"
 bs = ((mimax * mjmax) * mkmax);
-# 93 "sample/himeno.c"
+# 93 "/tmp/tmp.EduUHIB9bj/in.c"
 target = (60.0);
-# 95 "sample/himeno.c"
+# 95 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("mimax = %d mjmax = %d mkmax = %d\n", mimax, mjmax, mkmax);
-# 96 "sample/himeno.c"
+# 96 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("imax = %d jmax = %d kmax =%d\n", imax, jmax, kmax);
-# 101 "sample/himeno.c"
+# 101 "/tmp/tmp.EduUHIB9bj/in.c"
 newMat(&(p), 1, mimax, mjmax, mkmax);
-# 102 "sample/himeno.c"
+# 102 "/tmp/tmp.EduUHIB9bj/in.c"
 newMat(&(bnd), 1, mimax, mjmax, mkmax);
-# 103 "sample/himeno.c"
+# 103 "/tmp/tmp.EduUHIB9bj/in.c"
 newMat(&(wrk1), 1, mimax, mjmax, mkmax);
-# 104 "sample/himeno.c"
+# 104 "/tmp/tmp.EduUHIB9bj/in.c"
 newMat(&(wrk2), 1, mimax, mjmax, mkmax);
-# 105 "sample/himeno.c"
+# 105 "/tmp/tmp.EduUHIB9bj/in.c"
 newMat(&(a), 4, mimax, mjmax, mkmax);
-# 106 "sample/himeno.c"
+# 106 "/tmp/tmp.EduUHIB9bj/in.c"
 newMat(&(b), 3, mimax, mjmax, mkmax);
-# 107 "sample/himeno.c"
+# 107 "/tmp/tmp.EduUHIB9bj/in.c"
 newMat(&(c), 3, mimax, mjmax, mkmax);
-# 109 "sample/himeno.c"
+# 109 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set_init(&(p));
-# 110 "sample/himeno.c"
+# 110 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(bnd), 0, 1.0);
-# 111 "sample/himeno.c"
+# 111 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(wrk1), 0, 0.0);
-# 112 "sample/himeno.c"
+# 112 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(wrk2), 0, 0.0);
-# 113 "sample/himeno.c"
+# 113 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(a), 0, 1.0);
-# 114 "sample/himeno.c"
+# 114 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(a), 1, 1.0);
-# 115 "sample/himeno.c"
+# 115 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(a), 2, 1.0);
-# 116 "sample/himeno.c"
+# 116 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(a), 3, (1.0) / (6.0));
-# 117 "sample/himeno.c"
+# 117 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(b), 0, 0.0);
-# 118 "sample/himeno.c"
+# 118 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(b), 1, 0.0);
-# 119 "sample/himeno.c"
+# 119 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(b), 2, 0.0);
-# 120 "sample/himeno.c"
+# 120 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(c), 0, 1.0);
-# 121 "sample/himeno.c"
+# 121 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(c), 1, 1.0);
-# 122 "sample/himeno.c"
+# 122 "/tmp/tmp.EduUHIB9bj/in.c"
 mat_set(&(c), 2, 1.0);
-# 128 "sample/himeno.c"
+# 128 "/tmp/tmp.EduUHIB9bj/in.c"
 a_m = ((&(a))->m);
-# 129 "sample/himeno.c"
+# 129 "/tmp/tmp.EduUHIB9bj/in.c"
 b_m = ((&(b))->m);
-# 130 "sample/himeno.c"
+# 130 "/tmp/tmp.EduUHIB9bj/in.c"
 c_m = ((&(c))->m);
-# 131 "sample/himeno.c"
+# 131 "/tmp/tmp.EduUHIB9bj/in.c"
 p_m = ((&(p))->m);
-# 132 "sample/himeno.c"
+# 132 "/tmp/tmp.EduUHIB9bj/in.c"
 bnd_m = ((&(bnd))->m);
-# 133 "sample/himeno.c"
+# 133 "/tmp/tmp.EduUHIB9bj/in.c"
 wrk1_m = ((&(wrk1))->m);
-# 134 "sample/himeno.c"
+# 134 "/tmp/tmp.EduUHIB9bj/in.c"
 wrk2_m = ((&(wrk2))->m);
 {
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
@@ -1611,59 +2041,52 @@ __macc_copyin(__macc_tnum, wrk2_m, sizeof(float), 0, bs);
 }
 }
 {
-# 141 "sample/himeno.c"
+# 141 "/tmp/tmp.EduUHIB9bj/in.c"
 jacobi(1, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2));
-# 143 "sample/himeno.c"
+# 143 "/tmp/tmp.EduUHIB9bj/in.c"
 nn = (3);
-# 144 "sample/himeno.c"
+# 144 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" Start rehearsal measurement process.\n");
-# 145 "sample/himeno.c"
+# 145 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" Measure the performance in %d times.\n\n", nn);
-# 147 "sample/himeno.c"
+# 147 "/tmp/tmp.EduUHIB9bj/in.c"
 cpu0 = (second());
-# 148 "sample/himeno.c"
+# 148 "/tmp/tmp.EduUHIB9bj/in.c"
 gosa = (jacobi(nn, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2)));
-# 149 "sample/himeno.c"
+# 149 "/tmp/tmp.EduUHIB9bj/in.c"
 cpu1 = (second());
-# 150 "sample/himeno.c"
+# 150 "/tmp/tmp.EduUHIB9bj/in.c"
 cpu = (cpu1 - cpu0);
-# 151 "sample/himeno.c"
+# 151 "/tmp/tmp.EduUHIB9bj/in.c"
 flop = (fflop(imax, jmax, kmax));
-# 153 "sample/himeno.c"
+# 153 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" MFLOPS: %f time(s): %f %e\n\n", mflops(nn, cpu, flop), cpu, gosa);
-# 156 "sample/himeno.c"
+# 156 "/tmp/tmp.EduUHIB9bj/in.c"
 nn = ((int)(target / (cpu / (3.0))));
-# 158 "sample/himeno.c"
+# 158 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" Now, start the actual measurement process.\n");
-# 159 "sample/himeno.c"
+# 159 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" The loop will be excuted in %d times\n", nn);
-# 160 "sample/himeno.c"
+# 160 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" This will take about one minute.\n");
-# 161 "sample/himeno.c"
+# 161 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" Wait for a while\n\n");
-# 163 "sample/himeno.c"
-for(i = (1); i <= (10); i++) {
-{
-# 164 "sample/himeno.c"
+# 163 "/tmp/tmp.EduUHIB9bj/in.c"
 cpu0 = (second());
-# 165 "sample/himeno.c"
+# 164 "/tmp/tmp.EduUHIB9bj/in.c"
 gosa = (jacobi(nn, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2)));
-# 166 "sample/himeno.c"
+# 165 "/tmp/tmp.EduUHIB9bj/in.c"
 cpu1 = (second());
-# 167 "sample/himeno.c"
+# 166 "/tmp/tmp.EduUHIB9bj/in.c"
 cpu = (cpu1 - cpu0);
-# 169 "sample/himeno.c"
-printf(" [%d]\n", i);
-# 170 "sample/himeno.c"
+# 168 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" Loop executed for %d times\n", nn);
-# 171 "sample/himeno.c"
+# 169 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" Gosa : %e \n", gosa);
-# 172 "sample/himeno.c"
+# 170 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" MFLOPS measured : %f\tcpu : %f\n", mflops(nn, cpu, flop), cpu);
-# 173 "sample/himeno.c"
+# 171 "/tmp/tmp.EduUHIB9bj/in.c"
 printf(" Score based on Pentium III 600MHz using Fortran 77: %f\n", (mflops(nn, cpu, flop)) / (82), 84);
-}
-}
 }
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
 {
@@ -1688,157 +2111,157 @@ __macc_copyout(__macc_tnum, p_m, sizeof(float), 0, bs);
 }
 }
 }
-# 181 "sample/himeno.c"
+# 178 "/tmp/tmp.EduUHIB9bj/in.c"
 clearMat(&(p));
-# 182 "sample/himeno.c"
+# 179 "/tmp/tmp.EduUHIB9bj/in.c"
 clearMat(&(bnd));
-# 183 "sample/himeno.c"
+# 180 "/tmp/tmp.EduUHIB9bj/in.c"
 clearMat(&(wrk1));
-# 184 "sample/himeno.c"
+# 181 "/tmp/tmp.EduUHIB9bj/in.c"
 clearMat(&(wrk2));
-# 185 "sample/himeno.c"
+# 182 "/tmp/tmp.EduUHIB9bj/in.c"
 clearMat(&(a));
-# 186 "sample/himeno.c"
+# 183 "/tmp/tmp.EduUHIB9bj/in.c"
 clearMat(&(b));
-# 187 "sample/himeno.c"
+# 184 "/tmp/tmp.EduUHIB9bj/in.c"
 clearMat(&(c));
-# 189 "sample/himeno.c"
+# 186 "/tmp/tmp.EduUHIB9bj/in.c"
 return 0;
 }
 }
-# 192 "sample/himeno.c"
+# 189 "/tmp/tmp.EduUHIB9bj/in.c"
 double fflop(int mx, int my, int mz)
 {
-# 195 "sample/himeno.c"
+# 192 "/tmp/tmp.EduUHIB9bj/in.c"
 return ((((double)(mz - (2))) * ((double)(my - (2)))) * ((double)(mx - (2)))) * (34.0);
 }
-# 198 "sample/himeno.c"
+# 195 "/tmp/tmp.EduUHIB9bj/in.c"
 double mflops(int nn, double cpu, double flop)
 {
-# 201 "sample/himeno.c"
+# 198 "/tmp/tmp.EduUHIB9bj/in.c"
 return ((flop / cpu) * (1.e-6)) * ((double)(nn));
 }
-# 204 "sample/himeno.c"
+# 201 "/tmp/tmp.EduUHIB9bj/in.c"
 void set_param(int is[], char * size)
 {
-# 207 "sample/himeno.c"
+# 204 "/tmp/tmp.EduUHIB9bj/in.c"
 if((!(strcmp(size, "XS"))) || (!(strcmp(size, "xs")))) {
-# 208 "sample/himeno.c"
+# 205 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[0]) = (32);
-# 209 "sample/himeno.c"
+# 206 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[1]) = (32);
-# 210 "sample/himeno.c"
+# 207 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[2]) = (64);
-# 211 "sample/himeno.c"
+# 208 "/tmp/tmp.EduUHIB9bj/in.c"
 return ;
 }
-# 213 "sample/himeno.c"
+# 210 "/tmp/tmp.EduUHIB9bj/in.c"
 if((!(strcmp(size, "S"))) || (!(strcmp(size, "s")))) {
-# 214 "sample/himeno.c"
+# 211 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[0]) = (64);
-# 215 "sample/himeno.c"
+# 212 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[1]) = (64);
-# 216 "sample/himeno.c"
+# 213 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[2]) = (128);
-# 217 "sample/himeno.c"
+# 214 "/tmp/tmp.EduUHIB9bj/in.c"
 return ;
 }
-# 219 "sample/himeno.c"
+# 216 "/tmp/tmp.EduUHIB9bj/in.c"
 if((!(strcmp(size, "M"))) || (!(strcmp(size, "m")))) {
-# 220 "sample/himeno.c"
+# 217 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[0]) = (128);
-# 221 "sample/himeno.c"
+# 218 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[1]) = (128);
-# 222 "sample/himeno.c"
+# 219 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[2]) = (256);
-# 223 "sample/himeno.c"
+# 220 "/tmp/tmp.EduUHIB9bj/in.c"
 return ;
 }
-# 225 "sample/himeno.c"
+# 222 "/tmp/tmp.EduUHIB9bj/in.c"
 if((!(strcmp(size, "L"))) || (!(strcmp(size, "l")))) {
-# 226 "sample/himeno.c"
+# 223 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[0]) = (256);
-# 227 "sample/himeno.c"
+# 224 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[1]) = (256);
-# 228 "sample/himeno.c"
+# 225 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[2]) = (512);
-# 229 "sample/himeno.c"
+# 226 "/tmp/tmp.EduUHIB9bj/in.c"
 return ;
 }
-# 231 "sample/himeno.c"
+# 228 "/tmp/tmp.EduUHIB9bj/in.c"
 if((!(strcmp(size, "XL"))) || (!(strcmp(size, "xl")))) {
-# 232 "sample/himeno.c"
+# 229 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[0]) = (512);
-# 233 "sample/himeno.c"
+# 230 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[1]) = (512);
-# 234 "sample/himeno.c"
+# 231 "/tmp/tmp.EduUHIB9bj/in.c"
 (is[2]) = (1024);
-# 235 "sample/himeno.c"
+# 232 "/tmp/tmp.EduUHIB9bj/in.c"
 return ;
 }
 else {
-# 237 "sample/himeno.c"
+# 234 "/tmp/tmp.EduUHIB9bj/in.c"
 printf("Invalid input character !!\n");
-# 238 "sample/himeno.c"
+# 235 "/tmp/tmp.EduUHIB9bj/in.c"
 exit(6);
 }
 }
-# 242 "sample/himeno.c"
+# 239 "/tmp/tmp.EduUHIB9bj/in.c"
 int newMat(struct Mat * Mat, int mnums, int mrows, int mcols, int mdeps)
 {
-# 245 "sample/himeno.c"
+# 242 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->mnums) = mnums;
-# 246 "sample/himeno.c"
+# 243 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->mrows) = mrows;
-# 247 "sample/himeno.c"
+# 244 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->mcols) = mcols;
-# 248 "sample/himeno.c"
+# 245 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->mdeps) = mdeps;
-# 249 "sample/himeno.c"
+# 246 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->m) = ((void * )(0));
-# 250 "sample/himeno.c"
-(Mat->m) = ((float * )(malloc((((mnums * mrows) * mcols) * mdeps) * (sizeof(float)))));
-# 253 "sample/himeno.c"
+# 247 "/tmp/tmp.EduUHIB9bj/in.c"
+(Mat->m) = ((float * )(malloc_managed((((mnums * mrows) * mcols) * mdeps) * (sizeof(float)))));
+# 250 "/tmp/tmp.EduUHIB9bj/in.c"
 return ((Mat->m) != ((void * )(0))) ?(1) : (0);
 }
-# 256 "sample/himeno.c"
+# 253 "/tmp/tmp.EduUHIB9bj/in.c"
 void clearMat(struct Mat * Mat)
 {
-# 259 "sample/himeno.c"
+# 256 "/tmp/tmp.EduUHIB9bj/in.c"
 if(Mat->m) {
-# 260 "sample/himeno.c"
-free(Mat->m);
+# 257 "/tmp/tmp.EduUHIB9bj/in.c"
+free_managed(Mat->m);
 }
-# 261 "sample/himeno.c"
+# 258 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->m) = ((void * )(0));
-# 262 "sample/himeno.c"
+# 259 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->mnums) = (0);
-# 263 "sample/himeno.c"
+# 260 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->mcols) = (0);
-# 264 "sample/himeno.c"
+# 261 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->mrows) = (0);
-# 265 "sample/himeno.c"
+# 262 "/tmp/tmp.EduUHIB9bj/in.c"
 (Mat->mdeps) = (0);
 }
-# 268 "sample/himeno.c"
+# 265 "/tmp/tmp.EduUHIB9bj/in.c"
 void mat_set(struct Mat * Mat, int l, float val)
 {
-# 271 "sample/himeno.c"
+# 268 "/tmp/tmp.EduUHIB9bj/in.c"
 int i;
-# 271 "sample/himeno.c"
+# 268 "/tmp/tmp.EduUHIB9bj/in.c"
 int j;
-# 271 "sample/himeno.c"
+# 268 "/tmp/tmp.EduUHIB9bj/in.c"
 int k;
-# 273 "sample/himeno.c"
+# 270 "/tmp/tmp.EduUHIB9bj/in.c"
 for(i = (0); i < (Mat->mrows); i++) {
 {
-# 274 "sample/himeno.c"
+# 271 "/tmp/tmp.EduUHIB9bj/in.c"
 for(j = (0); j < (Mat->mcols); j++) {
 {
-# 275 "sample/himeno.c"
+# 272 "/tmp/tmp.EduUHIB9bj/in.c"
 for(k = (0); k < (Mat->mdeps); k++) {
 {
-# 276 "sample/himeno.c"
+# 273 "/tmp/tmp.EduUHIB9bj/in.c"
 (*((Mat->m) + ((((((l * (Mat->mrows)) * (Mat->mcols)) * (Mat->mdeps)) + ((i * (Mat->mcols)) * (Mat->mdeps))) + (j * (Mat->mdeps))) + k))) = val;
 }
 }
@@ -1847,29 +2270,29 @@ for(k = (0); k < (Mat->mdeps); k++) {
 }
 }
 }
-# 279 "sample/himeno.c"
+# 276 "/tmp/tmp.EduUHIB9bj/in.c"
 void mat_set_init(struct Mat * Mat)
 {
-# 282 "sample/himeno.c"
+# 279 "/tmp/tmp.EduUHIB9bj/in.c"
 int i;
-# 282 "sample/himeno.c"
+# 279 "/tmp/tmp.EduUHIB9bj/in.c"
 int j;
-# 282 "sample/himeno.c"
+# 279 "/tmp/tmp.EduUHIB9bj/in.c"
 int k;
-# 282 "sample/himeno.c"
+# 279 "/tmp/tmp.EduUHIB9bj/in.c"
 int l;
-# 283 "sample/himeno.c"
+# 280 "/tmp/tmp.EduUHIB9bj/in.c"
 float tt;
-# 285 "sample/himeno.c"
+# 282 "/tmp/tmp.EduUHIB9bj/in.c"
 for(i = (0); i < (Mat->mrows); i++) {
 {
-# 286 "sample/himeno.c"
+# 283 "/tmp/tmp.EduUHIB9bj/in.c"
 for(j = (0); j < (Mat->mcols); j++) {
 {
-# 287 "sample/himeno.c"
+# 284 "/tmp/tmp.EduUHIB9bj/in.c"
 for(k = (0); k < (Mat->mdeps); k++) {
 {
-# 288 "sample/himeno.c"
+# 285 "/tmp/tmp.EduUHIB9bj/in.c"
 (*((Mat->m) + (((((((0) * (Mat->mrows)) * (Mat->mcols)) * (Mat->mdeps)) + ((i * (Mat->mcols)) * (Mat->mdeps))) + (j * (Mat->mdeps))) + k))) = (((float)(i * i)) / ((float)(((Mat->mrows) - (1)) * ((Mat->mrows) - (1)))));
 }
 }
@@ -1878,68 +2301,68 @@ for(k = (0); k < (Mat->mdeps); k++) {
 }
 }
 }
-# 303 "sample/himeno.c"
+# 300 "/tmp/tmp.EduUHIB9bj/in.c"
 float jacobi(int nn, struct Mat * a, struct Mat * b, struct Mat * c, struct Mat * p, struct Mat * bnd, struct Mat * wrk1, struct Mat * wrk2)
 {
-# 307 "sample/himeno.c"
+# 304 "/tmp/tmp.EduUHIB9bj/in.c"
 unsigned long mrows = p->mrows;
-# 308 "sample/himeno.c"
+# 305 "/tmp/tmp.EduUHIB9bj/in.c"
 unsigned long mcols = p->mcols;
-# 309 "sample/himeno.c"
+# 306 "/tmp/tmp.EduUHIB9bj/in.c"
 unsigned long mdeps = p->mdeps;
-# 311 "sample/himeno.c"
+# 308 "/tmp/tmp.EduUHIB9bj/in.c"
 int i;
-# 311 "sample/himeno.c"
+# 308 "/tmp/tmp.EduUHIB9bj/in.c"
 int j;
-# 311 "sample/himeno.c"
+# 308 "/tmp/tmp.EduUHIB9bj/in.c"
 int k;
-# 311 "sample/himeno.c"
+# 308 "/tmp/tmp.EduUHIB9bj/in.c"
 int n;
-# 311 "sample/himeno.c"
+# 308 "/tmp/tmp.EduUHIB9bj/in.c"
 int imax;
-# 311 "sample/himeno.c"
+# 308 "/tmp/tmp.EduUHIB9bj/in.c"
 int jmax;
-# 311 "sample/himeno.c"
+# 308 "/tmp/tmp.EduUHIB9bj/in.c"
 int kmax;
-# 312 "sample/himeno.c"
+# 309 "/tmp/tmp.EduUHIB9bj/in.c"
 float gosa;
-# 312 "sample/himeno.c"
+# 309 "/tmp/tmp.EduUHIB9bj/in.c"
 float s0;
-# 312 "sample/himeno.c"
+# 309 "/tmp/tmp.EduUHIB9bj/in.c"
 float ss;
-# 314 "sample/himeno.c"
+# 311 "/tmp/tmp.EduUHIB9bj/in.c"
 float * a_m;
-# 314 "sample/himeno.c"
+# 311 "/tmp/tmp.EduUHIB9bj/in.c"
 float * b_m;
-# 314 "sample/himeno.c"
+# 311 "/tmp/tmp.EduUHIB9bj/in.c"
 float * c_m;
-# 314 "sample/himeno.c"
+# 311 "/tmp/tmp.EduUHIB9bj/in.c"
 float * p_m;
-# 314 "sample/himeno.c"
+# 311 "/tmp/tmp.EduUHIB9bj/in.c"
 float * bnd_m;
-# 314 "sample/himeno.c"
+# 311 "/tmp/tmp.EduUHIB9bj/in.c"
 float * wrk1_m;
-# 314 "sample/himeno.c"
+# 311 "/tmp/tmp.EduUHIB9bj/in.c"
 float * wrk2_m;
-# 316 "sample/himeno.c"
+# 313 "/tmp/tmp.EduUHIB9bj/in.c"
 imax = (mrows - (1));
-# 317 "sample/himeno.c"
+# 314 "/tmp/tmp.EduUHIB9bj/in.c"
 jmax = (mcols - (1));
-# 318 "sample/himeno.c"
+# 315 "/tmp/tmp.EduUHIB9bj/in.c"
 kmax = (mdeps - (1));
-# 320 "sample/himeno.c"
+# 317 "/tmp/tmp.EduUHIB9bj/in.c"
 a_m = (a->m);
-# 321 "sample/himeno.c"
+# 318 "/tmp/tmp.EduUHIB9bj/in.c"
 b_m = (b->m);
-# 322 "sample/himeno.c"
+# 319 "/tmp/tmp.EduUHIB9bj/in.c"
 c_m = (c->m);
-# 323 "sample/himeno.c"
+# 320 "/tmp/tmp.EduUHIB9bj/in.c"
 p_m = (p->m);
-# 324 "sample/himeno.c"
+# 321 "/tmp/tmp.EduUHIB9bj/in.c"
 bnd_m = (bnd->m);
-# 325 "sample/himeno.c"
+# 322 "/tmp/tmp.EduUHIB9bj/in.c"
 wrk1_m = (wrk1->m);
-# 326 "sample/himeno.c"
+# 323 "/tmp/tmp.EduUHIB9bj/in.c"
 wrk2_m = (wrk2->m);
 {
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
@@ -1949,362 +2372,482 @@ __macc_set_gpu_num(__macc_tnum);
 {
 }
 }
-# 329 "sample/himeno.c"
+# 326 "/tmp/tmp.EduUHIB9bj/in.c"
 for(n = (0); n < nn; n++) {
 {
-# 330 "sample/himeno.c"
+# 327 "/tmp/tmp.EduUHIB9bj/in.c"
 gosa = (0.0);
 {
 static int __macc_region_is_changed = 1;
 static int __macc_multi = 1;
+static void * __macc_ptrs[7];
+static int __macc_use_types[7];
+static int * __macc_use_lb_sets[7];
+static int * __macc_use_ub_sets[7];
+static int __macc_def_types[7];
+static int * __macc_def_lb_sets[7];
+static int * __macc_def_ub_sets[7];
+static int __macc_wrk1_m_def_ub_set[10];
+static int __macc_wrk1_m_def_lb_set[10];
+static int __macc_wrk1_m_use_ub_set[10];
+static int __macc_wrk1_m_use_lb_set[10];
+static int __macc_p_m_def_ub_set[10];
+static int __macc_p_m_def_lb_set[10];
+static int __macc_p_m_use_ub_set[10];
+static int __macc_p_m_use_lb_set[10];
+static int __macc_c_m_def_ub_set[10];
+static int __macc_c_m_def_lb_set[10];
+static int __macc_c_m_use_ub_set[10];
+static int __macc_c_m_use_lb_set[10];
+static int __macc_bnd_m_def_ub_set[10];
+static int __macc_bnd_m_def_lb_set[10];
+static int __macc_bnd_m_use_ub_set[10];
+static int __macc_bnd_m_use_lb_set[10];
+static int __macc_b_m_def_ub_set[10];
+static int __macc_b_m_def_lb_set[10];
+static int __macc_b_m_use_ub_set[10];
+static int __macc_b_m_use_lb_set[10];
+static int __macc_a_m_def_ub_set[10];
+static int __macc_a_m_def_lb_set[10];
+static int __macc_a_m_use_ub_set[10];
+static int __macc_a_m_use_lb_set[10];
+static int __macc_wrk2_m_def_ub_set[10];
+static int __macc_wrk2_m_def_lb_set[10];
+static int __macc_wrk2_m_use_ub_set[10];
+static int __macc_wrk2_m_use_lb_set[10];
+static int __macc_imax_last;
+static unsigned long __macc_mrows_last;
+static unsigned long __macc_mcols_last;
+static unsigned long __macc_mdeps_last;
+static int __macc_i_loop_lb_set[10];
+static int __macc_i_loop_ub_set[10];
+__macc_region_is_changed = (__macc_region_is_changed || ((mdeps != __macc_mdeps_last) || ((mcols != __macc_mcols_last) || ((mrows != __macc_mrows_last) || (imax != __macc_imax_last)))));
+if(__macc_region_is_changed) {
 int __macc_gpu_num;
 int __macc_top_loop_lb;
 int __macc_top_loop_ub;
-__macc_region_is_changed = (__macc_region_is_changed || ((mdeps != __macc__mdeps_last_3) || ((mcols != __macc__mcols_last_4) || ((mrows != __macc__mrows_last_5) || (imax != __macc__imax_last_6)))));
-if(__macc_region_is_changed) {
 __macc_multi = (1);
 __macc_region_is_changed = (0);
 {
-__macc__mdeps_last_3 = mdeps;
-__macc__mcols_last_4 = mcols;
-__macc__mrows_last_5 = mrows;
-__macc__imax_last_6 = imax;
+__macc_mdeps_last = mdeps;
+__macc_mcols_last = mcols;
+__macc_mrows_last = mrows;
+__macc_imax_last = imax;
 }
 {
-__macc_calc_loop_region(__macc__i_loop_lb_set_1, __macc__i_loop_ub_set_2, 1, imax, 1, 0);
+__macc_calc_loop_region(__macc_i_loop_lb_set, __macc_i_loop_ub_set, 1, imax - (1), 1, 1);
 }
-for(__macc_gpu_num = (0); __macc_gpu_num < __MACC_NUMGPUS; __macc_gpu_num++) {
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
 {
-__macc_top_loop_lb = (__macc__i_loop_lb_set_1[__macc_gpu_num]);
-__macc_top_loop_ub = (__macc__i_loop_ub_set_2[__macc_gpu_num]);
-}
+__macc_gpu_num = (omp_get_thread_num());
 {
-{
-__macc_init_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_7, __macc__wrk2_m_use_ub_set_8);
-__macc_init_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10);
-{
+__macc_top_loop_lb = (__macc_i_loop_lb_set[__macc_gpu_num]);
+__macc_top_loop_ub = (__macc_i_loop_ub_set[__macc_gpu_num]);
 }
 {
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-}
-}
 {
-__macc_init_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12);
-__macc_init_access_region(__macc_gpu_num, __macc__a_m_def_lb_set_13, __macc__a_m_def_ub_set_14);
 {
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-}
+__macc_init_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set);
 {
 }
+{
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+}
+__macc_adjust_data_region(wrk2_m, __macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set);
+__macc_adjust_data_region(wrk2_m, __macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set);
+}
+(__macc_ptrs[0]) = wrk2_m;
+(__macc_use_types[0]) = (1);
+(__macc_use_lb_sets[0]) = __macc_wrk2_m_use_lb_set;
+(__macc_use_ub_sets[0]) = __macc_wrk2_m_use_ub_set;
+(__macc_def_types[0]) = (2);
+(__macc_def_lb_sets[0]) = __macc_wrk2_m_def_lb_set;
+(__macc_def_ub_sets[0]) = __macc_wrk2_m_def_ub_set;
 }
 {
-__macc_init_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16);
-__macc_init_access_region(__macc_gpu_num, __macc__b_m_def_lb_set_17, __macc__b_m_def_ub_set_18);
 {
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
+__macc_init_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_a_m_def_lb_set, __macc_a_m_def_ub_set);
+{
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((3) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
 }
 {
 }
+__macc_adjust_data_region(a_m, __macc_gpu_num, __macc_a_m_use_lb_set, __macc_a_m_use_ub_set);
+__macc_adjust_data_region(a_m, __macc_gpu_num, __macc_a_m_def_lb_set, __macc_a_m_def_ub_set);
+}
+(__macc_ptrs[1]) = a_m;
+(__macc_use_types[1]) = (2);
+(__macc_use_lb_sets[1]) = __macc_a_m_use_lb_set;
+(__macc_use_ub_sets[1]) = __macc_a_m_use_ub_set;
+(__macc_def_types[1]) = (1);
+(__macc_def_lb_sets[1]) = __macc_a_m_def_lb_set;
+(__macc_def_ub_sets[1]) = __macc_a_m_def_ub_set;
 }
 {
-__macc_init_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20);
-__macc_init_access_region(__macc_gpu_num, __macc__bnd_m_def_lb_set_21, __macc__bnd_m_def_ub_set_22);
 {
-__macc_update_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-}
+__macc_init_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_b_m_def_lb_set, __macc_b_m_def_ub_set);
 {
-}
-}
-{
-__macc_init_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24);
-__macc_init_access_region(__macc_gpu_num, __macc__c_m_def_lb_set_25, __macc__c_m_def_ub_set_26);
-{
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
 }
 {
 }
+__macc_adjust_data_region(b_m, __macc_gpu_num, __macc_b_m_use_lb_set, __macc_b_m_use_ub_set);
+__macc_adjust_data_region(b_m, __macc_gpu_num, __macc_b_m_def_lb_set, __macc_b_m_def_ub_set);
+}
+(__macc_ptrs[2]) = b_m;
+(__macc_use_types[2]) = (2);
+(__macc_use_lb_sets[2]) = __macc_b_m_use_lb_set;
+(__macc_use_ub_sets[2]) = __macc_b_m_use_ub_set;
+(__macc_def_types[2]) = (1);
+(__macc_def_lb_sets[2]) = __macc_b_m_def_lb_set;
+(__macc_def_ub_sets[2]) = __macc_b_m_def_ub_set;
 }
 {
-__macc_init_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28);
-__macc_init_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_29, __macc__p_m_def_ub_set_30);
 {
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax + (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + ((1) + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (kmax + (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + ((1) - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (kmax - (1)));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
+__macc_init_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_bnd_m_def_lb_set, __macc_bnd_m_def_ub_set);
+{
+__macc_update_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
 }
 {
 }
+__macc_adjust_data_region(bnd_m, __macc_gpu_num, __macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set);
+__macc_adjust_data_region(bnd_m, __macc_gpu_num, __macc_bnd_m_def_lb_set, __macc_bnd_m_def_ub_set);
+}
+(__macc_ptrs[3]) = bnd_m;
+(__macc_use_types[3]) = (2);
+(__macc_use_lb_sets[3]) = __macc_bnd_m_use_lb_set;
+(__macc_use_ub_sets[3]) = __macc_bnd_m_use_ub_set;
+(__macc_def_types[3]) = (1);
+(__macc_def_lb_sets[3]) = __macc_bnd_m_def_lb_set;
+(__macc_def_ub_sets[3]) = __macc_bnd_m_def_ub_set;
 }
 {
-__macc_init_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32);
-__macc_init_access_region(__macc_gpu_num, __macc__wrk1_m_def_lb_set_33, __macc__wrk1_m_def_ub_set_34);
 {
-__macc_update_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
+__macc_init_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_c_m_def_lb_set, __macc_c_m_def_ub_set);
+{
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((2) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((1) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
 }
 {
 }
+__macc_adjust_data_region(c_m, __macc_gpu_num, __macc_c_m_use_lb_set, __macc_c_m_use_ub_set);
+__macc_adjust_data_region(c_m, __macc_gpu_num, __macc_c_m_def_lb_set, __macc_c_m_def_ub_set);
+}
+(__macc_ptrs[4]) = c_m;
+(__macc_use_types[4]) = (2);
+(__macc_use_lb_sets[4]) = __macc_c_m_use_lb_set;
+(__macc_use_ub_sets[4]) = __macc_c_m_use_ub_set;
+(__macc_def_types[4]) = (1);
+(__macc_def_lb_sets[4]) = __macc_c_m_def_lb_set;
+(__macc_def_ub_sets[4]) = __macc_c_m_def_ub_set;
+}
+{
+{
+__macc_init_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set);
+{
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub + (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_lb - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + (((__macc_top_loop_ub - (1)) * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) + (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((1) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (((jmax - (1)) - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) + (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((1) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + ((kmax - (1)) - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+}
+{
+}
+__macc_adjust_data_region(p_m, __macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set);
+__macc_adjust_data_region(p_m, __macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set);
+}
+(__macc_ptrs[5]) = p_m;
+(__macc_use_types[5]) = (2);
+(__macc_use_lb_sets[5]) = __macc_p_m_use_lb_set;
+(__macc_use_ub_sets[5]) = __macc_p_m_use_ub_set;
+(__macc_def_types[5]) = (1);
+(__macc_def_lb_sets[5]) = __macc_p_m_def_lb_set;
+(__macc_def_ub_sets[5]) = __macc_p_m_def_ub_set;
+}
+{
+{
+__macc_init_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_wrk1_m_def_lb_set, __macc_wrk1_m_def_ub_set);
+{
+__macc_update_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+}
+{
+}
+__macc_adjust_data_region(wrk1_m, __macc_gpu_num, __macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set);
+__macc_adjust_data_region(wrk1_m, __macc_gpu_num, __macc_wrk1_m_def_lb_set, __macc_wrk1_m_def_ub_set);
+}
+(__macc_ptrs[6]) = wrk1_m;
+(__macc_use_types[6]) = (2);
+(__macc_use_lb_sets[6]) = __macc_wrk1_m_use_lb_set;
+(__macc_use_ub_sets[6]) = __macc_wrk1_m_use_ub_set;
+(__macc_def_types[6]) = (1);
+(__macc_def_lb_sets[6]) = __macc_wrk1_m_def_lb_set;
+(__macc_def_ub_sets[6]) = __macc_wrk1_m_def_ub_set;
 }
 }
 }
-if(__macc_region_is_overlapping(__macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10)) {
+if(__macc_region_is_overlapping(__macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set)) {
 __macc_multi = (0);
 {
-__macc_rewrite_loop_region_into_single(__macc__i_loop_lb_set_1, __macc__i_loop_ub_set_2);
+__macc_rewrite_loop_region_into_single(__macc_i_loop_lb_set, __macc_i_loop_ub_set);
 {
-__macc_rewrite_data_region_into_single(__macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32);
-__macc_rewrite_data_region_into_single(__macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28);
-__macc_rewrite_data_region_into_single(__macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24);
-__macc_rewrite_data_region_into_single(__macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20);
-__macc_rewrite_data_region_into_single(__macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16);
-__macc_rewrite_data_region_into_single(__macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12);
-__macc_rewrite_data_region_into_single(__macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10);
+__macc_rewrite_data_region_into_single(__macc_wrk1_m_use_lb_set, __macc_wrk1_m_use_ub_set);
+__macc_rewrite_data_region_into_single(__macc_p_m_use_lb_set, __macc_p_m_use_ub_set);
+__macc_rewrite_data_region_into_single(__macc_c_m_use_lb_set, __macc_c_m_use_ub_set);
+__macc_rewrite_data_region_into_single(__macc_bnd_m_use_lb_set, __macc_bnd_m_use_ub_set);
+__macc_rewrite_data_region_into_single(__macc_b_m_use_lb_set, __macc_b_m_use_ub_set);
+__macc_rewrite_data_region_into_single(__macc_a_m_use_lb_set, __macc_a_m_use_ub_set);
+__macc_rewrite_data_region_into_single(__macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set);
 }
 }
 }
@@ -2314,35 +2857,34 @@ __macc_rewrite_data_region_into_single(__macc__wrk2_m_def_lb_set_9, __macc__wrk2
 int __macc_tnum = omp_get_thread_num();
 __macc_set_gpu_num(__macc_tnum);
 {
-{
-__macc_set_data_region(__macc_tnum, wrk1_m, __macc_multi, 2, __macc__wrk1_m_use_lb_set_31, __macc__wrk1_m_use_ub_set_32, 1, __macc__wrk1_m_def_lb_set_33, __macc__wrk1_m_def_ub_set_34);
-__macc_set_data_region(__macc_tnum, p_m, __macc_multi, 2, __macc__p_m_use_lb_set_27, __macc__p_m_use_ub_set_28, 1, __macc__p_m_def_lb_set_29, __macc__p_m_def_ub_set_30);
-__macc_set_data_region(__macc_tnum, c_m, __macc_multi, 2, __macc__c_m_use_lb_set_23, __macc__c_m_use_ub_set_24, 1, __macc__c_m_def_lb_set_25, __macc__c_m_def_ub_set_26);
-__macc_set_data_region(__macc_tnum, bnd_m, __macc_multi, 2, __macc__bnd_m_use_lb_set_19, __macc__bnd_m_use_ub_set_20, 1, __macc__bnd_m_def_lb_set_21, __macc__bnd_m_def_ub_set_22);
-__macc_set_data_region(__macc_tnum, b_m, __macc_multi, 2, __macc__b_m_use_lb_set_15, __macc__b_m_use_ub_set_16, 1, __macc__b_m_def_lb_set_17, __macc__b_m_def_ub_set_18);
-__macc_set_data_region(__macc_tnum, a_m, __macc_multi, 2, __macc__a_m_use_lb_set_11, __macc__a_m_use_ub_set_12, 1, __macc__a_m_def_lb_set_13, __macc__a_m_def_ub_set_14);
-__macc_set_data_region(__macc_tnum, wrk2_m, __macc_multi, 1, __macc__wrk2_m_use_lb_set_7, __macc__wrk2_m_use_ub_set_8, 2, __macc__wrk2_m_def_lb_set_9, __macc__wrk2_m_def_ub_set_10);
-}
+int __macc_num_gangs;
+int __macc_top_loop_lb;
+int __macc_top_loop_ub;
+__macc_top_loop_lb = (__macc_i_loop_lb_set[__macc_tnum]);
+__macc_top_loop_ub = (__macc_i_loop_ub_set[__macc_tnum]);
+__macc_set_data_region_multi(__macc_tnum, __macc_multi, 7, __macc_ptrs, __macc_use_types, __macc_use_lb_sets, __macc_use_ub_sets, __macc_def_types, __macc_def_lb_sets, __macc_def_ub_sets);
 #pragma omp barrier
-#pragma acc parallel present ( a_m , b_m , c_m , p_m , bnd_m , wrk1_m , wrk2_m ) reduction ( + : gosa )
-#pragma acc loop
-# 333 "sample/himeno.c"
-for(i = (__macc__i_loop_lb_set_1[__macc_tnum]); i <= (__macc__i_loop_ub_set_2[__macc_tnum]); i++) {
-#pragma acc loop
-# 335 "sample/himeno.c"
+#pragma acc parallel present ( a_m , b_m , c_m , p_m , bnd_m , wrk1_m , wrk2_m ) vector_length ( 256 ) reduction ( + : gosa )
+#pragma acc loop independent collapse ( 3 )
+# 330 "/tmp/tmp.EduUHIB9bj/in.c"
+for(i = __macc_top_loop_lb; i <= __macc_top_loop_ub; i++) {
+{
+# 331 "/tmp/tmp.EduUHIB9bj/in.c"
 for(j = (1); j < jmax; j++) {
-#pragma acc loop
-# 337 "sample/himeno.c"
+{
+# 332 "/tmp/tmp.EduUHIB9bj/in.c"
 for(k = (1); k < kmax; k++) {
 {
-# 338 "sample/himeno.c"
+# 333 "/tmp/tmp.EduUHIB9bj/in.c"
 s0 = (((((((((((a_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + k)])) + ((a_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)]))) + ((a_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))]))) + ((b_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)])))) + ((b_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + (k + (1)))]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + (k + (1)))])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + (k - (1)))])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + (k - (1)))])))) + ((b_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))])))) + ((c_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + k)]))) + ((c_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)]))) + ((c_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))]))) + (wrk1_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]));
-# 355 "sample/himeno.c"
+# 350 "/tmp/tmp.EduUHIB9bj/in.c"
 ss = (((s0 * (a_m[(((((((3) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)])) * (bnd_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]));
-# 357 "sample/himeno.c"
+# 352 "/tmp/tmp.EduUHIB9bj/in.c"
 gosa += (ss * ss);
-# 358 "sample/himeno.c"
+# 353 "/tmp/tmp.EduUHIB9bj/in.c"
 (wrk2_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) = ((p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) + (omega * ss));
+}
+}
 }
 }
 }
@@ -2353,69 +2895,114 @@ gosa += (ss * ss);
 {
 static int __macc_region_is_changed = 1;
 static int __macc_multi = 1;
+static void * __macc_ptrs[2];
+static int __macc_use_types[2];
+static int * __macc_use_lb_sets[2];
+static int * __macc_use_ub_sets[2];
+static int __macc_def_types[2];
+static int * __macc_def_lb_sets[2];
+static int * __macc_def_ub_sets[2];
+static int __macc_wrk2_m_def_ub_set[10];
+static int __macc_wrk2_m_def_lb_set[10];
+static int __macc_wrk2_m_use_ub_set[10];
+static int __macc_wrk2_m_use_lb_set[10];
+static int __macc_p_m_def_ub_set[10];
+static int __macc_p_m_def_lb_set[10];
+static int __macc_p_m_use_ub_set[10];
+static int __macc_p_m_use_lb_set[10];
+static int __macc_imax_last;
+static unsigned long __macc_mrows_last;
+static unsigned long __macc_mcols_last;
+static unsigned long __macc_mdeps_last;
+static int __macc_i_loop_lb_set[10];
+static int __macc_i_loop_ub_set[10];
+__macc_region_is_changed = (__macc_region_is_changed || ((mdeps != __macc_mdeps_last) || ((mcols != __macc_mcols_last) || ((mrows != __macc_mrows_last) || (imax != __macc_imax_last)))));
+if(__macc_region_is_changed) {
 int __macc_gpu_num;
 int __macc_top_loop_lb;
 int __macc_top_loop_ub;
-__macc_region_is_changed = (__macc_region_is_changed || ((mdeps != __macc__mdeps_last_37) || ((mcols != __macc__mcols_last_38) || ((mrows != __macc__mrows_last_39) || (imax != __macc__imax_last_40)))));
-if(__macc_region_is_changed) {
 __macc_multi = (1);
 __macc_region_is_changed = (0);
 {
-__macc__mdeps_last_37 = mdeps;
-__macc__mcols_last_38 = mcols;
-__macc__mrows_last_39 = mrows;
-__macc__imax_last_40 = imax;
+__macc_mdeps_last = mdeps;
+__macc_mcols_last = mcols;
+__macc_mrows_last = mrows;
+__macc_imax_last = imax;
 }
 {
-__macc_calc_loop_region(__macc__i_loop_lb_set_35, __macc__i_loop_ub_set_36, 1, imax, 1, 0);
+__macc_calc_loop_region(__macc_i_loop_lb_set, __macc_i_loop_ub_set, 1, imax - (1), 1, 1);
 }
-for(__macc_gpu_num = (0); __macc_gpu_num < __MACC_NUMGPUS; __macc_gpu_num++) {
+#pragma omp parallel num_threads ( __MACC_NUMGPUS )
 {
-__macc_top_loop_lb = (__macc__i_loop_lb_set_35[__macc_gpu_num]);
-__macc_top_loop_ub = (__macc__i_loop_ub_set_36[__macc_gpu_num]);
-}
+__macc_gpu_num = (omp_get_thread_num());
 {
-{
-__macc_init_access_region(__macc_gpu_num, __macc__p_m_use_lb_set_41, __macc__p_m_use_ub_set_42);
-__macc_init_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44);
-{
+__macc_top_loop_lb = (__macc_i_loop_lb_set[__macc_gpu_num]);
+__macc_top_loop_ub = (__macc_i_loop_ub_set[__macc_gpu_num]);
 }
 {
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-}
-}
 {
-__macc_init_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46);
-__macc_init_access_region(__macc_gpu_num, __macc__wrk2_m_def_lb_set_47, __macc__wrk2_m_def_ub_set_48);
 {
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + kmax);
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + (1));
-__macc_update_access_region(__macc_gpu_num, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + (jmax * mdeps)) + kmax);
-}
+__macc_init_access_region(__macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set);
 {
 }
+{
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+}
+__macc_adjust_data_region(p_m, __macc_gpu_num, __macc_p_m_use_lb_set, __macc_p_m_use_ub_set);
+__macc_adjust_data_region(p_m, __macc_gpu_num, __macc_p_m_def_lb_set, __macc_p_m_def_ub_set);
+}
+(__macc_ptrs[0]) = p_m;
+(__macc_use_types[0]) = (1);
+(__macc_use_lb_sets[0]) = __macc_p_m_use_lb_set;
+(__macc_use_ub_sets[0]) = __macc_p_m_use_ub_set;
+(__macc_def_types[0]) = (2);
+(__macc_def_lb_sets[0]) = __macc_p_m_def_lb_set;
+(__macc_def_ub_sets[0]) = __macc_p_m_def_ub_set;
+}
+{
+{
+__macc_init_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set);
+__macc_init_access_region(__macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set);
+{
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_lb * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((1) * mdeps)) + (kmax - (1)));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (1));
+__macc_update_access_region(__macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set, ((((((0) * mrows) * mcols) * mdeps) + ((__macc_top_loop_ub * mcols) * mdeps)) + ((jmax - (1)) * mdeps)) + (kmax - (1)));
+}
+{
+}
+__macc_adjust_data_region(wrk2_m, __macc_gpu_num, __macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set);
+__macc_adjust_data_region(wrk2_m, __macc_gpu_num, __macc_wrk2_m_def_lb_set, __macc_wrk2_m_def_ub_set);
+}
+(__macc_ptrs[1]) = wrk2_m;
+(__macc_use_types[1]) = (2);
+(__macc_use_lb_sets[1]) = __macc_wrk2_m_use_lb_set;
+(__macc_use_ub_sets[1]) = __macc_wrk2_m_use_ub_set;
+(__macc_def_types[1]) = (1);
+(__macc_def_lb_sets[1]) = __macc_wrk2_m_def_lb_set;
+(__macc_def_ub_sets[1]) = __macc_wrk2_m_def_ub_set;
 }
 }
 }
-if(__macc_region_is_overlapping(__macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44)) {
+if(__macc_region_is_overlapping(__macc_p_m_def_lb_set, __macc_p_m_def_ub_set)) {
 __macc_multi = (0);
 {
-__macc_rewrite_loop_region_into_single(__macc__i_loop_lb_set_35, __macc__i_loop_ub_set_36);
+__macc_rewrite_loop_region_into_single(__macc_i_loop_lb_set, __macc_i_loop_ub_set);
 {
-__macc_rewrite_data_region_into_single(__macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46);
-__macc_rewrite_data_region_into_single(__macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44);
+__macc_rewrite_data_region_into_single(__macc_wrk2_m_use_lb_set, __macc_wrk2_m_use_ub_set);
+__macc_rewrite_data_region_into_single(__macc_p_m_def_lb_set, __macc_p_m_def_ub_set);
 }
 }
 }
@@ -2425,23 +3012,25 @@ __macc_rewrite_data_region_into_single(__macc__p_m_def_lb_set_43, __macc__p_m_de
 int __macc_tnum = omp_get_thread_num();
 __macc_set_gpu_num(__macc_tnum);
 {
-{
-__macc_set_data_region(__macc_tnum, wrk2_m, __macc_multi, 2, __macc__wrk2_m_use_lb_set_45, __macc__wrk2_m_use_ub_set_46, 1, __macc__wrk2_m_def_lb_set_47, __macc__wrk2_m_def_ub_set_48);
-__macc_set_data_region(__macc_tnum, p_m, __macc_multi, 1, __macc__p_m_use_lb_set_41, __macc__p_m_use_ub_set_42, 2, __macc__p_m_def_lb_set_43, __macc__p_m_def_ub_set_44);
-}
+int __macc_num_gangs;
+int __macc_top_loop_lb;
+int __macc_top_loop_ub;
+__macc_top_loop_lb = (__macc_i_loop_lb_set[__macc_tnum]);
+__macc_top_loop_ub = (__macc_i_loop_ub_set[__macc_tnum]);
+__macc_set_data_region_multi(__macc_tnum, __macc_multi, 2, __macc_ptrs, __macc_use_types, __macc_use_lb_sets, __macc_use_ub_sets, __macc_def_types, __macc_def_lb_sets, __macc_def_ub_sets);
 #pragma omp barrier
-#pragma acc parallel present ( a_m , b_m , c_m , p_m , bnd_m , wrk1_m , wrk2_m )
-#pragma acc loop independent
-# 362 "sample/himeno.c"
-for(i = (__macc__i_loop_lb_set_35[__macc_tnum]); i <= (__macc__i_loop_ub_set_36[__macc_tnum]); i++) {
-#pragma acc loop independent
-# 364 "sample/himeno.c"
+#pragma acc parallel present ( a_m , b_m , c_m , p_m , bnd_m , wrk1_m , wrk2_m ) vector_length ( 256 )
+#pragma acc loop independent collapse ( 3 )
+# 357 "/tmp/tmp.EduUHIB9bj/in.c"
+for(i = __macc_top_loop_lb; i <= __macc_top_loop_ub; i++) {
+{
+# 358 "/tmp/tmp.EduUHIB9bj/in.c"
 for(j = (1); j < jmax; j++) {
-#pragma acc loop independent
-# 366 "sample/himeno.c"
+{
+# 359 "/tmp/tmp.EduUHIB9bj/in.c"
 for(k = (1); k < kmax; k++) {
 {
-# 367 "sample/himeno.c"
+# 360 "/tmp/tmp.EduUHIB9bj/in.c"
 (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) = (wrk2_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]);
 }
 }
@@ -2452,6 +3041,8 @@ for(k = (1); k < kmax; k++) {
 }
 }
 }
+}
+}
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
 {
 int __macc_tnum = omp_get_thread_num();
@@ -2460,6 +3051,6 @@ __macc_set_gpu_num(__macc_tnum);
 }
 }
 }
-# 371 "sample/himeno.c"
+# 364 "/tmp/tmp.EduUHIB9bj/in.c"
 return gosa;
 }

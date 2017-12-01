@@ -160,19 +160,16 @@ main(int argc, char *argv[])
       printf(" This will take about one minute.\n");
       printf(" Wait for a while\n\n");
 
-      for (i = 1; i <= 10; i++) {
-          cpu0 = second();
-          gosa = jacobi(nn,&a,&b,&c,&p,&bnd,&wrk1,&wrk2);
-          cpu1 = second();
-          cpu = cpu1 - cpu0;
+      cpu0 = second();
+      gosa = jacobi(nn,&a,&b,&c,&p,&bnd,&wrk1,&wrk2);
+      cpu1 = second();
+      cpu = cpu1 - cpu0;
 
-          printf(" [%d]\n", i);
-          printf(" Loop executed for %d times\n",nn);
-          printf(" Gosa : %e \n",gosa);
-          printf(" MFLOPS measured : %f\tcpu : %f\n",mflops(nn,cpu,flop),cpu);
-          printf(" Score based on Pentium III 600MHz using Fortran 77: %f\n",
-                 mflops(nn,cpu,flop)/82,84);
-      }
+      printf(" Loop executed for %d times\n",nn);
+      printf(" Gosa : %e \n",gosa);
+      printf(" MFLOPS measured : %f\tcpu : %f\n",mflops(nn,cpu,flop),cpu);
+      printf(" Score based on Pentium III 600MHz using Fortran 77: %f\n",
+             mflops(nn,cpu,flop)/82,84);
   }
 
   /*
@@ -329,11 +326,9 @@ jacobi(int nn, Matrix* a,Matrix* b,Matrix* c,
   for(n=0 ; n<nn ; n++){
     gosa = 0.0;
 
-    #pragma acc parallel loop independent gang num_gangs(imax+1) reduction (+ : gosa)
+#pragma acc parallel loop independent vector_length(256) reduction (+ : gosa) collapse(3)
     for(i=1 ; i<imax; i++)
-      #pragma acc loop
       for(j=1 ; j<jmax ; j++)
-        #pragma acc loop
         for(k=1 ; k<kmax ; k++){
           s0= MR(a,0,i,j,k)*MR(p,0,i+1,j,  k)
             + MR(a,1,i,j,k)*MR(p,0,i,  j+1,k)
@@ -358,11 +353,9 @@ jacobi(int nn, Matrix* a,Matrix* b,Matrix* c,
           MR(wrk2,0,i,j,k)= MR(p,0,i,j,k) + omega*ss;
         }
 
-    #pragma acc parallel loop independent gang num_gangs(imax+1)
+#pragma acc parallel loop independent vector_length(256) collapse(3)
     for(i=1 ; i<imax ; i++)
-      #pragma acc loop independent
       for(j=1 ; j<jmax ; j++)
-        #pragma acc loop independent
         for(k=1 ; k<kmax ; k++)
           MR(p,0,i,j,k)= MR(wrk2,0,i,j,k);
     
