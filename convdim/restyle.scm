@@ -160,9 +160,13 @@
        )))
     ))
 
+(define (redefine-arrays! xm)
+  ;; todo local arrays
+  (redefine-global-arrays! xm))
+
 ;; static -> dynamic (malloc)
 (define (replace-global-arrays xm)
-  (insert-alloc-to-main! xm (redefine-global-arrays! xm))
+  (insert-alloc-to-main! xm (redefine-arrays! xm))
   xm)
 
 (define (restyle sxml)
