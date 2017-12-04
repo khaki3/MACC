@@ -4,6 +4,7 @@
 (use sxml.tools)
 (add-load-path ".." :relative)
 (use util)
+(use xm)
 
 (define COUNT 0)
 (define (NEWSYM)
@@ -77,11 +78,95 @@
   (rename-var! sxml)
   sxml)
 
-(define (replace-statics sxml)
-  sxml)
+(define NEW_TYPE_COUNT 0)
+
+(define (new-pointer-type)
+  #"R_P~(inc! NEW_TYPE_COUNT)")
+
+(define (add-pointer! xm type)
+  (rlet1 ptype (new-pointer-type)
+    (sxml:content-push!
+     (xm-type-table xm)
+     `(pointerType (@ (type ,ptype) (ref ,type))))))
+
+(define (redefine-global-arrays! xm)
+  (filter-map
+   (lambda (x)
+     (and-let* ([varname ((car-sxpath '(name *text*)) x)]
+
+                [at ((if-car-sxpath
+                      `((arrayType
+                         (@ (type
+                             (*text*
+                              ,(make-sxpath-query
+                                (cut equal? <> (sxml:attr x 'type)))
+                              ))))))
+                     (xm-type-table xm))]
+
+                [decl ((if-car-sxpath
+                        `((varDecl
+                           (name
+                            (*text*
+                             (,(make-sxpath-query
+                                (cut equal? <> varname)))
+                             )))))
+                       (xm-global-declarations xm))]
+
+                ;; decl has no value
+                [(not ((if-sxpath '(value)) decl))]
+
+                [atype (sxml:attr at 'type)]
+                [etype (sxml:attr at 'element_type)]
+                [ssize (sxml:attr at 'array_size)]
+                [size  (string->number ssize)]
+
+                [ptype (add-pointer! xm etype)])
+
+       (sxml:change-attr! x `(type ,ptype))
+       (list varname size etype)
+       ))
+
+   (xm-global-symbols xm)))
+
+(define (insert-alloc-to-main! xm decls)
+  (let1 main-body
+      ((if-car-sxpath
+        '(// (functionDefinition (name (equal? "main"))) body))
+       (xm-global-declarations xm))
+
+    (unless main-body
+      (error "Can't locate the definition of main."))
+
+    (sxml:change-content!
+     main-body
+     (list
+
+      (apply gen-compound
+
+       (append
+        (map
+         (match-lambda1 (varname size type)
+           (gen-var=
+            varname
+            (gen-funcall-expr
+             "malloc_managed"
+             `(mulExpr
+               ,(gen-int-expr size)
+               (sizeOfExpr (typeName (@ (type ,type))))))))
+         decls)
+
+        (cdr main-body))
+
+       )))
+    ))
+
+;; static -> dynamic (malloc)
+(define (replace-global-arrays xm)
+  (insert-alloc-to-main! xm (redefine-global-arrays! xm))
+  xm)
 
 (define (restyle sxml)
-  (replace-statics (rename sxml)))
+  (xm->sxml (replace-global-arrays (sxml->xm (rename sxml)))))
 
 (define (main args)
   (let* ([iport    (current-input-port)]
