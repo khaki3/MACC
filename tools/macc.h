@@ -31,9 +31,11 @@ int __macc_get_num_gpus()
     return acc_get_num_devices(__MACC_DEVICE_TYPE);
 }
 
+int __MACC_TOPOLOGY[__MACC_MAX_NUMGPUS];
+
 void __macc_set_gpu_num(int i)
 {
-    acc_set_device_num(i, __MACC_DEVICE_TYPE);
+    acc_set_device_num(__MACC_TOPOLOGY[i], __MACC_DEVICE_TYPE);
 }
 
 #define MACC_DATA_TABLE_SIZE 256
@@ -522,6 +524,21 @@ void __macc_init()
     if (__MACC_NUMGPUS <= 0) {
         fputs("[MACC ERROR] No GPU device found.", stderr);
         exit(-1);
+    }
+
+    char * topo = getenv("MACC_TOPOLOGY");
+
+    if (topo != NULL) {
+        int i = 0;
+        topo = strtok(topo, ",");
+        while (topo != NULL) {
+            __MACC_TOPOLOGY[i] = atoi(topo);
+            topo = strtok(NULL, ",");
+            i++;
+        }
+    } else {
+        for (int i = 0; i < __MACC_NUMGPUS; i++)
+            __MACC_TOPOLOGY[i] = i;
     }
 
     /* if (getenv("OMP_NESTED") == NULL || getenv("OMP_MAX_ACTIVE_LEVELS") == NULL) { */
