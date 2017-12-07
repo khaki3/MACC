@@ -490,26 +490,6 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
     }
 }
 
-void __macc_set_data_region_multi(
-    int gpu_num, int multi, int len, void **ptrs,
-    int *use_type, int **use_lb_set, int **use_ub_set,
-    int *def_type, int **def_lb_set, int **def_ub_set)
-{
-    //#pragma omp parallel num_threads(len)
-    for (int i = 0; i < len; i++)
-    {
-        //int tnum = omp_get_thread_num();
-        int tnum = i;
-
-        __macc_set_gpu_num(gpu_num);
-
-        __macc_set_data_region(
-            gpu_num, ptrs[tnum], multi,
-            use_type[tnum], use_lb_set[tnum], use_ub_set[tnum],
-            def_type[tnum], def_lb_set[tnum], def_ub_set[tnum]);
-    }
-}
-
 void __macc_init()
 {
     char *env_macc_numgpus = getenv("MACC_NUMGPUS");
