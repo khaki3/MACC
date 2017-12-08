@@ -495,6 +495,13 @@
                   indexes)
                  env)))]
 
+           [(memberRef)
+            (values indexes
+                    (gi-update-env
+                     (simplify-expr lv env)
+                     (simplify-expr rv env)
+                     env))]
+
            )))]
 
     [(postIncrExpr postDecrExpr preIncrExpr preDecrExpr)
@@ -521,10 +528,10 @@
       logEQExpr logNEQExpr logGEExpr logGTExpr logLEExpr logLTExpr
       logAndExpr logOrExpr
       unaryMinusExpr bitNotExpr logNotExpr sizeOfExpr
-      commaExpr commaExpr0)
+      commaExpr commaExpr0 memberRef)
      (gather-indexes-multi (sxml:content state) env)]
 
-    [(Var caseLabel defaultLabel breakStatement
+    [(Var varAddr caseLabel defaultLabel breakStatement
       intConstant longlongConstant floatConstant
       stringConstant moeConstant funcAddr arrayAddr)
      (values '() env)]
@@ -634,6 +641,12 @@
                (if (eq? (sxml:name expr) preIncrExpr) plusExpr minusExpr)
                (rec (~ c 0))
                (gen-int-expr 1)))]
+
+          [(memberRef)
+           (let1 st (car c)
+             (and-let1 x (assoc-ref env st '())
+               (if (pair? x) x
+                   (list expr))))]
 
           [(Var)
            (let1 varname (car c)
