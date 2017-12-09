@@ -31,7 +31,7 @@ int __macc_get_num_gpus()
     return acc_get_num_devices(__MACC_DEVICE_TYPE);
 }
 
-int __MACC_TOPOLOGY[__MACC_MAX_NUMGPUS];
+int * __MACC_TOPOLOGY;
 
 void __macc_set_gpu_num(int i)
 {
@@ -506,12 +506,13 @@ void __macc_init()
         exit(-1);
     }
 
+    __MACC_TOPOLOGY = malloc(__MACC_NUMGPUS * sizeof(int));
     char * topo = getenv("MACC_TOPOLOGY");
 
     if (topo != NULL) {
         int i = 0;
         topo = strtok(topo, ",");
-        while (topo != NULL) {
+        while (topo != NULL && i < __MACC_NUMGPUS) {
             __MACC_TOPOLOGY[i] = atoi(topo);
             topo = strtok(NULL, ",");
             i++;

@@ -5,6 +5,7 @@
 (add-load-path ".." :relative)
 (use util)
 (use xm)
+(use util.match)
 
 (define COUNT 0)
 (define (NEWSYM)
@@ -169,13 +170,15 @@
   (insert-alloc-to-main! xm (redefine-arrays! xm))
   xm)
 
-(define (restyle sxml)
-  (xm->sxml (replace-global-arrays (sxml->xm (rename sxml)))))
+(define (restyle sxml args)
+  (match args
+   [(_ "-n") (rename sxml)]
+   [(_ "-a") (xm->sxml (replace-global-arrays (sxml->xm sxml)))]))
 
 (define (main args)
   (let* ([iport    (current-input-port)]
          [oport    (current-output-port)]
          [sxml-in  (~ (ssax:xml->sxml iport '()) 2)]
-         [sxml-out (restyle sxml-in)])
+         [sxml-out (restyle sxml-in args)])
     (srl:sxml->xml sxml-out oport))
   0)
