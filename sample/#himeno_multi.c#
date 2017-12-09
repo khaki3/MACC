@@ -1,11 +1,11 @@
 /*
- * Original Source  : /tmp/tmp.rutwVzhqmN/1.c
+ * Original Source  : /tmp/tmp.GTd1u4YhDc/1.c
  * Language         : C
- * Compiled Time    : 2017-12-06 13:11:03
+ * Compiled Time    : 2017-12-06 12:58:46
  * Compiler Info    : XcodeML/C-FrontEnd
  * Compiler Version : 1.0.3
  */
-# 1 "/tmp/tmp.rutwVzhqmN/1.c"
+# 1 "/tmp/tmp.GTd1u4YhDc/1.c"
 typedef void * omp_lock_t;
 typedef void * omp_nest_lock_t;
 enum anon_type_1_acc_device_t {
@@ -289,6 +289,14 @@ typedef struct timezone * restrict __timezone_ptr_t;
 enum __itimer_which {
 ITIMER_REAL = 0,
 ITIMER_VIRTUAL = 1,
+                     
+                     
+                     
+                     
+                     
+                     
+                     
+                     
 ITIMER_PROF = 2
 };
 struct itimerval {
@@ -875,332 +883,332 @@ extern char * __stpcpy(char * restrict __dest, char const * restrict __src);
 extern char * stpcpy(char * restrict __dest, char const * restrict __src);
 extern char * __stpncpy(char * restrict __dest, char const * restrict __src, unsigned long __n);
 extern char * stpncpy(char * restrict __dest, char const * restrict __src, unsigned long __n);
-# 27 "/tmp/tmp.rutwVzhqmN/1.c"
+# 27 "/tmp/tmp.GTd1u4YhDc/1.c"
 int __MACC_NUMGPUS = -(1);
-# 29 "/tmp/tmp.rutwVzhqmN/1.c"
+# 29 "/tmp/tmp.GTd1u4YhDc/1.c"
 int __macc_get_num_gpus()
 {
-# 31 "/tmp/tmp.rutwVzhqmN/1.c"
+# 31 "/tmp/tmp.GTd1u4YhDc/1.c"
 return acc_get_num_devices(acc_device_nvidia);
 }
-# 34 "/tmp/tmp.rutwVzhqmN/1.c"
+# 34 "/tmp/tmp.GTd1u4YhDc/1.c"
 int __MACC_TOPOLOGY[10];
-# 36 "/tmp/tmp.rutwVzhqmN/1.c"
+# 36 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_set_gpu_num(int i)
 {
-# 38 "/tmp/tmp.rutwVzhqmN/1.c"
-acc_set_device_num(__MACC_TOPOLOGY[i], acc_device_nvidia);
+# 38 "/tmp/tmp.GTd1u4YhDc/1.c"
+acc_set_device_num(i, acc_device_nvidia);
 }
-# 61 "/tmp/tmp.rutwVzhqmN/1.c"
+# 61 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTable * __MACC_DATA_TABLE_SET;
-# 74 "/tmp/tmp.rutwVzhqmN/1.c"
+# 74 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataWrapCache * __MACC_DATA_WRAP_CACHE_SET;
-# 76 "/tmp/tmp.rutwVzhqmN/1.c"
+# 76 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_data_table_insert(int gpu_num, void * ptr, int type_size, int entire_lb, int entire_ub)
 {
-# 79 "/tmp/tmp.rutwVzhqmN/1.c"
+# 79 "/tmp/tmp.GTd1u4YhDc/1.c"
 int index = (((long)(ptr)) / (16)) % (256);
-# 81 "/tmp/tmp.rutwVzhqmN/1.c"
+# 81 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * new_entry = malloc_managed(sizeof(struct __MaccDataTableEntry));
-# 83 "/tmp/tmp.rutwVzhqmN/1.c"
+# 83 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->addr) = ptr;
-# 84 "/tmp/tmp.rutwVzhqmN/1.c"
+# 84 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->addr_ub) = (ptr + (entire_ub * type_size));
-# 85 "/tmp/tmp.rutwVzhqmN/1.c"
+# 85 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->type_size) = type_size;
-# 86 "/tmp/tmp.rutwVzhqmN/1.c"
+# 86 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->entire_lb) = entire_lb;
-# 87 "/tmp/tmp.rutwVzhqmN/1.c"
+# 87 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->entire_ub) = entire_ub;
-# 88 "/tmp/tmp.rutwVzhqmN/1.c"
+# 88 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->dirty) = (0);
-# 89 "/tmp/tmp.rutwVzhqmN/1.c"
+# 89 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->dirty_lb) = (-(1));
-# 90 "/tmp/tmp.rutwVzhqmN/1.c"
+# 90 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->dirty_ub) = (-(1));
-# 91 "/tmp/tmp.rutwVzhqmN/1.c"
+# 91 "/tmp/tmp.GTd1u4YhDc/1.c"
 (new_entry->next) = (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index));
-# 93 "/tmp/tmp.rutwVzhqmN/1.c"
+# 93 "/tmp/tmp.GTd1u4YhDc/1.c"
 (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index)) = new_entry;
 }
-# 96 "/tmp/tmp.rutwVzhqmN/1.c"
+# 96 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * __macc_data_table_find(int gpu_num, void * ptr)
 {
-# 98 "/tmp/tmp.rutwVzhqmN/1.c"
+# 98 "/tmp/tmp.GTd1u4YhDc/1.c"
 int index = (((long)(ptr)) / (16)) % (256);
-# 99 "/tmp/tmp.rutwVzhqmN/1.c"
+# 99 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * entry = *(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index);
-# 101 "/tmp/tmp.rutwVzhqmN/1.c"
+# 101 "/tmp/tmp.GTd1u4YhDc/1.c"
 while(entry != ((void * )(0))) {
 {
-# 102 "/tmp/tmp.rutwVzhqmN/1.c"
+# 102 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((entry->addr) == ptr) {
-# 103 "/tmp/tmp.rutwVzhqmN/1.c"
+# 103 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->offset) = (0);
-# 104 "/tmp/tmp.rutwVzhqmN/1.c"
+# 104 "/tmp/tmp.GTd1u4YhDc/1.c"
 return entry;
 }
-# 107 "/tmp/tmp.rutwVzhqmN/1.c"
+# 107 "/tmp/tmp.GTd1u4YhDc/1.c"
 entry = (entry->next);
 }
 }
 {
-# 110 "/tmp/tmp.rutwVzhqmN/1.c"
+# 110 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataWrapCache wrap_cache = __MACC_DATA_WRAP_CACHE_SET[gpu_num];
-# 111 "/tmp/tmp.rutwVzhqmN/1.c"
+# 111 "/tmp/tmp.GTd1u4YhDc/1.c"
 int lane = (((long)(ptr)) / (16)) % (16);
 {
-# 113 "/tmp/tmp.rutwVzhqmN/1.c"
+# 113 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 113 "/tmp/tmp.rutwVzhqmN/1.c"
+# 113 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < (*(((&(wrap_cache))->cachenum) + lane)); i++) {
 {
-# 114 "/tmp/tmp.rutwVzhqmN/1.c"
+# 114 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(ptr == (*(((&(wrap_cache))->addr) + ((lane * (16)) + i)))) {
-# 115 "/tmp/tmp.rutwVzhqmN/1.c"
+# 115 "/tmp/tmp.GTd1u4YhDc/1.c"
 entry = (*(((&(wrap_cache))->entry) + ((lane * (16)) + i)));
-# 116 "/tmp/tmp.rutwVzhqmN/1.c"
+# 116 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->offset) = (*(((&(wrap_cache))->offset) + ((lane * (16)) + i)));
-# 117 "/tmp/tmp.rutwVzhqmN/1.c"
+# 117 "/tmp/tmp.GTd1u4YhDc/1.c"
 return entry;
 }
 }
 }
 }
 {
-# 121 "/tmp/tmp.rutwVzhqmN/1.c"
+# 121 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 121 "/tmp/tmp.rutwVzhqmN/1.c"
+# 121 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < (256); i++) {
 {
-# 122 "/tmp/tmp.rutwVzhqmN/1.c"
+# 122 "/tmp/tmp.GTd1u4YhDc/1.c"
 entry = (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + i));
-# 124 "/tmp/tmp.rutwVzhqmN/1.c"
+# 124 "/tmp/tmp.GTd1u4YhDc/1.c"
 while(entry != ((void * )(0))) {
 {
-# 125 "/tmp/tmp.rutwVzhqmN/1.c"
+# 125 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(((entry->addr) <= ptr) && (ptr <= (entry->addr_ub))) {
-# 126 "/tmp/tmp.rutwVzhqmN/1.c"
+# 126 "/tmp/tmp.GTd1u4YhDc/1.c"
 int offset = (ptr - (entry->addr)) / (entry->type_size);
-# 128 "/tmp/tmp.rutwVzhqmN/1.c"
+# 128 "/tmp/tmp.GTd1u4YhDc/1.c"
 int cachenum = *(((&(wrap_cache))->cachenum) + lane);
-# 130 "/tmp/tmp.rutwVzhqmN/1.c"
+# 130 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(cachenum == (16)) {
-# 131 "/tmp/tmp.rutwVzhqmN/1.c"
+# 131 "/tmp/tmp.GTd1u4YhDc/1.c"
 cachenum = (0);
 }
-# 134 "/tmp/tmp.rutwVzhqmN/1.c"
+# 134 "/tmp/tmp.GTd1u4YhDc/1.c"
 (*(((&(wrap_cache))->addr) + ((lane * (16)) + cachenum))) = (entry->addr);
-# 135 "/tmp/tmp.rutwVzhqmN/1.c"
+# 135 "/tmp/tmp.GTd1u4YhDc/1.c"
 (*(((&(wrap_cache))->entry) + ((lane * (16)) + cachenum))) = entry;
-# 136 "/tmp/tmp.rutwVzhqmN/1.c"
+# 136 "/tmp/tmp.GTd1u4YhDc/1.c"
 (*(((&(wrap_cache))->offset) + ((lane * (16)) + cachenum))) = offset;
-# 138 "/tmp/tmp.rutwVzhqmN/1.c"
+# 138 "/tmp/tmp.GTd1u4YhDc/1.c"
 (*(((&(wrap_cache))->cachenum) + lane)) = (cachenum + (1));
-# 140 "/tmp/tmp.rutwVzhqmN/1.c"
+# 140 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->offset) = offset;
-# 141 "/tmp/tmp.rutwVzhqmN/1.c"
+# 141 "/tmp/tmp.GTd1u4YhDc/1.c"
 return entry;
 }
-# 144 "/tmp/tmp.rutwVzhqmN/1.c"
+# 144 "/tmp/tmp.GTd1u4YhDc/1.c"
 entry = (entry->next);
 }
 }
 }
 }
 }
-# 148 "/tmp/tmp.rutwVzhqmN/1.c"
+# 148 "/tmp/tmp.GTd1u4YhDc/1.c"
 fprintf(stderr, "Error on __macc_data_table_find: Not found the item %p\n", ptr);
-# 149 "/tmp/tmp.rutwVzhqmN/1.c"
+# 149 "/tmp/tmp.GTd1u4YhDc/1.c"
 exit(-(1));
-# 151 "/tmp/tmp.rutwVzhqmN/1.c"
+# 151 "/tmp/tmp.GTd1u4YhDc/1.c"
 return (void * )(0);
 }
 }
-# 154 "/tmp/tmp.rutwVzhqmN/1.c"
+# 154 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_data_table_delete(int gpu_num, void * ptr)
 {
-# 156 "/tmp/tmp.rutwVzhqmN/1.c"
+# 156 "/tmp/tmp.GTd1u4YhDc/1.c"
 int index = (((long)(ptr)) / (16)) % (256);
-# 157 "/tmp/tmp.rutwVzhqmN/1.c"
+# 157 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * entry = *(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index);
-# 158 "/tmp/tmp.rutwVzhqmN/1.c"
+# 158 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * pre = (void * )(0);
-# 160 "/tmp/tmp.rutwVzhqmN/1.c"
+# 160 "/tmp/tmp.GTd1u4YhDc/1.c"
 memset((__MACC_DATA_WRAP_CACHE_SET + gpu_num)->cachenum, 0, (16) * (sizeof(int)));
-# 162 "/tmp/tmp.rutwVzhqmN/1.c"
+# 162 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(entry != ((void * )(0))) {
-# 163 "/tmp/tmp.rutwVzhqmN/1.c"
+# 163 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((entry->addr) == ptr) {
-# 164 "/tmp/tmp.rutwVzhqmN/1.c"
+# 164 "/tmp/tmp.GTd1u4YhDc/1.c"
 (*(((__MACC_DATA_TABLE_SET + gpu_num)->entries) + index)) = (entry->next);
-# 165 "/tmp/tmp.rutwVzhqmN/1.c"
+# 165 "/tmp/tmp.GTd1u4YhDc/1.c"
 free_managed(entry);
-# 166 "/tmp/tmp.rutwVzhqmN/1.c"
+# 166 "/tmp/tmp.GTd1u4YhDc/1.c"
 return ;
 }
-# 169 "/tmp/tmp.rutwVzhqmN/1.c"
+# 169 "/tmp/tmp.GTd1u4YhDc/1.c"
 pre = entry;
-# 170 "/tmp/tmp.rutwVzhqmN/1.c"
+# 170 "/tmp/tmp.GTd1u4YhDc/1.c"
 entry = (entry->next);
 }
-# 173 "/tmp/tmp.rutwVzhqmN/1.c"
+# 173 "/tmp/tmp.GTd1u4YhDc/1.c"
 while((pre != ((void * )(0))) && (entry != ((void * )(0)))) {
 {
-# 174 "/tmp/tmp.rutwVzhqmN/1.c"
+# 174 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((entry->addr) == ptr) {
-# 175 "/tmp/tmp.rutwVzhqmN/1.c"
+# 175 "/tmp/tmp.GTd1u4YhDc/1.c"
 (pre->next) = (entry->next);
-# 176 "/tmp/tmp.rutwVzhqmN/1.c"
+# 176 "/tmp/tmp.GTd1u4YhDc/1.c"
 free_managed(entry);
-# 177 "/tmp/tmp.rutwVzhqmN/1.c"
+# 177 "/tmp/tmp.GTd1u4YhDc/1.c"
 return ;
 }
-# 180 "/tmp/tmp.rutwVzhqmN/1.c"
+# 180 "/tmp/tmp.GTd1u4YhDc/1.c"
 pre = entry;
-# 181 "/tmp/tmp.rutwVzhqmN/1.c"
+# 181 "/tmp/tmp.GTd1u4YhDc/1.c"
 entry = (entry->next);
 }
 }
-# 184 "/tmp/tmp.rutwVzhqmN/1.c"
+# 184 "/tmp/tmp.GTd1u4YhDc/1.c"
 fprintf(stderr, "Error on __macc_data_table_delete: Not found the item %p\n", ptr);
-# 185 "/tmp/tmp.rutwVzhqmN/1.c"
+# 185 "/tmp/tmp.GTd1u4YhDc/1.c"
 exit(-(1));
 }
-# 188 "/tmp/tmp.rutwVzhqmN/1.c"
+# 188 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_delete(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 190 "/tmp/tmp.rutwVzhqmN/1.c"
+# 190 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_delete_async(ptr + (lb * type_size), length * type_size, gpu_num);
-# 191 "/tmp/tmp.rutwVzhqmN/1.c"
+# 191 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_data_table_delete(gpu_num, ptr);
-# 192 "/tmp/tmp.rutwVzhqmN/1.c"
+# 192 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_wait(gpu_num);
 }
-# 195 "/tmp/tmp.rutwVzhqmN/1.c"
+# 195 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_copyout(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 197 "/tmp/tmp.rutwVzhqmN/1.c"
+# 197 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
-# 199 "/tmp/tmp.rutwVzhqmN/1.c"
+# 199 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(entry->dirty) {
-# 200 "/tmp/tmp.rutwVzhqmN/1.c"
+# 200 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_update_self_async((entry->addr) + ((entry->dirty_lb) * (entry->type_size)), (((entry->dirty_ub) - (entry->dirty_lb)) + (1)) * (entry->type_size), gpu_num);
 }
-# 204 "/tmp/tmp.rutwVzhqmN/1.c"
+# 204 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_delete(gpu_num, ptr, type_size, lb, length);
 }
-# 207 "/tmp/tmp.rutwVzhqmN/1.c"
+# 207 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_copyin(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 209 "/tmp/tmp.rutwVzhqmN/1.c"
+# 209 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_copyin_async(ptr + (lb * type_size), length * type_size, gpu_num);
-# 210 "/tmp/tmp.rutwVzhqmN/1.c"
+# 210 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_data_table_insert(gpu_num, ptr, type_size, lb, (lb + length) - (1));
-# 211 "/tmp/tmp.rutwVzhqmN/1.c"
+# 211 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_wait(gpu_num);
 }
-# 214 "/tmp/tmp.rutwVzhqmN/1.c"
+# 214 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_create(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 216 "/tmp/tmp.rutwVzhqmN/1.c"
+# 216 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_create_async(ptr + (lb * type_size), length * type_size, gpu_num);
-# 217 "/tmp/tmp.rutwVzhqmN/1.c"
+# 217 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_data_table_insert(gpu_num, ptr, type_size, lb, (lb + length) - (1));
-# 218 "/tmp/tmp.rutwVzhqmN/1.c"
+# 218 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_wait(gpu_num);
 }
-# 221 "/tmp/tmp.rutwVzhqmN/1.c"
+# 221 "/tmp/tmp.GTd1u4YhDc/1.c"
 void * __macc_malloc(unsigned long size)
 {
-# 223 "/tmp/tmp.rutwVzhqmN/1.c"
+# 223 "/tmp/tmp.GTd1u4YhDc/1.c"
 void * ret = malloc_managed(size);
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
 {
-# 227 "/tmp/tmp.rutwVzhqmN/1.c"
+# 227 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_create(omp_get_thread_num(), ret, 1, 0, size);
 }
-# 230 "/tmp/tmp.rutwVzhqmN/1.c"
+# 230 "/tmp/tmp.GTd1u4YhDc/1.c"
 return ret;
 }
-# 233 "/tmp/tmp.rutwVzhqmN/1.c"
+# 233 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_free(void * ptr)
 {
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
 {
-# 237 "/tmp/tmp.rutwVzhqmN/1.c"
+# 237 "/tmp/tmp.GTd1u4YhDc/1.c"
 int gpu_num = omp_get_thread_num();
-# 238 "/tmp/tmp.rutwVzhqmN/1.c"
+# 238 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
-# 240 "/tmp/tmp.rutwVzhqmN/1.c"
+# 240 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_delete(gpu_num, ptr, 1, 0, (entry->entire_ub) + (1));
 }
-# 242 "/tmp/tmp.rutwVzhqmN/1.c"
+# 242 "/tmp/tmp.GTd1u4YhDc/1.c"
 free_managed(ptr);
 }
-# 245 "/tmp/tmp.rutwVzhqmN/1.c"
+# 245 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_update_self(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 247 "/tmp/tmp.rutwVzhqmN/1.c"
+# 247 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
-# 248 "/tmp/tmp.rutwVzhqmN/1.c"
+# 248 "/tmp/tmp.GTd1u4YhDc/1.c"
 ptr = (entry->addr);
-# 249 "/tmp/tmp.rutwVzhqmN/1.c"
+# 249 "/tmp/tmp.GTd1u4YhDc/1.c"
 lb += (entry->offset);
 {
-# 250 "/tmp/tmp.rutwVzhqmN/1.c"
+# 250 "/tmp/tmp.GTd1u4YhDc/1.c"
 int ub = (lb + length) - (1);
-# 252 "/tmp/tmp.rutwVzhqmN/1.c"
+# 252 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((entry->dirty) && (!(((entry->dirty_lb) > ub) || ((entry->dirty_ub) < lb)))) {
-# 253 "/tmp/tmp.rutwVzhqmN/1.c"
+# 253 "/tmp/tmp.GTd1u4YhDc/1.c"
 int new_lb = ((entry->dirty_lb) > lb) ?(entry->dirty_lb) : lb;
-# 254 "/tmp/tmp.rutwVzhqmN/1.c"
+# 254 "/tmp/tmp.GTd1u4YhDc/1.c"
 int new_ub = ((entry->dirty_ub) < ub) ?(entry->dirty_ub) : ub;
-# 255 "/tmp/tmp.rutwVzhqmN/1.c"
+# 255 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_update_self(ptr + (new_lb * type_size), ((new_ub - new_lb) + (1)) * type_size);
 }
 }
 }
-# 259 "/tmp/tmp.rutwVzhqmN/1.c"
+# 259 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_update_device(int gpu_num, void * ptr, int type_size, int lb, int length)
 {
-# 261 "/tmp/tmp.rutwVzhqmN/1.c"
+# 261 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_update_device(ptr + (lb * type_size), length * type_size);
 }
-# 264 "/tmp/tmp.rutwVzhqmN/1.c"
+# 264 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_init_access_region(int gpu_num, int * lb_set, int * ub_set)
 {
-# 266 "/tmp/tmp.rutwVzhqmN/1.c"
+# 266 "/tmp/tmp.GTd1u4YhDc/1.c"
 (lb_set[gpu_num]) = (2147483647);
-# 267 "/tmp/tmp.rutwVzhqmN/1.c"
+# 267 "/tmp/tmp.GTd1u4YhDc/1.c"
 (ub_set[gpu_num]) = (-(1));
 }
-# 270 "/tmp/tmp.rutwVzhqmN/1.c"
+# 270 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_update_access_region(int gpu_num, int * lb_set, int * ub_set, int val)
 {
-# 272 "/tmp/tmp.rutwVzhqmN/1.c"
+# 272 "/tmp/tmp.GTd1u4YhDc/1.c"
 (lb_set[gpu_num]) = (((lb_set[gpu_num]) < val) ?(lb_set[gpu_num]) : val);
-# 273 "/tmp/tmp.rutwVzhqmN/1.c"
+# 273 "/tmp/tmp.GTd1u4YhDc/1.c"
 (ub_set[gpu_num]) = (((ub_set[gpu_num]) > val) ?(ub_set[gpu_num]) : val);
 }
-# 276 "/tmp/tmp.rutwVzhqmN/1.c"
+# 276 "/tmp/tmp.GTd1u4YhDc/1.c"
 int __macc_region_is_overlapping(int * lb_set, int * ub_set)
 {
 {
-# 278 "/tmp/tmp.rutwVzhqmN/1.c"
+# 278 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 278 "/tmp/tmp.rutwVzhqmN/1.c"
+# 278 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < (__MACC_NUMGPUS - (1)); i++) {
 {
 {
-# 279 "/tmp/tmp.rutwVzhqmN/1.c"
+# 279 "/tmp/tmp.GTd1u4YhDc/1.c"
 int j;
-# 279 "/tmp/tmp.rutwVzhqmN/1.c"
+# 279 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(j = (i + (1)); j < __MACC_NUMGPUS; j++) {
 {
-# 280 "/tmp/tmp.rutwVzhqmN/1.c"
+# 280 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(!(((lb_set[i]) > (ub_set[j])) || ((ub_set[i]) < (lb_set[j])))) {
-# 281 "/tmp/tmp.rutwVzhqmN/1.c"
+# 281 "/tmp/tmp.GTd1u4YhDc/1.c"
 return 1;
 }
 }
@@ -1209,44 +1217,44 @@ return 1;
 }
 }
 }
-# 283 "/tmp/tmp.rutwVzhqmN/1.c"
+# 283 "/tmp/tmp.GTd1u4YhDc/1.c"
 return 0;
 }
-# 287 "/tmp/tmp.rutwVzhqmN/1.c"
+# 287 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_calc_loop_region(int * loop_lb_set, int * loop_ub_set, int entire_start, int entire_end, int step, int until_equal)
 {
-# 291 "/tmp/tmp.rutwVzhqmN/1.c"
+# 291 "/tmp/tmp.GTd1u4YhDc/1.c"
 int tmp = entire_start + (step * ((entire_end - entire_start) / step));
-# 292 "/tmp/tmp.rutwVzhqmN/1.c"
+# 292 "/tmp/tmp.GTd1u4YhDc/1.c"
 entire_end = (tmp - ((until_equal || (entire_end != tmp)) ?(0) : step));
 {
-# 294 "/tmp/tmp.rutwVzhqmN/1.c"
+# 294 "/tmp/tmp.GTd1u4YhDc/1.c"
 int len = (entire_end - entire_start) + step;
-# 295 "/tmp/tmp.rutwVzhqmN/1.c"
+# 295 "/tmp/tmp.GTd1u4YhDc/1.c"
 int width = (int)(((float)(len)) / __MACC_NUMGPUS);
-# 296 "/tmp/tmp.rutwVzhqmN/1.c"
+# 296 "/tmp/tmp.GTd1u4YhDc/1.c"
 width -= (width % step);
 {
-# 297 "/tmp/tmp.rutwVzhqmN/1.c"
+# 297 "/tmp/tmp.GTd1u4YhDc/1.c"
 int rem = (len - (width * __MACC_NUMGPUS)) / step;
-# 298 "/tmp/tmp.rutwVzhqmN/1.c"
+# 298 "/tmp/tmp.GTd1u4YhDc/1.c"
 width -= step;
 {
-# 300 "/tmp/tmp.rutwVzhqmN/1.c"
+# 300 "/tmp/tmp.GTd1u4YhDc/1.c"
 int pos = entire_start;
 {
-# 302 "/tmp/tmp.rutwVzhqmN/1.c"
+# 302 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 302 "/tmp/tmp.rutwVzhqmN/1.c"
+# 302 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 303 "/tmp/tmp.rutwVzhqmN/1.c"
+# 303 "/tmp/tmp.GTd1u4YhDc/1.c"
 (loop_lb_set[i]) = pos;
-# 304 "/tmp/tmp.rutwVzhqmN/1.c"
+# 304 "/tmp/tmp.GTd1u4YhDc/1.c"
 pos = ((width < (0)) ? pos : ((((pos + width) + ((i < rem) ? step : (0))) < entire_end) ?((pos + width) + ((i < rem) ? step : (0))) : entire_end));
-# 305 "/tmp/tmp.rutwVzhqmN/1.c"
+# 305 "/tmp/tmp.GTd1u4YhDc/1.c"
 (loop_ub_set[i]) = pos;
-# 306 "/tmp/tmp.rutwVzhqmN/1.c"
+# 306 "/tmp/tmp.GTd1u4YhDc/1.c"
 pos = (((pos + step) < entire_end) ?(pos + step) : entire_end);
 }
 }
@@ -1255,105 +1263,105 @@ pos = (((pos + step) < entire_end) ?(pos + step) : entire_end);
 }
 }
 }
-# 310 "/tmp/tmp.rutwVzhqmN/1.c"
+# 310 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_adjust_data_region(void * ptr, int gpu_num, int * lb_set, int * ub_set)
 {
-# 312 "/tmp/tmp.rutwVzhqmN/1.c"
+# 312 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
-# 314 "/tmp/tmp.rutwVzhqmN/1.c"
+# 314 "/tmp/tmp.GTd1u4YhDc/1.c"
 (lb_set[gpu_num]) += (entry->offset);
-# 315 "/tmp/tmp.rutwVzhqmN/1.c"
+# 315 "/tmp/tmp.GTd1u4YhDc/1.c"
 (ub_set[gpu_num]) += (entry->offset);
 }
-# 318 "/tmp/tmp.rutwVzhqmN/1.c"
+# 318 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_rewrite_loop_region_into_single(int * loop_lb_set, int * loop_ub_set)
 {
-# 320 "/tmp/tmp.rutwVzhqmN/1.c"
+# 320 "/tmp/tmp.GTd1u4YhDc/1.c"
 (loop_ub_set[(0)]) = (loop_ub_set[(__MACC_NUMGPUS - (1))]);
 {
-# 322 "/tmp/tmp.rutwVzhqmN/1.c"
+# 322 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 322 "/tmp/tmp.rutwVzhqmN/1.c"
+# 322 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (1); i < __MACC_NUMGPUS; i++) {
 {
-# 323 "/tmp/tmp.rutwVzhqmN/1.c"
+# 323 "/tmp/tmp.GTd1u4YhDc/1.c"
 (loop_lb_set[i]) = (1);
-# 324 "/tmp/tmp.rutwVzhqmN/1.c"
+# 324 "/tmp/tmp.GTd1u4YhDc/1.c"
 (loop_ub_set[i]) = (0);
 }
 }
 }
 }
-# 328 "/tmp/tmp.rutwVzhqmN/1.c"
+# 328 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_rewrite_data_region_into_single(int * lb_set, int * ub_set)
 {
-# 330 "/tmp/tmp.rutwVzhqmN/1.c"
+# 330 "/tmp/tmp.GTd1u4YhDc/1.c"
 int gpu_ub = __MACC_NUMGPUS - (1);
-# 331 "/tmp/tmp.rutwVzhqmN/1.c"
+# 331 "/tmp/tmp.GTd1u4YhDc/1.c"
 (lb_set[(0)]) = (((lb_set[(0)]) < (lb_set[gpu_ub])) ?(lb_set[(0)]) : (lb_set[gpu_ub]));
-# 332 "/tmp/tmp.rutwVzhqmN/1.c"
+# 332 "/tmp/tmp.GTd1u4YhDc/1.c"
 (ub_set[(0)]) = (((ub_set[(0)]) > (ub_set[gpu_ub])) ?(ub_set[(0)]) : (ub_set[gpu_ub]));
 }
-# 335 "/tmp/tmp.rutwVzhqmN/1.c"
+# 335 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_sync_data(int gpu_num, void * ptr, int type_size, int lb, int ub)
 {
-# 337 "/tmp/tmp.rutwVzhqmN/1.c"
+# 337 "/tmp/tmp.GTd1u4YhDc/1.c"
 void * update_addr = ptr + (lb * type_size);
-# 338 "/tmp/tmp.rutwVzhqmN/1.c"
+# 338 "/tmp/tmp.GTd1u4YhDc/1.c"
 unsigned long length_b = ((ub - lb) + (1)) * type_size;
-# 340 "/tmp/tmp.rutwVzhqmN/1.c"
+# 340 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_update_self(update_addr, length_b);
 {
-# 343 "/tmp/tmp.rutwVzhqmN/1.c"
+# 343 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 343 "/tmp/tmp.rutwVzhqmN/1.c"
+# 343 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 346 "/tmp/tmp.rutwVzhqmN/1.c"
+# 346 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(i != gpu_num) {
-# 347 "/tmp/tmp.rutwVzhqmN/1.c"
+# 347 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_set_gpu_num(i);
-# 348 "/tmp/tmp.rutwVzhqmN/1.c"
+# 348 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_update_device(update_addr, length_b);
 }
 }
 }
 }
-# 352 "/tmp/tmp.rutwVzhqmN/1.c"
+# 352 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_set_gpu_num(gpu_num);
 }
-# 356 "/tmp/tmp.rutwVzhqmN/1.c"
+# 356 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_set_data_region(int gpu_num, void * ptr, int multi, int use_type, int * use_lb_set, int * use_ub_set, int def_type, int * def_lb_set, int * def_ub_set)
 {
-# 360 "/tmp/tmp.rutwVzhqmN/1.c"
+# 360 "/tmp/tmp.GTd1u4YhDc/1.c"
 struct __MaccDataTableEntry * entry = __macc_data_table_find(gpu_num, ptr);
-# 361 "/tmp/tmp.rutwVzhqmN/1.c"
+# 361 "/tmp/tmp.GTd1u4YhDc/1.c"
 ptr = (entry->addr);
-# 366 "/tmp/tmp.rutwVzhqmN/1.c"
+# 366 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(((entry->dirty) && (multi || (gpu_num != (0)))) && (__MACC_NUMGPUS > (1))) {
-# 367 "/tmp/tmp.rutwVzhqmN/1.c"
+# 367 "/tmp/tmp.GTd1u4YhDc/1.c"
 int update_all = 0;
-# 368 "/tmp/tmp.rutwVzhqmN/1.c"
+# 368 "/tmp/tmp.GTd1u4YhDc/1.c"
 int update_all_DtoH = 0;
-# 370 "/tmp/tmp.rutwVzhqmN/1.c"
+# 370 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((use_type == (0)) || (def_type == (0))) {
-# 371 "/tmp/tmp.rutwVzhqmN/1.c"
+# 371 "/tmp/tmp.GTd1u4YhDc/1.c"
 update_all = (1);
 }
 else {
-# 373 "/tmp/tmp.rutwVzhqmN/1.c"
+# 373 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(def_type == (2)) {
 {
-# 374 "/tmp/tmp.rutwVzhqmN/1.c"
+# 374 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 374 "/tmp/tmp.rutwVzhqmN/1.c"
+# 374 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 375 "/tmp/tmp.rutwVzhqmN/1.c"
+# 375 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((i != gpu_num) && (!(((entry->dirty_lb) > (def_ub_set[i])) || ((entry->dirty_ub) < (def_lb_set[i]))))) {
-# 378 "/tmp/tmp.rutwVzhqmN/1.c"
+# 378 "/tmp/tmp.GTd1u4YhDc/1.c"
 update_all = (1);
-# 379 "/tmp/tmp.rutwVzhqmN/1.c"
+# 379 "/tmp/tmp.GTd1u4YhDc/1.c"
 break;
 }
 }
@@ -1361,39 +1369,39 @@ break;
 }
 }
 }
-# 384 "/tmp/tmp.rutwVzhqmN/1.c"
+# 384 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(! update_all) {
-# 385 "/tmp/tmp.rutwVzhqmN/1.c"
+# 385 "/tmp/tmp.GTd1u4YhDc/1.c"
 int every_whole = 1;
-# 386 "/tmp/tmp.rutwVzhqmN/1.c"
+# 386 "/tmp/tmp.GTd1u4YhDc/1.c"
 int unused_lb = entry->dirty_lb;
-# 387 "/tmp/tmp.rutwVzhqmN/1.c"
+# 387 "/tmp/tmp.GTd1u4YhDc/1.c"
 int unused_ub = entry->dirty_ub;
 {
-# 389 "/tmp/tmp.rutwVzhqmN/1.c"
+# 389 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 389 "/tmp/tmp.rutwVzhqmN/1.c"
+# 389 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 390 "/tmp/tmp.rutwVzhqmN/1.c"
+# 390 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(i != gpu_num) {
-# 391 "/tmp/tmp.rutwVzhqmN/1.c"
+# 391 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(((use_lb_set[i]) <= (entry->dirty_lb)) && ((entry->dirty_ub) <= (use_ub_set[i]))) {
-# 393 "/tmp/tmp.rutwVzhqmN/1.c"
+# 393 "/tmp/tmp.GTd1u4YhDc/1.c"
 update_all_DtoH = (1);
 }
 else {
-# 396 "/tmp/tmp.rutwVzhqmN/1.c"
+# 396 "/tmp/tmp.GTd1u4YhDc/1.c"
 every_whole = (0);
-# 398 "/tmp/tmp.rutwVzhqmN/1.c"
+# 398 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((use_lb_set[i]) <= unused_lb) {
-# 399 "/tmp/tmp.rutwVzhqmN/1.c"
+# 399 "/tmp/tmp.GTd1u4YhDc/1.c"
 unused_lb = ((unused_lb > ((use_ub_set[i]) + (1))) ? unused_lb : ((use_ub_set[i]) + (1)));
 }
 else {
-# 400 "/tmp/tmp.rutwVzhqmN/1.c"
+# 400 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((use_ub_set[i]) >= unused_ub) {
-# 401 "/tmp/tmp.rutwVzhqmN/1.c"
+# 401 "/tmp/tmp.GTd1u4YhDc/1.c"
 unused_ub = ((unused_ub < ((use_lb_set[i]) - (1))) ? unused_ub : ((use_lb_set[i]) - (1)));
 }
 }
@@ -1402,201 +1410,203 @@ unused_ub = ((unused_ub < ((use_lb_set[i]) - (1))) ? unused_ub : ((use_lb_set[i]
 }
 }
 }
-# 406 "/tmp/tmp.rutwVzhqmN/1.c"
+# 406 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(every_whole) {
-# 407 "/tmp/tmp.rutwVzhqmN/1.c"
+# 407 "/tmp/tmp.GTd1u4YhDc/1.c"
 update_all = (1);
 }
-# 408 "/tmp/tmp.rutwVzhqmN/1.c"
+# 408 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(unused_ub < unused_lb) {
-# 409 "/tmp/tmp.rutwVzhqmN/1.c"
+# 409 "/tmp/tmp.GTd1u4YhDc/1.c"
 update_all_DtoH = (1);
 }
 }
-# 413 "/tmp/tmp.rutwVzhqmN/1.c"
+# 413 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(update_all) {
-# 414 "/tmp/tmp.rutwVzhqmN/1.c"
+# 414 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
-# 415 "/tmp/tmp.rutwVzhqmN/1.c"
+# 415 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty) = (0);
 }
 else {
-# 419 "/tmp/tmp.rutwVzhqmN/1.c"
+# 419 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((entry->dirty) && (use_type == (2))) {
-# 420 "/tmp/tmp.rutwVzhqmN/1.c"
+# 420 "/tmp/tmp.GTd1u4YhDc/1.c"
 int thread_num = multi ? __MACC_NUMGPUS : (1);
-# 422 "/tmp/tmp.rutwVzhqmN/1.c"
+# 422 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(update_all_DtoH) {
-# 423 "/tmp/tmp.rutwVzhqmN/1.c"
+# 423 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_update_self(ptr + ((entry->dirty_lb) * (entry->type_size)), (((entry->dirty_ub) - (entry->dirty_lb)) + (1)) * (entry->type_size));
 }
 {
-# 427 "/tmp/tmp.rutwVzhqmN/1.c"
+# 427 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 427 "/tmp/tmp.rutwVzhqmN/1.c"
+# 427 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < thread_num; i++) {
 {
-# 431 "/tmp/tmp.rutwVzhqmN/1.c"
+# 431 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((i != gpu_num) && (!(((entry->dirty_lb) > (use_ub_set[i])) || ((entry->dirty_ub) < (use_lb_set[i]))))) {
-# 435 "/tmp/tmp.rutwVzhqmN/1.c"
+# 435 "/tmp/tmp.GTd1u4YhDc/1.c"
 int update_lb = ((entry->dirty_lb) > (use_lb_set[i])) ?(entry->dirty_lb) : (use_lb_set[i]);
-# 436 "/tmp/tmp.rutwVzhqmN/1.c"
+# 436 "/tmp/tmp.GTd1u4YhDc/1.c"
 int update_ub = ((entry->dirty_ub) < (use_ub_set[i])) ?(entry->dirty_ub) : (use_ub_set[i]);
-# 437 "/tmp/tmp.rutwVzhqmN/1.c"
+# 437 "/tmp/tmp.GTd1u4YhDc/1.c"
 void * update_addr = ptr + (update_lb * (entry->type_size));
-# 438 "/tmp/tmp.rutwVzhqmN/1.c"
+# 438 "/tmp/tmp.GTd1u4YhDc/1.c"
 unsigned long length_b = ((update_ub - update_lb) + (1)) * (entry->type_size);
-# 440 "/tmp/tmp.rutwVzhqmN/1.c"
+# 440 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(! update_all_DtoH) {
-# 441 "/tmp/tmp.rutwVzhqmN/1.c"
+# 441 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_set_gpu_num(gpu_num);
-# 442 "/tmp/tmp.rutwVzhqmN/1.c"
+# 442 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_update_self(update_addr, length_b);
 }
-# 444 "/tmp/tmp.rutwVzhqmN/1.c"
+# 444 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_set_gpu_num(i);
-# 445 "/tmp/tmp.rutwVzhqmN/1.c"
+# 445 "/tmp/tmp.GTd1u4YhDc/1.c"
 acc_update_device(update_addr, length_b);
 }
 }
 }
 }
-# 449 "/tmp/tmp.rutwVzhqmN/1.c"
+# 449 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_set_gpu_num(gpu_num);
 }
 }
 }
-# 458 "/tmp/tmp.rutwVzhqmN/1.c"
+# 458 "/tmp/tmp.GTd1u4YhDc/1.c"
 if((multi || (gpu_num == (0))) && (def_type != (1))) {
-# 459 "/tmp/tmp.rutwVzhqmN/1.c"
+# 459 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(def_type == (0)) {
-# 460 "/tmp/tmp.rutwVzhqmN/1.c"
+# 460 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty) = (1);
-# 461 "/tmp/tmp.rutwVzhqmN/1.c"
+# 461 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty_lb) = (entry->entire_lb);
-# 462 "/tmp/tmp.rutwVzhqmN/1.c"
+# 462 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty_ub) = (entry->entire_ub);
 }
 else {
-# 465 "/tmp/tmp.rutwVzhqmN/1.c"
+# 465 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(!(entry->dirty)) {
-# 466 "/tmp/tmp.rutwVzhqmN/1.c"
+# 466 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty) = (1);
-# 467 "/tmp/tmp.rutwVzhqmN/1.c"
+# 467 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty_lb) = (def_lb_set[gpu_num]);
-# 468 "/tmp/tmp.rutwVzhqmN/1.c"
+# 468 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty_ub) = (def_ub_set[gpu_num]);
 }
 else {
-# 473 "/tmp/tmp.rutwVzhqmN/1.c"
+# 473 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(((!(((entry->dirty_lb) > (def_ub_set[gpu_num])) || ((entry->dirty_ub) < (def_lb_set[gpu_num])))) || ((entry->dirty_lb) == ((def_ub_set[gpu_num]) + (1)))) || ((def_lb_set[gpu_num]) == ((entry->dirty_ub) + (1)))) {
-# 481 "/tmp/tmp.rutwVzhqmN/1.c"
+# 481 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty_lb) = (((entry->dirty_lb) < (def_lb_set[gpu_num])) ?(entry->dirty_lb) : (def_lb_set[gpu_num]));
-# 482 "/tmp/tmp.rutwVzhqmN/1.c"
+# 482 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty_ub) = (((entry->dirty_ub) > (def_ub_set[gpu_num])) ?(entry->dirty_ub) : (def_ub_set[gpu_num]));
 }
 else {
-# 486 "/tmp/tmp.rutwVzhqmN/1.c"
+# 486 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
-# 487 "/tmp/tmp.rutwVzhqmN/1.c"
+# 487 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty_lb) = (def_lb_set[gpu_num]);
-# 488 "/tmp/tmp.rutwVzhqmN/1.c"
+# 488 "/tmp/tmp.GTd1u4YhDc/1.c"
 (entry->dirty_ub) = (def_ub_set[gpu_num]);
 }
 }
 }
 }
 }
-# 493 "/tmp/tmp.rutwVzhqmN/1.c"
+# 493 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_set_data_region_multi(int gpu_num, int multi, int len, void * * ptrs, int * use_type, int * * use_lb_set, int * * use_ub_set, int * def_type, int * * def_lb_set, int * * def_ub_set)
 {
 {
-# 499 "/tmp/tmp.rutwVzhqmN/1.c"
+# 499 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 499 "/tmp/tmp.rutwVzhqmN/1.c"
+# 499 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < len; i++) {
 {
-# 502 "/tmp/tmp.rutwVzhqmN/1.c"
+# 502 "/tmp/tmp.GTd1u4YhDc/1.c"
 int tnum = i;
-# 504 "/tmp/tmp.rutwVzhqmN/1.c"
+# 504 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_set_gpu_num(gpu_num);
-# 506 "/tmp/tmp.rutwVzhqmN/1.c"
+# 506 "/tmp/tmp.GTd1u4YhDc/1.c"
 __macc_set_data_region(gpu_num, ptrs[tnum], multi, use_type[tnum], use_lb_set[tnum], use_ub_set[tnum], def_type[tnum], def_lb_set[tnum], def_ub_set[tnum]);
 }
 }
 }
 }
-# 513 "/tmp/tmp.rutwVzhqmN/1.c"
+# 513 "/tmp/tmp.GTd1u4YhDc/1.c"
 void __macc_init()
 {
-# 515 "/tmp/tmp.rutwVzhqmN/1.c"
+# 515 "/tmp/tmp.GTd1u4YhDc/1.c"
 char * env_macc_numgpus = getenv("MACC_NUMGPUS");
-# 517 "/tmp/tmp.rutwVzhqmN/1.c"
+# 517 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(env_macc_numgpus != ((void * )(0))) {
-# 518 "/tmp/tmp.rutwVzhqmN/1.c"
+# 518 "/tmp/tmp.GTd1u4YhDc/1.c"
 __MACC_NUMGPUS = (atoi(env_macc_numgpus));
 }
 else {
-# 521 "/tmp/tmp.rutwVzhqmN/1.c"
+# 521 "/tmp/tmp.GTd1u4YhDc/1.c"
 __MACC_NUMGPUS = (__macc_get_num_gpus());
 }
-# 524 "/tmp/tmp.rutwVzhqmN/1.c"
+# 524 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(__MACC_NUMGPUS <= (0)) {
-# 525 "/tmp/tmp.rutwVzhqmN/1.c"
+# 525 "/tmp/tmp.GTd1u4YhDc/1.c"
 fputs("[MACC ERROR] No GPU device found.", stderr);
-# 526 "/tmp/tmp.rutwVzhqmN/1.c"
+# 526 "/tmp/tmp.GTd1u4YhDc/1.c"
 exit(-(1));
 }
 {
-# 529 "/tmp/tmp.rutwVzhqmN/1.c"
+# 529 "/tmp/tmp.GTd1u4YhDc/1.c"
 char * topo = getenv("MACC_TOPOLOGY");
-# 531 "/tmp/tmp.rutwVzhqmN/1.c"
+# 531 "/tmp/tmp.GTd1u4YhDc/1.c"
 if(topo != ((void * )(0))) {
-# 532 "/tmp/tmp.rutwVzhqmN/1.c"
+# 532 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i = 0;
-# 533 "/tmp/tmp.rutwVzhqmN/1.c"
+# 533 "/tmp/tmp.GTd1u4YhDc/1.c"
 topo = (strtok(topo, ","));
-# 534 "/tmp/tmp.rutwVzhqmN/1.c"
+# 534 "/tmp/tmp.GTd1u4YhDc/1.c"
 while(topo != ((void * )(0))) {
 {
-# 535 "/tmp/tmp.rutwVzhqmN/1.c"
+# 535 "/tmp/tmp.GTd1u4YhDc/1.c"
+printf("%s\n", topo);
+# 536 "/tmp/tmp.GTd1u4YhDc/1.c"
 (__MACC_TOPOLOGY[i]) = (atoi(topo));
-# 536 "/tmp/tmp.rutwVzhqmN/1.c"
+# 538 "/tmp/tmp.GTd1u4YhDc/1.c"
 topo = (strtok((void * )(0), ","));
-# 537 "/tmp/tmp.rutwVzhqmN/1.c"
+# 539 "/tmp/tmp.GTd1u4YhDc/1.c"
 i++;
 }
 }
 }
 else {
 {
-# 540 "/tmp/tmp.rutwVzhqmN/1.c"
+# 542 "/tmp/tmp.GTd1u4YhDc/1.c"
 int i;
-# 540 "/tmp/tmp.rutwVzhqmN/1.c"
+# 542 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(i = (0); i < __MACC_NUMGPUS; i++) {
 {
-# 541 "/tmp/tmp.rutwVzhqmN/1.c"
+# 543 "/tmp/tmp.GTd1u4YhDc/1.c"
 (__MACC_TOPOLOGY[i]) = i;
 }
 }
 }
 }
-# 557 "/tmp/tmp.rutwVzhqmN/1.c"
+# 559 "/tmp/tmp.GTd1u4YhDc/1.c"
 __MACC_DATA_TABLE_SET = (calloc_managed(__MACC_NUMGPUS, sizeof(struct __MaccDataTable)));
-# 558 "/tmp/tmp.rutwVzhqmN/1.c"
+# 560 "/tmp/tmp.GTd1u4YhDc/1.c"
 __MACC_DATA_WRAP_CACHE_SET = (calloc_managed(__MACC_NUMGPUS, sizeof(struct __MaccDataWrapCache)));
 {
-# 561 "/tmp/tmp.rutwVzhqmN/1.c"
+# 563 "/tmp/tmp.GTd1u4YhDc/1.c"
 int t;
-# 561 "/tmp/tmp.rutwVzhqmN/1.c"
+# 563 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(t = (0); t < (10); t++) {
 {
-# 562 "/tmp/tmp.rutwVzhqmN/1.c"
+# 564 "/tmp/tmp.GTd1u4YhDc/1.c"
 printf("[MACC] Wake up (%d)\n", t);
 {
-# 564 "/tmp/tmp.rutwVzhqmN/1.c"
+# 566 "/tmp/tmp.GTd1u4YhDc/1.c"
 int n = ((256) * (1024)) * (1024);
-# 565 "/tmp/tmp.rutwVzhqmN/1.c"
+# 567 "/tmp/tmp.GTd1u4YhDc/1.c"
 int * tmp = malloc_managed(n * (sizeof(int)));
 {
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
@@ -1694,11 +1704,11 @@ __macc_set_data_region_multi(__macc_tnum, __macc_multi, 1, __macc_ptrs, __macc_u
 __macc_num_gangs = ( __macc_multi ? (((512) + __MACC_NUMGPUS) - (1)) / __MACC_NUMGPUS : 512 );
 #pragma acc parallel present ( tmp ) num_gangs  (__macc_num_gangs)  vector_length ( 1024 )
 #pragma acc loop gang vector
-# 571 "/tmp/tmp.rutwVzhqmN/1.c"
-# 571 "/tmp/tmp.rutwVzhqmN/1.c"
+# 573 "/tmp/tmp.GTd1u4YhDc/1.c"
+# 573 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(int i= __macc_top_loop_lb; i <= __macc_top_loop_ub; i++) {
 {
-# 572 "/tmp/tmp.rutwVzhqmN/1.c"
+# 574 "/tmp/tmp.GTd1u4YhDc/1.c"
 (tmp[i]) = i;
 }
 }
@@ -1794,11 +1804,11 @@ __macc_set_data_region_multi(__macc_tnum, __macc_multi, 1, __macc_ptrs, __macc_u
 __macc_num_gangs = ( __macc_multi ? (((512) + __MACC_NUMGPUS) - (1)) / __MACC_NUMGPUS : 512 );
 #pragma acc parallel present ( tmp ) num_gangs  (__macc_num_gangs)  vector_length ( 1024 )
 #pragma acc loop gang vector
-# 576 "/tmp/tmp.rutwVzhqmN/1.c"
-# 576 "/tmp/tmp.rutwVzhqmN/1.c"
+# 578 "/tmp/tmp.GTd1u4YhDc/1.c"
+# 578 "/tmp/tmp.GTd1u4YhDc/1.c"
 for(int i= __macc_top_loop_lb; i <= __macc_top_loop_ub; i++) {
 {
-# 577 "/tmp/tmp.rutwVzhqmN/1.c"
+# 579 "/tmp/tmp.GTd1u4YhDc/1.c"
 (tmp[(n - i)]) += i;
 }
 }
@@ -1815,7 +1825,7 @@ __macc_copyout(__macc_tnum, tmp, sizeof(int), 0, n);
 }
 }
 }
-# 580 "/tmp/tmp.rutwVzhqmN/1.c"
+# 582 "/tmp/tmp.GTd1u4YhDc/1.c"
 free_managed(tmp);
 }
 }
@@ -1849,210 +1859,210 @@ void mat_set_init(struct Mat * Mat);
 float jacobi(int nn, struct Mat * a, struct Mat * b, struct Mat * c, struct Mat * p, struct Mat * bnd, struct Mat * wrk1, struct Mat * wrk2);
 double fflop(int mx, int my, int mz);
 double mflops(int nn, double cpu, double flop);
-# 32 "/tmp/tmp.rutwVzhqmN/in.c"
+# 32 "/tmp/tmp.GTd1u4YhDc/in.c"
 double second()
 {
-# 35 "/tmp/tmp.rutwVzhqmN/in.c"
+# 35 "/tmp/tmp.GTd1u4YhDc/in.c"
 struct timeval tm;
-# 36 "/tmp/tmp.rutwVzhqmN/in.c"
+# 36 "/tmp/tmp.GTd1u4YhDc/in.c"
 double t;
-# 38 "/tmp/tmp.rutwVzhqmN/in.c"
+# 38 "/tmp/tmp.GTd1u4YhDc/in.c"
 static int base_sec = 0;
-# 38 "/tmp/tmp.rutwVzhqmN/in.c"
+# 38 "/tmp/tmp.GTd1u4YhDc/in.c"
 static int base_usec = 0;
-# 40 "/tmp/tmp.rutwVzhqmN/in.c"
+# 40 "/tmp/tmp.GTd1u4YhDc/in.c"
 gettimeofday(&(tm), (void * )(0));
-# 42 "/tmp/tmp.rutwVzhqmN/in.c"
+# 42 "/tmp/tmp.GTd1u4YhDc/in.c"
 if((base_sec == (0)) && (base_usec == (0))) {
-# 44 "/tmp/tmp.rutwVzhqmN/in.c"
+# 44 "/tmp/tmp.GTd1u4YhDc/in.c"
 base_sec = ((&(tm))->tv_sec);
-# 45 "/tmp/tmp.rutwVzhqmN/in.c"
+# 45 "/tmp/tmp.GTd1u4YhDc/in.c"
 base_usec = ((&(tm))->tv_usec);
-# 46 "/tmp/tmp.rutwVzhqmN/in.c"
+# 46 "/tmp/tmp.GTd1u4YhDc/in.c"
 t = (0.0);
 }
 else {
-# 48 "/tmp/tmp.rutwVzhqmN/in.c"
+# 48 "/tmp/tmp.GTd1u4YhDc/in.c"
 t = (((double)(((&(tm))->tv_sec) - base_sec)) + (((double)(((&(tm))->tv_usec) - base_usec)) / (1.0e6)));
 }
-# 52 "/tmp/tmp.rutwVzhqmN/in.c"
+# 52 "/tmp/tmp.GTd1u4YhDc/in.c"
 return t;
 }
-# 55 "/tmp/tmp.rutwVzhqmN/in.c"
+# 55 "/tmp/tmp.GTd1u4YhDc/in.c"
 float omega = 0.8;
-# 56 "/tmp/tmp.rutwVzhqmN/in.c"
+# 56 "/tmp/tmp.GTd1u4YhDc/in.c"
 struct Mat a;
-# 56 "/tmp/tmp.rutwVzhqmN/in.c"
+# 56 "/tmp/tmp.GTd1u4YhDc/in.c"
 struct Mat b;
-# 56 "/tmp/tmp.rutwVzhqmN/in.c"
+# 56 "/tmp/tmp.GTd1u4YhDc/in.c"
 struct Mat c;
-# 56 "/tmp/tmp.rutwVzhqmN/in.c"
+# 56 "/tmp/tmp.GTd1u4YhDc/in.c"
 struct Mat p;
-# 56 "/tmp/tmp.rutwVzhqmN/in.c"
+# 56 "/tmp/tmp.GTd1u4YhDc/in.c"
 struct Mat bnd;
-# 56 "/tmp/tmp.rutwVzhqmN/in.c"
+# 56 "/tmp/tmp.GTd1u4YhDc/in.c"
 struct Mat wrk1;
-# 56 "/tmp/tmp.rutwVzhqmN/in.c"
+# 56 "/tmp/tmp.GTd1u4YhDc/in.c"
 struct Mat wrk2;
-# 58 "/tmp/tmp.rutwVzhqmN/in.c"
+# 58 "/tmp/tmp.GTd1u4YhDc/in.c"
 int main(int argc, char * argv[])
 {
 __macc_init();
 {
-# 61 "/tmp/tmp.rutwVzhqmN/in.c"
+# 61 "/tmp/tmp.GTd1u4YhDc/in.c"
 int i;
-# 61 "/tmp/tmp.rutwVzhqmN/in.c"
+# 61 "/tmp/tmp.GTd1u4YhDc/in.c"
 int j;
-# 61 "/tmp/tmp.rutwVzhqmN/in.c"
+# 61 "/tmp/tmp.GTd1u4YhDc/in.c"
 int k;
-# 61 "/tmp/tmp.rutwVzhqmN/in.c"
+# 61 "/tmp/tmp.GTd1u4YhDc/in.c"
 int nn;
-# 62 "/tmp/tmp.rutwVzhqmN/in.c"
+# 62 "/tmp/tmp.GTd1u4YhDc/in.c"
 int imax;
-# 62 "/tmp/tmp.rutwVzhqmN/in.c"
+# 62 "/tmp/tmp.GTd1u4YhDc/in.c"
 int jmax;
-# 62 "/tmp/tmp.rutwVzhqmN/in.c"
+# 62 "/tmp/tmp.GTd1u4YhDc/in.c"
 int kmax;
-# 62 "/tmp/tmp.rutwVzhqmN/in.c"
+# 62 "/tmp/tmp.GTd1u4YhDc/in.c"
 int mimax;
-# 62 "/tmp/tmp.rutwVzhqmN/in.c"
+# 62 "/tmp/tmp.GTd1u4YhDc/in.c"
 int mjmax;
-# 62 "/tmp/tmp.rutwVzhqmN/in.c"
+# 62 "/tmp/tmp.GTd1u4YhDc/in.c"
 int mkmax;
-# 62 "/tmp/tmp.rutwVzhqmN/in.c"
+# 62 "/tmp/tmp.GTd1u4YhDc/in.c"
 int msize[3];
-# 63 "/tmp/tmp.rutwVzhqmN/in.c"
+# 63 "/tmp/tmp.GTd1u4YhDc/in.c"
 float gosa;
-# 63 "/tmp/tmp.rutwVzhqmN/in.c"
+# 63 "/tmp/tmp.GTd1u4YhDc/in.c"
 float target;
-# 64 "/tmp/tmp.rutwVzhqmN/in.c"
+# 64 "/tmp/tmp.GTd1u4YhDc/in.c"
 double cpu0;
-# 64 "/tmp/tmp.rutwVzhqmN/in.c"
+# 64 "/tmp/tmp.GTd1u4YhDc/in.c"
 double cpu1;
-# 64 "/tmp/tmp.rutwVzhqmN/in.c"
+# 64 "/tmp/tmp.GTd1u4YhDc/in.c"
 double cpu;
-# 64 "/tmp/tmp.rutwVzhqmN/in.c"
+# 64 "/tmp/tmp.GTd1u4YhDc/in.c"
 double flop;
-# 65 "/tmp/tmp.rutwVzhqmN/in.c"
+# 65 "/tmp/tmp.GTd1u4YhDc/in.c"
 char size[10];
-# 66 "/tmp/tmp.rutwVzhqmN/in.c"
+# 66 "/tmp/tmp.GTd1u4YhDc/in.c"
 unsigned long bs;
-# 67 "/tmp/tmp.rutwVzhqmN/in.c"
+# 67 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * a_m;
-# 67 "/tmp/tmp.rutwVzhqmN/in.c"
+# 67 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * b_m;
-# 67 "/tmp/tmp.rutwVzhqmN/in.c"
+# 67 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * c_m;
-# 67 "/tmp/tmp.rutwVzhqmN/in.c"
+# 67 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * p_m;
-# 67 "/tmp/tmp.rutwVzhqmN/in.c"
+# 67 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * bnd_m;
-# 67 "/tmp/tmp.rutwVzhqmN/in.c"
+# 67 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * wrk1_m;
-# 67 "/tmp/tmp.rutwVzhqmN/in.c"
+# 67 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * wrk2_m;
-# 69 "/tmp/tmp.rutwVzhqmN/in.c"
+# 69 "/tmp/tmp.GTd1u4YhDc/in.c"
 if(argc == (2)) {
-# 70 "/tmp/tmp.rutwVzhqmN/in.c"
+# 70 "/tmp/tmp.GTd1u4YhDc/in.c"
 strcpy(size, argv[1]);
 }
 else {
-# 72 "/tmp/tmp.rutwVzhqmN/in.c"
+# 72 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("For example: \n");
-# 73 "/tmp/tmp.rutwVzhqmN/in.c"
+# 73 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" Grid-size= XS (32x32x64)\n");
-# 74 "/tmp/tmp.rutwVzhqmN/in.c"
+# 74 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("\t    S  (64x64x128)\n");
-# 75 "/tmp/tmp.rutwVzhqmN/in.c"
+# 75 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("\t    M  (128x128x256)\n");
-# 76 "/tmp/tmp.rutwVzhqmN/in.c"
+# 76 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("\t    L  (256x256x512)\n");
-# 77 "/tmp/tmp.rutwVzhqmN/in.c"
+# 77 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("\t    XL (512x512x1024)\n\n");
-# 78 "/tmp/tmp.rutwVzhqmN/in.c"
+# 78 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("Grid-size = ");
-# 79 "/tmp/tmp.rutwVzhqmN/in.c"
+# 79 "/tmp/tmp.GTd1u4YhDc/in.c"
 __isoc99_scanf("%s", size);
-# 80 "/tmp/tmp.rutwVzhqmN/in.c"
+# 80 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("\n");
 }
-# 83 "/tmp/tmp.rutwVzhqmN/in.c"
+# 83 "/tmp/tmp.GTd1u4YhDc/in.c"
 set_param(msize, size);
-# 85 "/tmp/tmp.rutwVzhqmN/in.c"
+# 85 "/tmp/tmp.GTd1u4YhDc/in.c"
 mimax = (msize[0]);
-# 86 "/tmp/tmp.rutwVzhqmN/in.c"
+# 86 "/tmp/tmp.GTd1u4YhDc/in.c"
 mjmax = (msize[1]);
-# 87 "/tmp/tmp.rutwVzhqmN/in.c"
+# 87 "/tmp/tmp.GTd1u4YhDc/in.c"
 mkmax = (msize[2]);
-# 88 "/tmp/tmp.rutwVzhqmN/in.c"
+# 88 "/tmp/tmp.GTd1u4YhDc/in.c"
 imax = (mimax - (1));
-# 89 "/tmp/tmp.rutwVzhqmN/in.c"
+# 89 "/tmp/tmp.GTd1u4YhDc/in.c"
 jmax = (mjmax - (1));
-# 90 "/tmp/tmp.rutwVzhqmN/in.c"
+# 90 "/tmp/tmp.GTd1u4YhDc/in.c"
 kmax = (mkmax - (1));
-# 91 "/tmp/tmp.rutwVzhqmN/in.c"
+# 91 "/tmp/tmp.GTd1u4YhDc/in.c"
 bs = ((mimax * mjmax) * mkmax);
-# 93 "/tmp/tmp.rutwVzhqmN/in.c"
+# 93 "/tmp/tmp.GTd1u4YhDc/in.c"
 target = (60.0);
-# 95 "/tmp/tmp.rutwVzhqmN/in.c"
+# 95 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("mimax = %d mjmax = %d mkmax = %d\n", mimax, mjmax, mkmax);
-# 96 "/tmp/tmp.rutwVzhqmN/in.c"
+# 96 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("imax = %d jmax = %d kmax =%d\n", imax, jmax, kmax);
-# 101 "/tmp/tmp.rutwVzhqmN/in.c"
+# 101 "/tmp/tmp.GTd1u4YhDc/in.c"
 newMat(&(p), 1, mimax, mjmax, mkmax);
-# 102 "/tmp/tmp.rutwVzhqmN/in.c"
+# 102 "/tmp/tmp.GTd1u4YhDc/in.c"
 newMat(&(bnd), 1, mimax, mjmax, mkmax);
-# 103 "/tmp/tmp.rutwVzhqmN/in.c"
+# 103 "/tmp/tmp.GTd1u4YhDc/in.c"
 newMat(&(wrk1), 1, mimax, mjmax, mkmax);
-# 104 "/tmp/tmp.rutwVzhqmN/in.c"
+# 104 "/tmp/tmp.GTd1u4YhDc/in.c"
 newMat(&(wrk2), 1, mimax, mjmax, mkmax);
-# 105 "/tmp/tmp.rutwVzhqmN/in.c"
+# 105 "/tmp/tmp.GTd1u4YhDc/in.c"
 newMat(&(a), 4, mimax, mjmax, mkmax);
-# 106 "/tmp/tmp.rutwVzhqmN/in.c"
+# 106 "/tmp/tmp.GTd1u4YhDc/in.c"
 newMat(&(b), 3, mimax, mjmax, mkmax);
-# 107 "/tmp/tmp.rutwVzhqmN/in.c"
+# 107 "/tmp/tmp.GTd1u4YhDc/in.c"
 newMat(&(c), 3, mimax, mjmax, mkmax);
-# 109 "/tmp/tmp.rutwVzhqmN/in.c"
+# 109 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set_init(&(p));
-# 110 "/tmp/tmp.rutwVzhqmN/in.c"
+# 110 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(bnd), 0, 1.0);
-# 111 "/tmp/tmp.rutwVzhqmN/in.c"
+# 111 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(wrk1), 0, 0.0);
-# 112 "/tmp/tmp.rutwVzhqmN/in.c"
+# 112 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(wrk2), 0, 0.0);
-# 113 "/tmp/tmp.rutwVzhqmN/in.c"
+# 113 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(a), 0, 1.0);
-# 114 "/tmp/tmp.rutwVzhqmN/in.c"
+# 114 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(a), 1, 1.0);
-# 115 "/tmp/tmp.rutwVzhqmN/in.c"
+# 115 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(a), 2, 1.0);
-# 116 "/tmp/tmp.rutwVzhqmN/in.c"
+# 116 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(a), 3, (1.0) / (6.0));
-# 117 "/tmp/tmp.rutwVzhqmN/in.c"
+# 117 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(b), 0, 0.0);
-# 118 "/tmp/tmp.rutwVzhqmN/in.c"
+# 118 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(b), 1, 0.0);
-# 119 "/tmp/tmp.rutwVzhqmN/in.c"
+# 119 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(b), 2, 0.0);
-# 120 "/tmp/tmp.rutwVzhqmN/in.c"
+# 120 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(c), 0, 1.0);
-# 121 "/tmp/tmp.rutwVzhqmN/in.c"
+# 121 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(c), 1, 1.0);
-# 122 "/tmp/tmp.rutwVzhqmN/in.c"
+# 122 "/tmp/tmp.GTd1u4YhDc/in.c"
 mat_set(&(c), 2, 1.0);
-# 128 "/tmp/tmp.rutwVzhqmN/in.c"
+# 128 "/tmp/tmp.GTd1u4YhDc/in.c"
 a_m = ((&(a))->m);
-# 129 "/tmp/tmp.rutwVzhqmN/in.c"
+# 129 "/tmp/tmp.GTd1u4YhDc/in.c"
 b_m = ((&(b))->m);
-# 130 "/tmp/tmp.rutwVzhqmN/in.c"
+# 130 "/tmp/tmp.GTd1u4YhDc/in.c"
 c_m = ((&(c))->m);
-# 131 "/tmp/tmp.rutwVzhqmN/in.c"
+# 131 "/tmp/tmp.GTd1u4YhDc/in.c"
 p_m = ((&(p))->m);
-# 132 "/tmp/tmp.rutwVzhqmN/in.c"
+# 132 "/tmp/tmp.GTd1u4YhDc/in.c"
 bnd_m = ((&(bnd))->m);
-# 133 "/tmp/tmp.rutwVzhqmN/in.c"
+# 133 "/tmp/tmp.GTd1u4YhDc/in.c"
 wrk1_m = ((&(wrk1))->m);
-# 134 "/tmp/tmp.rutwVzhqmN/in.c"
+# 134 "/tmp/tmp.GTd1u4YhDc/in.c"
 wrk2_m = ((&(wrk2))->m);
 {
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
@@ -2078,51 +2088,51 @@ __macc_copyin(__macc_tnum, wrk2_m, sizeof(float), 0, bs);
 }
 }
 {
-# 141 "/tmp/tmp.rutwVzhqmN/in.c"
+# 141 "/tmp/tmp.GTd1u4YhDc/in.c"
 jacobi(1, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2));
-# 143 "/tmp/tmp.rutwVzhqmN/in.c"
+# 143 "/tmp/tmp.GTd1u4YhDc/in.c"
 nn = (3);
-# 144 "/tmp/tmp.rutwVzhqmN/in.c"
+# 144 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" Start rehearsal measurement process.\n");
-# 145 "/tmp/tmp.rutwVzhqmN/in.c"
+# 145 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" Measure the performance in %d times.\n\n", nn);
-# 147 "/tmp/tmp.rutwVzhqmN/in.c"
+# 147 "/tmp/tmp.GTd1u4YhDc/in.c"
 cpu0 = (second());
-# 148 "/tmp/tmp.rutwVzhqmN/in.c"
+# 148 "/tmp/tmp.GTd1u4YhDc/in.c"
 gosa = (jacobi(nn, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2)));
-# 149 "/tmp/tmp.rutwVzhqmN/in.c"
+# 149 "/tmp/tmp.GTd1u4YhDc/in.c"
 cpu1 = (second());
-# 150 "/tmp/tmp.rutwVzhqmN/in.c"
+# 150 "/tmp/tmp.GTd1u4YhDc/in.c"
 cpu = (cpu1 - cpu0);
-# 151 "/tmp/tmp.rutwVzhqmN/in.c"
+# 151 "/tmp/tmp.GTd1u4YhDc/in.c"
 flop = (fflop(imax, jmax, kmax));
-# 153 "/tmp/tmp.rutwVzhqmN/in.c"
+# 153 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" MFLOPS: %f time(s): %f %e\n\n", mflops(nn, cpu, flop), cpu, gosa);
-# 156 "/tmp/tmp.rutwVzhqmN/in.c"
+# 156 "/tmp/tmp.GTd1u4YhDc/in.c"
 nn = ((int)(target / (cpu / (3.0))));
-# 158 "/tmp/tmp.rutwVzhqmN/in.c"
+# 158 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" Now, start the actual measurement process.\n");
-# 159 "/tmp/tmp.rutwVzhqmN/in.c"
+# 159 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" The loop will be excuted in %d times\n", nn);
-# 160 "/tmp/tmp.rutwVzhqmN/in.c"
+# 160 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" This will take about one minute.\n");
-# 161 "/tmp/tmp.rutwVzhqmN/in.c"
+# 161 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" Wait for a while\n\n");
-# 163 "/tmp/tmp.rutwVzhqmN/in.c"
+# 163 "/tmp/tmp.GTd1u4YhDc/in.c"
 cpu0 = (second());
-# 164 "/tmp/tmp.rutwVzhqmN/in.c"
+# 164 "/tmp/tmp.GTd1u4YhDc/in.c"
 gosa = (jacobi(nn, &(a), &(b), &(c), &(p), &(bnd), &(wrk1), &(wrk2)));
-# 165 "/tmp/tmp.rutwVzhqmN/in.c"
+# 165 "/tmp/tmp.GTd1u4YhDc/in.c"
 cpu1 = (second());
-# 166 "/tmp/tmp.rutwVzhqmN/in.c"
+# 166 "/tmp/tmp.GTd1u4YhDc/in.c"
 cpu = (cpu1 - cpu0);
-# 168 "/tmp/tmp.rutwVzhqmN/in.c"
+# 168 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" Loop executed for %d times\n", nn);
-# 169 "/tmp/tmp.rutwVzhqmN/in.c"
+# 169 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" Gosa : %e \n", gosa);
-# 170 "/tmp/tmp.rutwVzhqmN/in.c"
+# 170 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" MFLOPS measured : %f\tcpu : %f\n", mflops(nn, cpu, flop), cpu);
-# 171 "/tmp/tmp.rutwVzhqmN/in.c"
+# 171 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf(" Score based on Pentium III 600MHz using Fortran 77: %f\n", (mflops(nn, cpu, flop)) / (82), 84);
 }
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
@@ -2148,157 +2158,157 @@ __macc_copyout(__macc_tnum, p_m, sizeof(float), 0, bs);
 }
 }
 }
-# 178 "/tmp/tmp.rutwVzhqmN/in.c"
+# 178 "/tmp/tmp.GTd1u4YhDc/in.c"
 clearMat(&(p));
-# 179 "/tmp/tmp.rutwVzhqmN/in.c"
+# 179 "/tmp/tmp.GTd1u4YhDc/in.c"
 clearMat(&(bnd));
-# 180 "/tmp/tmp.rutwVzhqmN/in.c"
+# 180 "/tmp/tmp.GTd1u4YhDc/in.c"
 clearMat(&(wrk1));
-# 181 "/tmp/tmp.rutwVzhqmN/in.c"
+# 181 "/tmp/tmp.GTd1u4YhDc/in.c"
 clearMat(&(wrk2));
-# 182 "/tmp/tmp.rutwVzhqmN/in.c"
+# 182 "/tmp/tmp.GTd1u4YhDc/in.c"
 clearMat(&(a));
-# 183 "/tmp/tmp.rutwVzhqmN/in.c"
+# 183 "/tmp/tmp.GTd1u4YhDc/in.c"
 clearMat(&(b));
-# 184 "/tmp/tmp.rutwVzhqmN/in.c"
+# 184 "/tmp/tmp.GTd1u4YhDc/in.c"
 clearMat(&(c));
-# 186 "/tmp/tmp.rutwVzhqmN/in.c"
+# 186 "/tmp/tmp.GTd1u4YhDc/in.c"
 return 0;
 }
 }
-# 189 "/tmp/tmp.rutwVzhqmN/in.c"
+# 189 "/tmp/tmp.GTd1u4YhDc/in.c"
 double fflop(int mx, int my, int mz)
 {
-# 192 "/tmp/tmp.rutwVzhqmN/in.c"
+# 192 "/tmp/tmp.GTd1u4YhDc/in.c"
 return ((((double)(mz - (2))) * ((double)(my - (2)))) * ((double)(mx - (2)))) * (34.0);
 }
-# 195 "/tmp/tmp.rutwVzhqmN/in.c"
+# 195 "/tmp/tmp.GTd1u4YhDc/in.c"
 double mflops(int nn, double cpu, double flop)
 {
-# 198 "/tmp/tmp.rutwVzhqmN/in.c"
+# 198 "/tmp/tmp.GTd1u4YhDc/in.c"
 return ((flop / cpu) * (1.e-6)) * ((double)(nn));
 }
-# 201 "/tmp/tmp.rutwVzhqmN/in.c"
+# 201 "/tmp/tmp.GTd1u4YhDc/in.c"
 void set_param(int is[], char * size)
 {
-# 204 "/tmp/tmp.rutwVzhqmN/in.c"
+# 204 "/tmp/tmp.GTd1u4YhDc/in.c"
 if((!(strcmp(size, "XS"))) || (!(strcmp(size, "xs")))) {
-# 205 "/tmp/tmp.rutwVzhqmN/in.c"
+# 205 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[0]) = (32);
-# 206 "/tmp/tmp.rutwVzhqmN/in.c"
+# 206 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[1]) = (32);
-# 207 "/tmp/tmp.rutwVzhqmN/in.c"
+# 207 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[2]) = (64);
-# 208 "/tmp/tmp.rutwVzhqmN/in.c"
+# 208 "/tmp/tmp.GTd1u4YhDc/in.c"
 return ;
 }
-# 210 "/tmp/tmp.rutwVzhqmN/in.c"
+# 210 "/tmp/tmp.GTd1u4YhDc/in.c"
 if((!(strcmp(size, "S"))) || (!(strcmp(size, "s")))) {
-# 211 "/tmp/tmp.rutwVzhqmN/in.c"
+# 211 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[0]) = (64);
-# 212 "/tmp/tmp.rutwVzhqmN/in.c"
+# 212 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[1]) = (64);
-# 213 "/tmp/tmp.rutwVzhqmN/in.c"
+# 213 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[2]) = (128);
-# 214 "/tmp/tmp.rutwVzhqmN/in.c"
+# 214 "/tmp/tmp.GTd1u4YhDc/in.c"
 return ;
 }
-# 216 "/tmp/tmp.rutwVzhqmN/in.c"
+# 216 "/tmp/tmp.GTd1u4YhDc/in.c"
 if((!(strcmp(size, "M"))) || (!(strcmp(size, "m")))) {
-# 217 "/tmp/tmp.rutwVzhqmN/in.c"
+# 217 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[0]) = (128);
-# 218 "/tmp/tmp.rutwVzhqmN/in.c"
+# 218 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[1]) = (128);
-# 219 "/tmp/tmp.rutwVzhqmN/in.c"
+# 219 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[2]) = (256);
-# 220 "/tmp/tmp.rutwVzhqmN/in.c"
+# 220 "/tmp/tmp.GTd1u4YhDc/in.c"
 return ;
 }
-# 222 "/tmp/tmp.rutwVzhqmN/in.c"
+# 222 "/tmp/tmp.GTd1u4YhDc/in.c"
 if((!(strcmp(size, "L"))) || (!(strcmp(size, "l")))) {
-# 223 "/tmp/tmp.rutwVzhqmN/in.c"
+# 223 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[0]) = (256);
-# 224 "/tmp/tmp.rutwVzhqmN/in.c"
+# 224 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[1]) = (256);
-# 225 "/tmp/tmp.rutwVzhqmN/in.c"
+# 225 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[2]) = (512);
-# 226 "/tmp/tmp.rutwVzhqmN/in.c"
+# 226 "/tmp/tmp.GTd1u4YhDc/in.c"
 return ;
 }
-# 228 "/tmp/tmp.rutwVzhqmN/in.c"
+# 228 "/tmp/tmp.GTd1u4YhDc/in.c"
 if((!(strcmp(size, "XL"))) || (!(strcmp(size, "xl")))) {
-# 229 "/tmp/tmp.rutwVzhqmN/in.c"
+# 229 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[0]) = (512);
-# 230 "/tmp/tmp.rutwVzhqmN/in.c"
+# 230 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[1]) = (512);
-# 231 "/tmp/tmp.rutwVzhqmN/in.c"
+# 231 "/tmp/tmp.GTd1u4YhDc/in.c"
 (is[2]) = (1024);
-# 232 "/tmp/tmp.rutwVzhqmN/in.c"
+# 232 "/tmp/tmp.GTd1u4YhDc/in.c"
 return ;
 }
 else {
-# 234 "/tmp/tmp.rutwVzhqmN/in.c"
+# 234 "/tmp/tmp.GTd1u4YhDc/in.c"
 printf("Invalid input character !!\n");
-# 235 "/tmp/tmp.rutwVzhqmN/in.c"
+# 235 "/tmp/tmp.GTd1u4YhDc/in.c"
 exit(6);
 }
 }
-# 239 "/tmp/tmp.rutwVzhqmN/in.c"
+# 239 "/tmp/tmp.GTd1u4YhDc/in.c"
 int newMat(struct Mat * Mat, int mnums, int mrows, int mcols, int mdeps)
 {
-# 242 "/tmp/tmp.rutwVzhqmN/in.c"
+# 242 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->mnums) = mnums;
-# 243 "/tmp/tmp.rutwVzhqmN/in.c"
+# 243 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->mrows) = mrows;
-# 244 "/tmp/tmp.rutwVzhqmN/in.c"
+# 244 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->mcols) = mcols;
-# 245 "/tmp/tmp.rutwVzhqmN/in.c"
+# 245 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->mdeps) = mdeps;
-# 246 "/tmp/tmp.rutwVzhqmN/in.c"
+# 246 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->m) = ((void * )(0));
-# 247 "/tmp/tmp.rutwVzhqmN/in.c"
+# 247 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->m) = ((float * )(malloc_managed((((mnums * mrows) * mcols) * mdeps) * (sizeof(float)))));
-# 250 "/tmp/tmp.rutwVzhqmN/in.c"
+# 250 "/tmp/tmp.GTd1u4YhDc/in.c"
 return ((Mat->m) != ((void * )(0))) ?(1) : (0);
 }
-# 253 "/tmp/tmp.rutwVzhqmN/in.c"
+# 253 "/tmp/tmp.GTd1u4YhDc/in.c"
 void clearMat(struct Mat * Mat)
 {
-# 256 "/tmp/tmp.rutwVzhqmN/in.c"
+# 256 "/tmp/tmp.GTd1u4YhDc/in.c"
 if(Mat->m) {
-# 257 "/tmp/tmp.rutwVzhqmN/in.c"
+# 257 "/tmp/tmp.GTd1u4YhDc/in.c"
 free_managed(Mat->m);
 }
-# 258 "/tmp/tmp.rutwVzhqmN/in.c"
+# 258 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->m) = ((void * )(0));
-# 259 "/tmp/tmp.rutwVzhqmN/in.c"
+# 259 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->mnums) = (0);
-# 260 "/tmp/tmp.rutwVzhqmN/in.c"
+# 260 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->mcols) = (0);
-# 261 "/tmp/tmp.rutwVzhqmN/in.c"
+# 261 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->mrows) = (0);
-# 262 "/tmp/tmp.rutwVzhqmN/in.c"
+# 262 "/tmp/tmp.GTd1u4YhDc/in.c"
 (Mat->mdeps) = (0);
 }
-# 265 "/tmp/tmp.rutwVzhqmN/in.c"
+# 265 "/tmp/tmp.GTd1u4YhDc/in.c"
 void mat_set(struct Mat * Mat, int l, float val)
 {
-# 268 "/tmp/tmp.rutwVzhqmN/in.c"
+# 268 "/tmp/tmp.GTd1u4YhDc/in.c"
 int i;
-# 268 "/tmp/tmp.rutwVzhqmN/in.c"
+# 268 "/tmp/tmp.GTd1u4YhDc/in.c"
 int j;
-# 268 "/tmp/tmp.rutwVzhqmN/in.c"
+# 268 "/tmp/tmp.GTd1u4YhDc/in.c"
 int k;
-# 270 "/tmp/tmp.rutwVzhqmN/in.c"
+# 270 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(i = (0); i < (Mat->mrows); i++) {
 {
-# 271 "/tmp/tmp.rutwVzhqmN/in.c"
+# 271 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(j = (0); j < (Mat->mcols); j++) {
 {
-# 272 "/tmp/tmp.rutwVzhqmN/in.c"
+# 272 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(k = (0); k < (Mat->mdeps); k++) {
 {
-# 273 "/tmp/tmp.rutwVzhqmN/in.c"
+# 273 "/tmp/tmp.GTd1u4YhDc/in.c"
 (*((Mat->m) + ((((((l * (Mat->mrows)) * (Mat->mcols)) * (Mat->mdeps)) + ((i * (Mat->mcols)) * (Mat->mdeps))) + (j * (Mat->mdeps))) + k))) = val;
 }
 }
@@ -2307,29 +2317,29 @@ for(k = (0); k < (Mat->mdeps); k++) {
 }
 }
 }
-# 276 "/tmp/tmp.rutwVzhqmN/in.c"
+# 276 "/tmp/tmp.GTd1u4YhDc/in.c"
 void mat_set_init(struct Mat * Mat)
 {
-# 279 "/tmp/tmp.rutwVzhqmN/in.c"
+# 279 "/tmp/tmp.GTd1u4YhDc/in.c"
 int i;
-# 279 "/tmp/tmp.rutwVzhqmN/in.c"
+# 279 "/tmp/tmp.GTd1u4YhDc/in.c"
 int j;
-# 279 "/tmp/tmp.rutwVzhqmN/in.c"
+# 279 "/tmp/tmp.GTd1u4YhDc/in.c"
 int k;
-# 279 "/tmp/tmp.rutwVzhqmN/in.c"
+# 279 "/tmp/tmp.GTd1u4YhDc/in.c"
 int l;
-# 280 "/tmp/tmp.rutwVzhqmN/in.c"
+# 280 "/tmp/tmp.GTd1u4YhDc/in.c"
 float tt;
-# 282 "/tmp/tmp.rutwVzhqmN/in.c"
+# 282 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(i = (0); i < (Mat->mrows); i++) {
 {
-# 283 "/tmp/tmp.rutwVzhqmN/in.c"
+# 283 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(j = (0); j < (Mat->mcols); j++) {
 {
-# 284 "/tmp/tmp.rutwVzhqmN/in.c"
+# 284 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(k = (0); k < (Mat->mdeps); k++) {
 {
-# 285 "/tmp/tmp.rutwVzhqmN/in.c"
+# 285 "/tmp/tmp.GTd1u4YhDc/in.c"
 (*((Mat->m) + (((((((0) * (Mat->mrows)) * (Mat->mcols)) * (Mat->mdeps)) + ((i * (Mat->mcols)) * (Mat->mdeps))) + (j * (Mat->mdeps))) + k))) = (((float)(i * i)) / ((float)(((Mat->mrows) - (1)) * ((Mat->mrows) - (1)))));
 }
 }
@@ -2338,68 +2348,68 @@ for(k = (0); k < (Mat->mdeps); k++) {
 }
 }
 }
-# 300 "/tmp/tmp.rutwVzhqmN/in.c"
+# 300 "/tmp/tmp.GTd1u4YhDc/in.c"
 float jacobi(int nn, struct Mat * a, struct Mat * b, struct Mat * c, struct Mat * p, struct Mat * bnd, struct Mat * wrk1, struct Mat * wrk2)
 {
-# 304 "/tmp/tmp.rutwVzhqmN/in.c"
+# 304 "/tmp/tmp.GTd1u4YhDc/in.c"
 unsigned long mrows = p->mrows;
-# 305 "/tmp/tmp.rutwVzhqmN/in.c"
+# 305 "/tmp/tmp.GTd1u4YhDc/in.c"
 unsigned long mcols = p->mcols;
-# 306 "/tmp/tmp.rutwVzhqmN/in.c"
+# 306 "/tmp/tmp.GTd1u4YhDc/in.c"
 unsigned long mdeps = p->mdeps;
-# 308 "/tmp/tmp.rutwVzhqmN/in.c"
+# 308 "/tmp/tmp.GTd1u4YhDc/in.c"
 int i;
-# 308 "/tmp/tmp.rutwVzhqmN/in.c"
+# 308 "/tmp/tmp.GTd1u4YhDc/in.c"
 int j;
-# 308 "/tmp/tmp.rutwVzhqmN/in.c"
+# 308 "/tmp/tmp.GTd1u4YhDc/in.c"
 int k;
-# 308 "/tmp/tmp.rutwVzhqmN/in.c"
+# 308 "/tmp/tmp.GTd1u4YhDc/in.c"
 int n;
-# 308 "/tmp/tmp.rutwVzhqmN/in.c"
+# 308 "/tmp/tmp.GTd1u4YhDc/in.c"
 int imax;
-# 308 "/tmp/tmp.rutwVzhqmN/in.c"
+# 308 "/tmp/tmp.GTd1u4YhDc/in.c"
 int jmax;
-# 308 "/tmp/tmp.rutwVzhqmN/in.c"
+# 308 "/tmp/tmp.GTd1u4YhDc/in.c"
 int kmax;
-# 309 "/tmp/tmp.rutwVzhqmN/in.c"
+# 309 "/tmp/tmp.GTd1u4YhDc/in.c"
 float gosa;
-# 309 "/tmp/tmp.rutwVzhqmN/in.c"
+# 309 "/tmp/tmp.GTd1u4YhDc/in.c"
 float s0;
-# 309 "/tmp/tmp.rutwVzhqmN/in.c"
+# 309 "/tmp/tmp.GTd1u4YhDc/in.c"
 float ss;
-# 311 "/tmp/tmp.rutwVzhqmN/in.c"
+# 311 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * a_m;
-# 311 "/tmp/tmp.rutwVzhqmN/in.c"
+# 311 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * b_m;
-# 311 "/tmp/tmp.rutwVzhqmN/in.c"
+# 311 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * c_m;
-# 311 "/tmp/tmp.rutwVzhqmN/in.c"
+# 311 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * p_m;
-# 311 "/tmp/tmp.rutwVzhqmN/in.c"
+# 311 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * bnd_m;
-# 311 "/tmp/tmp.rutwVzhqmN/in.c"
+# 311 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * wrk1_m;
-# 311 "/tmp/tmp.rutwVzhqmN/in.c"
+# 311 "/tmp/tmp.GTd1u4YhDc/in.c"
 float * wrk2_m;
-# 313 "/tmp/tmp.rutwVzhqmN/in.c"
+# 313 "/tmp/tmp.GTd1u4YhDc/in.c"
 imax = (mrows - (1));
-# 314 "/tmp/tmp.rutwVzhqmN/in.c"
+# 314 "/tmp/tmp.GTd1u4YhDc/in.c"
 jmax = (mcols - (1));
-# 315 "/tmp/tmp.rutwVzhqmN/in.c"
+# 315 "/tmp/tmp.GTd1u4YhDc/in.c"
 kmax = (mdeps - (1));
-# 317 "/tmp/tmp.rutwVzhqmN/in.c"
+# 317 "/tmp/tmp.GTd1u4YhDc/in.c"
 a_m = (a->m);
-# 318 "/tmp/tmp.rutwVzhqmN/in.c"
+# 318 "/tmp/tmp.GTd1u4YhDc/in.c"
 b_m = (b->m);
-# 319 "/tmp/tmp.rutwVzhqmN/in.c"
+# 319 "/tmp/tmp.GTd1u4YhDc/in.c"
 c_m = (c->m);
-# 320 "/tmp/tmp.rutwVzhqmN/in.c"
+# 320 "/tmp/tmp.GTd1u4YhDc/in.c"
 p_m = (p->m);
-# 321 "/tmp/tmp.rutwVzhqmN/in.c"
+# 321 "/tmp/tmp.GTd1u4YhDc/in.c"
 bnd_m = (bnd->m);
-# 322 "/tmp/tmp.rutwVzhqmN/in.c"
+# 322 "/tmp/tmp.GTd1u4YhDc/in.c"
 wrk1_m = (wrk1->m);
-# 323 "/tmp/tmp.rutwVzhqmN/in.c"
+# 323 "/tmp/tmp.GTd1u4YhDc/in.c"
 wrk2_m = (wrk2->m);
 {
 #pragma omp parallel num_threads ( __MACC_NUMGPUS )
@@ -2409,10 +2419,10 @@ __macc_set_gpu_num(__macc_tnum);
 {
 }
 }
-# 326 "/tmp/tmp.rutwVzhqmN/in.c"
+# 326 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(n = (0); n < nn; n++) {
 {
-# 327 "/tmp/tmp.rutwVzhqmN/in.c"
+# 327 "/tmp/tmp.GTd1u4YhDc/in.c"
 gosa = (0.0);
 {
 static int __macc_region_is_changed = 1;
@@ -2903,22 +2913,22 @@ __macc_set_data_region_multi(__macc_tnum, __macc_multi, 7, __macc_ptrs, __macc_u
 #pragma omp barrier
 #pragma acc parallel present ( a_m , b_m , c_m , p_m , bnd_m , wrk1_m , wrk2_m ) vector_length ( 256 ) reduction ( + : gosa )
 #pragma acc loop independent collapse ( 3 )
-# 330 "/tmp/tmp.rutwVzhqmN/in.c"
+# 330 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(i = __macc_top_loop_lb; i <= __macc_top_loop_ub; i++) {
 {
-# 331 "/tmp/tmp.rutwVzhqmN/in.c"
+# 331 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(j = (1); j < jmax; j++) {
 {
-# 332 "/tmp/tmp.rutwVzhqmN/in.c"
+# 332 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(k = (1); k < kmax; k++) {
 {
-# 333 "/tmp/tmp.rutwVzhqmN/in.c"
+# 333 "/tmp/tmp.GTd1u4YhDc/in.c"
 s0 = (((((((((((a_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + k)])) + ((a_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)]))) + ((a_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))]))) + ((b_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + ((j + (1)) * mdeps)) + k)])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)])))) + ((b_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + (k + (1)))]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + (k + (1)))])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j + (1)) * mdeps)) + (k - (1)))])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + (k - (1)))])))) + ((b_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * ((((p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))]) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + (k + (1)))])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i + (1)) * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))])) + (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))])))) + ((c_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + (((i - (1)) * mcols) * mdeps)) + (j * mdeps)) + k)]))) + ((c_m[(((((((1) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + ((j - (1)) * mdeps)) + k)]))) + ((c_m[(((((((2) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) * (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + (k - (1)))]))) + (wrk1_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]));
-# 350 "/tmp/tmp.rutwVzhqmN/in.c"
+# 350 "/tmp/tmp.GTd1u4YhDc/in.c"
 ss = (((s0 * (a_m[(((((((3) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)])) - (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)])) * (bnd_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]));
-# 352 "/tmp/tmp.rutwVzhqmN/in.c"
+# 352 "/tmp/tmp.GTd1u4YhDc/in.c"
 gosa += (ss * ss);
-# 353 "/tmp/tmp.rutwVzhqmN/in.c"
+# 353 "/tmp/tmp.GTd1u4YhDc/in.c"
 (wrk2_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) = ((p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) + (omega * ss));
 }
 }
@@ -3058,16 +3068,16 @@ __macc_set_data_region_multi(__macc_tnum, __macc_multi, 2, __macc_ptrs, __macc_u
 #pragma omp barrier
 #pragma acc parallel present ( a_m , b_m , c_m , p_m , bnd_m , wrk1_m , wrk2_m ) vector_length ( 256 )
 #pragma acc loop independent collapse ( 3 )
-# 357 "/tmp/tmp.rutwVzhqmN/in.c"
+# 357 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(i = __macc_top_loop_lb; i <= __macc_top_loop_ub; i++) {
 {
-# 358 "/tmp/tmp.rutwVzhqmN/in.c"
+# 358 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(j = (1); j < jmax; j++) {
 {
-# 359 "/tmp/tmp.rutwVzhqmN/in.c"
+# 359 "/tmp/tmp.GTd1u4YhDc/in.c"
 for(k = (1); k < kmax; k++) {
 {
-# 360 "/tmp/tmp.rutwVzhqmN/in.c"
+# 360 "/tmp/tmp.GTd1u4YhDc/in.c"
 (p_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]) = (wrk2_m[(((((((0) * mrows) * mcols) * mdeps) + ((i * mcols) * mdeps)) + (j * mdeps)) + k)]);
 }
 }
@@ -3088,6 +3098,6 @@ __macc_set_gpu_num(__macc_tnum);
 }
 }
 }
-# 364 "/tmp/tmp.rutwVzhqmN/in.c"
+# 364 "/tmp/tmp.GTd1u4YhDc/in.c"
 return gosa;
 }
