@@ -96,11 +96,11 @@
    state
 
    (gen-compound
-    (gen-par :state (translate-data-clauses state #t))
+    ;; (gen-par :state (translate-data-clauses state #t))
 
     (~ (sxml:content state) 2)
 
-    (gen-par :state (translate-data-clauses state #f))
+    ;; (gen-par :state (translate-data-clauses state #f))
     )))
 
 (define (generate-update-state label arg)
@@ -131,7 +131,10 @@
   (translate-com-clauses state generate-update-state))
 
 (define (parallelize-acc-update! xm state)
-  (sxml:change! state (gen-par :state (translate-update-clauses state))))
+  (sxml:change! state
+                (gen-compound )
+                #;(gen-par :state (translate-update-clauses state))
+                ))
 
 (define NEW_TYPE_COUNT 0)
 
@@ -390,7 +393,7 @@
            (~ top-loop-counter 3)
            (gen-int-expr (if (eq? (~ top-loop-counter 4) '<=) 1 0))))
 
-        (gen-par
+        #;(gen-par
          :num_threads (if is-loop `(Var "__MACC_NUMGPUS") (gen-int-expr 1))
          :with_tnum #f
          :state
@@ -411,7 +414,7 @@
 
           (apply gen-compound region-calculation)))
 
-        (gen-if
+        #;(gen-if
          ;; cond
          (if is-loop
              (apply gen-OR-expr
@@ -484,7 +487,7 @@
          "__macc_top_loop_ub"
          (gen-arrayref-var-expr top-loop-ub-set-name "__macc_tnum"))
 
-        (apply gen-compound
+        #;(apply gen-compound
           (map
            (lambda (set)
              (gen-funcall
@@ -500,7 +503,7 @@
               `(Var ,(~ set 6))))
            data-sets))
 
-        (gen-barrier)
+        #;(gen-barrier)
 
         state)))
      )))

@@ -16,8 +16,8 @@
 #define MIN(a,b) (((a)<(b))?(a):(b))
 #define MAX(a,b) (((a)>(b))?(a):(b))
 
-#define TOPADDR(ADDR, LB, TYPE_SIZE)   (ADDR + LB * TYPE_SIZE)
-#define LENGTH_BYTE(LB, UB, TYPE_SIZE) ((UB - LB + 1) * TYPE_SIZE)
+#define TOPADDR(ADDR, LB, TYPE_SIZE)   (ADDR + LB * (size_t)TYPE_SIZE)
+#define LENGTH_BYTE(LB, UB, TYPE_SIZE) ((UB - LB + 1) * (size_t)TYPE_SIZE)
 #define ARE_OVERLAPPING(a_lb, a_ub, b_lb, b_ub) (!(a_lb > b_ub || a_ub < b_lb))
 #define ARE_OVERLAPPING_WHOLE(a_lb, a_ub, b_lb, b_ub) (a_lb <= b_lb && b_ub <= a_ub)
 
@@ -81,7 +81,7 @@ void __macc_data_table_insert(
     struct __MaccDataTableEntry *new_entry = malloc(sizeof(struct __MaccDataTableEntry));
 
     new_entry->addr      = ptr;
-    new_entry->addr_ub   = ptr + entire_ub * type_size;
+    new_entry->addr_ub   = ptr + entire_ub * (size_t)type_size;
     new_entry->type_size = type_size;
     new_entry->entire_lb = entire_lb;
     new_entry->entire_ub = entire_ub;
@@ -187,7 +187,7 @@ void __macc_data_table_delete(int gpu_num, void *ptr)
 
 void __macc_delete(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    acc_delete_async(TOPADDR(ptr, lb, type_size), length * type_size, gpu_num);
+    acc_delete_async(TOPADDR(ptr, lb, type_size), length * (size_t)type_size, gpu_num);
     __macc_data_table_delete(gpu_num, ptr);
     acc_wait(gpu_num);
 }
@@ -206,14 +206,14 @@ void __macc_copyout(int gpu_num, void *ptr, int type_size, int lb, int length)
 
 void __macc_copyin(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    acc_copyin_async(TOPADDR(ptr, lb, type_size), length * type_size, gpu_num);
+    acc_copyin_async(TOPADDR(ptr, lb, type_size), length * (size_t)type_size, gpu_num);
     __macc_data_table_insert(gpu_num, ptr, type_size, lb, lb + length - 1);
     acc_wait(gpu_num);
 }
 
 void __macc_create(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    acc_create_async(TOPADDR(ptr, lb, type_size), length * type_size, gpu_num);
+    acc_create_async(TOPADDR(ptr, lb, type_size), length * (size_t)type_size, gpu_num);
     __macc_data_table_insert(gpu_num, ptr, type_size, lb, lb + length - 1);
     acc_wait(gpu_num);
 }
@@ -222,23 +222,23 @@ void *__macc_malloc(unsigned long size)
 {
     void *ret = malloc(size);
 
-    #pragma omp parallel num_threads(__MACC_NUMGPUS)
-    {
-        __macc_create(omp_get_thread_num(), ret, 1, 0, size);
-    }
+    /* #pragma omp parallel num_threads(__MACC_NUMGPUS) */
+    /* { */
+    /*     __macc_create(omp_get_thread_num(), ret, 1, 0, size); */
+    /* } */
 
     return ret;
 }
 
 void __macc_free(void *ptr)
 {
-    #pragma omp parallel num_threads(__MACC_NUMGPUS)
-    {
-        int gpu_num = omp_get_thread_num();
-        struct __MaccDataTableEntry *entry =
-            __macc_data_table_find(gpu_num, ptr);
-        __macc_delete(gpu_num, ptr, 1, 0, entry->entire_ub + 1);
-    }
+    /* #pragma omp parallel num_threads(__MACC_NUMGPUS) */
+    /* { */
+    /*     int gpu_num = omp_get_thread_num(); */
+    /*     struct __MaccDataTableEntry *entry = */
+    /*         __macc_data_table_find(gpu_num, ptr); */
+    /*     __macc_delete(gpu_num, ptr, 1, 0, entry->entire_ub + 1); */
+    /* } */
     free(ptr);
 }
 
@@ -258,7 +258,7 @@ void __macc_update_self(int gpu_num, void *ptr, int type_size, int lb, int lengt
 
 void __macc_update_device(int gpu_num, void *ptr, int type_size, int lb, int length)
 {
-    acc_update_device(TOPADDR(ptr, lb, type_size), length * type_size);
+    acc_update_device(TOPADDR(ptr, lb, type_size), length * (size_t)type_size);
 }
 
 void __macc_init_access_region(int gpu_num, int *lb_set, int *ub_set)
@@ -288,6 +288,16 @@ void __macc_calc_loop_region
 (int *loop_lb_set, int *loop_ub_set,
  int entire_start, int entire_end, int step, int until_equal)
 {
+    if (__MACC_NUMGPUS > (entire_end - entire_start + (until_equal ? 1 : 0))) {
+        loop_lb_set[0] = entire_start;
+        loop_ub_set[0] = entire_end - ((until_equal) ? 0 : 1);
+        for (int i = 1; i < __MACC_NUMGPUS; i++) {
+            loop_lb_set[i] = 0;
+            loop_ub_set[i] = -1;
+        }
+        return;
+    }
+
     int tmp = entire_start + step * ((entire_end - entire_start) / step);
     entire_end = tmp - ((until_equal || entire_end != tmp) ? 0 : step);
 
