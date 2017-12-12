@@ -33,9 +33,11 @@ int __macc_get_num_gpus()
 
 int * __MACC_TOPOLOGY;
 
-void __macc_set_gpu_num(int i)
+int __macc_set_gpu_num(int i)
 {
-    acc_set_device_num(__MACC_TOPOLOGY[i], __MACC_DEVICE_TYPE);
+    int gpu_id = __MACC_TOPOLOGY[i];
+    acc_set_device_num(gpu_id, __MACC_DEVICE_TYPE);
+    return gpu_id;
 }
 
 #define MACC_DATA_TABLE_SIZE 256
@@ -332,24 +334,32 @@ void __macc_rewrite_data_region_into_single(int *lb_set, int *ub_set)
     ub_set[0] = MAX(ub_set[0], ub_set[gpu_ub]);
 }
 
+extern void cudaMemcpyPeerAsync(void *, int, void *, int, size_t, void *);
+extern void cudaDeviceEnablePeerAccess(int, int);
+
+void __macc_p2p(int from, int to, void *ptr, size_t length_b)
+{
+    void *from_ptr, *to_ptr;
+    void * s = acc_get_cuda_stream(from);
+    to = __macc_set_gpu_num(to);
+    to_ptr = acc_deviceptr(ptr);
+    from = __macc_set_gpu_num(from);
+    from_ptr = acc_deviceptr(ptr);
+
+    cudaMemcpyPeerAsync(to_ptr, to, from_ptr, from, length_b, s);
+}
+
 void __macc_sync_data(int gpu_num, void *ptr, int type_size, int lb, int ub)
 {
     void *update_addr = TOPADDR(ptr, lb, type_size);
     size_t length_b   = LENGTH_BYTE(lb, ub, type_size);
 
-    acc_update_self(update_addr, length_b);
+    acc_update_self_async(update_addr, length_b, gpu_num);
 
-    //#pragma omp parallel num_threads (__MACC_NUMGPUS)
-    for (int i = 0; i < __MACC_NUMGPUS; i++)
-    {
-        //int i = omp_get_thread_num();
-        if (i != gpu_num) {
-            __macc_set_gpu_num(i);
-            acc_update_device(update_addr, length_b);
-        }
+    for (int i = 0; i < __MACC_NUMGPUS; i++) {
+        if (i != gpu_num)
+            __macc_p2p(gpu_num, i, update_addr, length_b);
     }
-
-    __macc_set_gpu_num(gpu_num);
 }
 
 // (use|def)_type: 0->non-affine, 1->nothing, 2->affine
@@ -381,34 +391,6 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
             }
         }
 
-        if (!update_all) {
-            int every_whole = true;
-            int unused_lb = entry->dirty_lb;
-            int unused_ub = entry->dirty_ub;
-
-            for (int i = 0; i < __MACC_NUMGPUS; i++) {
-                if (i != gpu_num) {
-                    if (ARE_OVERLAPPING_WHOLE(use_lb_set[i], use_ub_set[i],
-                                              entry->dirty_lb, entry->dirty_ub)) {
-                        update_all_DtoH = true;
-                    }
-                    else {
-                        every_whole = false;
-
-                        if (use_lb_set[i] <= unused_lb)
-                            unused_lb = MAX(unused_lb, use_ub_set[i] + 1);
-                        else if (use_ub_set[i] >= unused_ub)
-                            unused_ub = MIN(unused_ub, use_lb_set[i] - 1);
-                    }
-                }
-            }
-
-            if (every_whole)
-                update_all = true;
-            if (unused_ub < unused_lb)
-                update_all_DtoH = true;
-        }
-
         // update all dirty
         if (update_all) {
             __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
@@ -419,15 +401,7 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
         else if (entry->dirty && use_type == 2) {
             int thread_num = multi ? __MACC_NUMGPUS : 1;
 
-            if (update_all_DtoH)
-                acc_update_self(TOPADDR(ptr, entry->dirty_lb, entry->type_size),
-                                LENGTH_BYTE(entry->dirty_lb, entry->dirty_ub, entry->type_size));
-
-            //#pragma omp parallel num_threads(thread_num)
-            for (int i = 0; i < thread_num; i++)
-            {
-                //int i = omp_get_thread_num();
-
+            for (int i = 0; i < thread_num; i++) {
                 if (i != gpu_num && ARE_OVERLAPPING(entry->dirty_lb,
                                                     entry->dirty_ub,
                                                     use_lb_set[i],
@@ -437,16 +411,9 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
                     void *update_addr = TOPADDR(ptr, update_lb, entry->type_size);
                     size_t length_b = LENGTH_BYTE(update_lb, update_ub, entry->type_size);
 
-                    if (!update_all_DtoH) {
-                        __macc_set_gpu_num(gpu_num);
-                        acc_update_self(update_addr, length_b);
-                    }
-                    __macc_set_gpu_num(i);
-                    acc_update_device(update_addr, length_b);
+                    __macc_p2p(gpu_num, i, update_addr, length_b);
                 }
-                //__macc_set_gpu_num(gpu_num);
             }
-            __macc_set_gpu_num(gpu_num);
         }
     }
 
@@ -488,6 +455,8 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
             entry->dirty_ub = def_ub_set[gpu_num];
         }
     }
+
+    acc_wait(gpu_num);
 }
 
 void __macc_init()
@@ -520,6 +489,15 @@ void __macc_init()
     } else {
         for (int i = 0; i < __MACC_NUMGPUS; i++)
             __MACC_TOPOLOGY[i] = i;
+    }
+
+    for (int i = 0; i < __MACC_NUMGPUS; i++) {
+        acc_set_device_num(__MACC_TOPOLOGY[i], __MACC_DEVICE_TYPE);
+        for (int j = 0; j < __MACC_NUMGPUS; j++) {
+            if (i != j) {
+                cudaDeviceEnablePeerAccess(__MACC_TOPOLOGY[j], 0);
+            }
+        }
     }
 
     /* if (getenv("OMP_NESTED") == NULL || getenv("OMP_MAX_ACTIVE_LEVELS") == NULL) { */
