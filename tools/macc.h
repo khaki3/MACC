@@ -349,12 +349,13 @@ void __macc_p2p(int from, int to, void *ptr, size_t length_b)
     cudaMemcpyPeerAsync(to_ptr, to, from_ptr, from, length_b, s);
 }
 
-void __macc_sync_data(int gpu_num, void *ptr, int type_size, int lb, int ub)
+void __macc_sync_data(int gpu_num, void *ptr, int type_size, int lb, int ub, bool including_host)
 {
     void *update_addr = TOPADDR(ptr, lb, type_size);
     size_t length_b   = LENGTH_BYTE(lb, ub, type_size);
 
-    acc_update_self_async(update_addr, length_b, gpu_num);
+    if (including_host)
+        acc_update_self_async(update_addr, length_b, gpu_num);
 
     for (int i = 0; i < __MACC_NUMGPUS; i++) {
         if (i != gpu_num)
@@ -374,11 +375,13 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
     // update: dirty /\ DEF_{*-i}, dirty /\ USE_{*-i}
     //
     if (entry->dirty && (multi || gpu_num != 0) && __MACC_NUMGPUS > 1) {
-        bool update_all      = false;
-        bool update_all_DtoH = false;
+        bool update_all     = false;
+        bool including_host = false;
 
-        if (use_type == 0 || def_type == 0)
+        if (def_type == 0) {
             update_all = true;
+            including_host = true;
+        }
 
         else if (def_type == 2) {
             for (int i = 0; i < __MACC_NUMGPUS; i++) {
@@ -386,15 +389,22 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
                     ARE_OVERLAPPING(entry->dirty_lb, entry->dirty_ub,
                                     def_lb_set[i], def_ub_set[i])) {
                     update_all = true;
+                    including_host = true;
                     break;
                 }
             }
         }
 
+        if (use_type == 0)  {
+            update_all = true;
+        }
+
         // update all dirty
         if (update_all) {
-            __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
-            entry->dirty = false;
+            __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub,
+                             including_host);
+            if (including_host)
+                entry->dirty = false;
         }
 
         // USE /\ dirty (don't change dirty region)
@@ -450,7 +460,7 @@ void __macc_set_data_region(int gpu_num, void *ptr, int multi,
         }
 
         else {
-            __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub);
+            __macc_sync_data(gpu_num, ptr, entry->type_size, entry->dirty_lb, entry->dirty_ub, true);
             entry->dirty_lb = def_lb_set[gpu_num];
             entry->dirty_ub = def_ub_set[gpu_num];
         }
