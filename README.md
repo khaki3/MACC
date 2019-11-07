@@ -4,7 +4,7 @@ An OpenACC transpiler for automatic multi-GPU use.
 
 ## Requirements
 * Gauche (>= 0.9.5)
-* http://xtqh0.m.gsic.titech.ac.jp/matsumura/omni-compiler/tree/extend-c-decompiler
+* Omni Compiler 1.1.0
 * PGI compiler (>= 16.10)
 
 ## Usage
